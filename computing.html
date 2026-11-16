@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Byte Squad: KS2 Computing Missions</title>
+<style>
+:root{--navy:#14213d;--navy2:#1f3160;--manila:#f4e4bc;--manila2:#e6cf94;--paper:#fffdf6;--ink:#1f2430;--muted:#6b6250;--red:#c0392b;--green:#25854f;--gold:#e0a526;--blue:#2f6fb5;--line:#d9cfb4}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--navy);background-image:radial-gradient(circle at 20% 0%,#24386b 0,transparent 55%),repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 14px);font-family:"Trebuchet MS",Verdana,system-ui,sans-serif;color:var(--ink);font-size:17px;line-height:1.45}
+.tw{font-family:"Courier New",Courier,monospace}
+button{font:inherit;cursor:pointer}
+#app{max-width:980px;margin:0 auto;padding:12px 14px 60px}
+header.top{display:flex;align-items:center;gap:12px;color:#fff;padding:6px 2px 14px;flex-wrap:wrap}
+header.top .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;min-width:220px}
+header.top h1{font-family:"Courier New",monospace;font-size:22px;margin:0;letter-spacing:.5px;line-height:1.1}
+header.top h1 small{display:block;font-size:12px;color:#c9d3ee;letter-spacing:2px;text-transform:uppercase}
+.pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:5px 12px;font-size:14px;white-space:nowrap}
+.pill b{color:var(--gold)}
+.iconbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:10px;padding:5px 10px}
+.hero{display:flex;gap:16px;align-items:center;background:var(--manila);border-radius:6px 16px 16px 16px;padding:16px 18px;box-shadow:0 8px 0 var(--manila2),0 14px 30px rgba(0,0,0,.35);margin:6px 0 26px;position:relative}
+.hero:before{content:attr(data-tab);position:absolute;top:-22px;left:0;background:var(--manila);padding:3px 16px;border-radius:8px 8px 0 0;font:700 12px "Courier New",monospace;letter-spacing:3px;color:var(--muted)}
+.hero p{margin:4px 0}
+.speech{background:#fff;border-radius:14px;padding:10px 14px;position:relative;box-shadow:0 2px 0 var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.folder{background:var(--manila);border:0;text-align:left;border-radius:4px 12px 12px 12px;padding:16px 14px 12px;position:relative;box-shadow:0 5px 0 var(--manila2),0 10px 20px rgba(0,0,0,.3);transition:transform .15s;margin-top:14px;color:var(--ink)}
+.folder:hover{transform:translateY(-3px) rotate(-.4deg)}
+.folder:before{content:attr(data-tab);position:absolute;top:-17px;left:0;background:var(--manila);padding:2px 12px;border-radius:7px 7px 0 0;font:700 11px "Courier New",monospace;letter-spacing:2px;color:var(--muted)}
+.folder h3{margin:0 0 4px;font-family:"Courier New",monospace;font-size:17px}
+.folder p{margin:0;font-size:13.5px;color:#4a4436}
+.folder .stars{margin-top:8px;font-size:18px;letter-spacing:2px}
+.folder.special{background:#dfe9f7;box-shadow:0 5px 0 #b4c6e3,0 10px 20px rgba(0,0,0,.3)}
+.folder.special:before{background:#dfe9f7}
+.folder.red{background:#f6d5cf;box-shadow:0 5px 0 #e2aaa0,0 10px 20px rgba(0,0,0,.3)}
+.folder.red:before{background:#f6d5cf}
+.folder.green{background:#d6eedc;box-shadow:0 5px 0 #a9d6b6,0 10px 20px rgba(0,0,0,.3)}
+.folder.green:before{background:#d6eedc}
+.secthead{color:#fff;font-family:"Courier New",monospace;letter-spacing:3px;text-transform:uppercase;font-size:13px;margin:30px 0 4px;opacity:.85}
+.weight{display:inline-block;font-size:11px;background:rgba(0,0,0,.08);border-radius:6px;padding:1px 6px;margin-top:6px}
+/* question */
+.qwrap{position:relative}
+.qbar{display:flex;align-items:center;gap:10px;color:#fff;margin-bottom:10px;flex-wrap:wrap}
+.qbar .ttl{font-family:"Courier New",monospace;font-weight:700;flex:1;min-width:180px}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.2)}
+.dot.ok{background:#52c27e}.dot.half{background:var(--gold)}.dot.bad{background:#e0605a}.dot.cur{outline:2px solid #fff}
+.qcard{background:var(--paper);border-radius:14px;padding:22px 20px 18px;box-shadow:0 12px 30px rgba(0,0,0,.35);position:relative;background-image:linear-gradient(transparent 31px,rgba(47,111,181,.07) 32px);background-size:100% 32px;min-height:260px}
+.qmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:-8px 0 10px;font-family:"Courier New",monospace}
+.prompt{font-size:19px;font-weight:700;margin:0 0 14px}
+.stem{background:#fff;border:2px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:20px;margin:0 0 14px;line-height:2}
+.note{font-size:13.5px;color:var(--muted);margin:-6px 0 12px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:17.5px;color:var(--ink)}
+.opt:hover{border-color:var(--blue)}
+.opt .box{flex:0 0 26px;height:26px;border:2.5px solid #555;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--blue);margin-top:1px}
+.opt.sel{border-color:var(--blue);background:#eef4fc}
+.opt.sel .box:after{content:"✓"}
+.opt.right{border-color:var(--green);background:#e5f5ea}
+.opt.wrong{border-color:var(--red);background:#fbe9e7}
+.opt ul{margin:4px 0 0;padding-left:20px}
+.tok{display:inline-block;border:2.5px solid transparent;border-radius:50%;padding:0 6px;margin:0 1px;background:none;font-size:20px;color:var(--ink);line-height:1.5}
+.tok.click:hover{border-color:#b9c9e6;border-style:dashed}
+.tok.sel{border-color:var(--red);border-style:solid}
+.tok.right{border-color:var(--green);border-style:solid;background:#e5f5ea}
+.tok.miss{border-color:var(--green);border-style:dashed}
+.tok.wrong{border-color:var(--red);background:#fbe9e7}
+.tok.p{padding:0;margin-left:-4px}
+.chunk{background:none;border:0;border-bottom:3px dashed transparent;padding:2px 3px;font-size:20px;color:var(--ink);line-height:1.6;border-radius:4px}
+.chunk:hover{background:#eef4fc}
+.chunk.sel{border-bottom:4px solid var(--red)}
+.chunk.right{border-bottom:4px solid var(--green);background:#e5f5ea}
+.chunk.wrong{border-bottom:4px solid var(--red);background:#fbe9e7}
+table.tt{border-collapse:collapse;width:100%;background:#fff;font-size:16.5px}
+table.tt th,table.tt td{border:1.5px solid #bdb39a;padding:8px;text-align:center}
+table.tt th{background:#f3ecd9;font-size:14px}
+table.tt td:first-child{text-align:left}
+.cell{width:30px;height:30px;border:2.5px solid #555;border-radius:4px;background:#fff;font-weight:900;color:var(--blue);font-size:18px;padding:0}
+.cell.sel:after{content:"✓"}
+tr.rowok td{background:#e5f5ea}
+tr.rowbad td{background:#fbe9e7}
+.cell.ans{outline:3px solid var(--green);outline-offset:2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px}
+.mcol{display:grid;gap:9px;align-content:start}
+.mitem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px;text-align:left;font-size:16px;position:relative;color:var(--ink);min-height:46px}
+.mitem.act{border-color:var(--blue);box-shadow:0 0 0 3px #cfe0f7}
+.mitem .tag{position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.mitem.right{border-color:var(--green)}
+.mitem.wrong{border-color:var(--red)}
+.typed{font-size:20px;padding:10px 12px;border:2.5px solid #888;border-radius:10px;width:min(100%,360px);font-family:inherit}
+.typed.right{border-color:var(--green);background:#e5f5ea}
+.typed.wrong{border-color:var(--red);background:#fbe9e7}
+.gapline{font-size:21px;line-height:2.4}
+.gap{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:34px;vertical-align:middle;border:2px dashed #b9c9e6;border-radius:8px;background:#f7faff;margin:0 2px;padding:0 3px;font-size:22px;font-weight:900;color:var(--blue)}
+.gap.filled{border-style:solid;border-color:var(--blue);background:#eef4fc}
+.gap.right{border-color:var(--green);color:var(--green);background:#e5f5ea}
+.gap.wrong{border-color:var(--red);color:var(--red);background:#fbe9e7}
+.palette{display:flex;gap:8px;margin:12px 0 0;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.pbtn{width:46px;height:42px;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:24px;font-weight:900}
+.pbtn.on{border-color:var(--blue);background:#dfeafa}
+.box2{display:inline-block;width:22px;height:24px;border:2px solid #333;vertical-align:middle;margin:0 2px;background:#fff}
+.hl{background:#ffe38a;padding:0 3px;border-radius:3px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:700;font-size:16px;background:var(--blue);color:#fff;box-shadow:0 4px 0 #1f4f86}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #1f4f86}
+.btn.sec{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.gold{background:var(--gold);color:#2a1e00;box-shadow:0 4px 0 #a87a10}
+.btn.red{background:var(--red);box-shadow:0 4px 0 #8a2419}
+.btn.green{background:var(--green);box-shadow:0 4px 0 #17593a}
+.btn[disabled]{opacity:.45;cursor:default}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.fb.good{background:#e5f5ea;border:2px solid #9ad3ae}
+.fb.bad{background:#fbe9e7;border:2px solid #efb0a8}
+.fb.hint{background:#fff6da;border:2px solid #ecd27e}
+.fb .mini{flex:0 0 44px}
+.why{margin-top:12px;background:#f3f7fd;border:2px solid #c8d8f0;border-radius:12px;padding:12px 16px}
+.why h4{margin:0 0 6px;font-family:"Courier New",monospace;letter-spacing:1px}
+.why ol{margin:0;padding-left:22px}
+.why li{margin:5px 0}
+.why .ans{margin-top:8px;font-weight:700;color:var(--green)}
+.stamp{position:absolute;right:18px;top:40px;z-index:3;border:5px solid var(--green);color:var(--green);font:900 26px "Courier New",monospace;padding:4px 12px;transform:rotate(-12deg);border-radius:8px;opacity:.85;animation:stamp .35s ease-out;pointer-events:none;background:rgba(255,255,255,.6)}
+.stamp.r{border-color:var(--red);color:var(--red)}
+@keyframes stamp{0%{transform:rotate(-12deg) scale(2.4);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:.85}}
+.panel{background:var(--paper);border-radius:14px;padding:20px;box-shadow:0 12px 30px rgba(0,0,0,.35);margin-bottom:16px}
+.panel h2{font-family:"Courier New",monospace;margin:0 0 10px}
+.panel h3{font-family:"Courier New",monospace;margin:18px 0 6px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:10px 0}
+.kv div{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px}
+.kv b{display:block;font-size:24px;font-family:"Courier New",monospace}
+.bars .bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:14px}
+.bars .bar span:first-child{flex:0 0 210px}
+.bars .track{flex:1;height:14px;background:#eee4cc;border-radius:7px;overflow:hidden}
+.bars .fill{height:100%;background:var(--blue)}
+.troph{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tro{background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;opacity:.5;filter:grayscale(1)}
+.tro.got{opacity:1;filter:none;border-color:var(--gold);background:#fff8e2}
+.tro .ic{font-size:30px}
+.tro b{display:block;font-size:14px}
+.tro small{font-size:12.5px;color:var(--muted)}
+.gloss{display:grid;gap:10px}
+.gitem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.gitem b{font-family:"Courier New",monospace;font-size:16px}
+.gitem .ex{font-size:14.5px;color:#3d4a63;margin-top:3px}
+.gitem .btn{padding:6px 12px;font-size:13px;margin-top:6px}
+.review{display:grid;gap:8px}
+.ritem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.ritem.ok{border-left:8px solid var(--green)}.ritem.no{border-left:8px solid var(--red)}
+.timer{font-family:"Courier New",monospace;font-weight:700;font-size:20px;background:rgba(0,0,0,.25);padding:3px 10px;border-radius:8px}
+.timer.low{color:#ffb3a8}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#fff8e2;border:3px solid var(--gold);border-radius:14px;padding:10px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:50;animation:pop .4s}
+@keyframes pop{0%{transform:translateX(-50%) scale(.6);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:30;animation:fl .5s forwards}
+@keyframes fl{0%{opacity:.35}100%{opacity:0}}
+.rapidscore{font:900 40px "Courier New",monospace;color:#fff}
+.small{font-size:13.5px;color:var(--muted)}
+.tag-type{display:inline-block;background:#eef4fc;border:1px solid #c8d8f0;border-radius:6px;padding:1px 7px;font-size:12.5px;margin:2px}
+@media (max-width:640px){
+ body{font-size:16px}.stem,.tok,.chunk,.gapline{font-size:18px}.prompt{font-size:17px}
+ .match{grid-template-columns:1fr 1fr;gap:8px}.mitem{font-size:14px}
+ .bars .bar span:first-child{flex-basis:130px}
+ .stamp{font-size:18px;top:auto;bottom:12px}
+ header.top h1{font-size:18px}
+ table.tt{font-size:14px}table.tt th{font-size:10.5px;padding:5px 2px;word-break:break-word}table.tt td{padding:5px 3px}table.tt td:first-child{min-width:128px}.cell{width:26px;height:26px}
+ .qbar .ttl{min-width:0;font-size:14px}
+}
+/* engine v2 additions */
+.ordslots{display:grid;gap:8px;margin-bottom:12px}
+.oslot{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2px dashed var(--line);border-radius:10px;padding:8px 10px;font-size:16.5px;color:var(--ink);min-height:44px}
+.oslot.filled{border-style:solid;border-color:var(--blue);background:#eef4fc}
+.oslot.right{border-color:var(--green);background:#e5f5ea}.oslot.wrong{border-color:var(--red);background:#fbe9e7}
+.onum{flex:0 0 28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.opool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.oitem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:8px 12px;font-size:16px;color:var(--ink)}
+.oitem:hover{border-color:var(--blue)}
+.vlist{display:grid;gap:4px;justify-items:start}
+.vlist .chunk{border:3px solid transparent;border-radius:8px;padding:2px}
+.vlist .chunk.sel{border-color:var(--red)}.vlist .chunk.right{border-color:var(--green)}.vlist .chunk.wrong{border-color:var(--red)}
+.code{display:inline-grid;gap:3px;justify-items:start;font:700 15px/1.2 "Trebuchet MS",sans-serif}
+.blk{color:#fff;border-radius:6px;padding:7px 12px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);white-space:nowrap}
+.blk.hat{border-radius:16px 16px 6px 6px;padding-top:9px}
+.blk.end{padding:0;height:12px;width:60px;border-radius:0 0 6px 6px}
+.blk .v{background:#fff;color:#333;border-radius:12px;padding:1px 8px;margin:0 3px;font-weight:700}
+.blk .b{background:rgba(0,0,0,.18);border-radius:12px;padding:1px 8px;margin:0 3px}
+.diag{display:block;max-width:100%;height:auto;margin:4px auto}
+.dtab{border-collapse:collapse;background:#fff;font-size:15.5px;margin:6px 0}
+.dtab th,.dtab td{border:1.5px solid #bdb39a;padding:6px 10px;text-align:center}
+.dtab th{background:#f3ecd9}
+.key{font-size:15.5px;line-height:1.5}
+.key .kq{display:inline-block;background:#fff;border:2px solid var(--blue);border-radius:8px;padding:2px 8px;font-weight:700}
+.key .ka{display:inline-block;background:#e5f5ea;border:2px solid var(--green);border-radius:8px;padding:2px 8px}
+.key ul{list-style:none;padding-left:22px;margin:4px 0;border-left:2px dashed #b9c9e6}
+.key li{margin:4px 0}
+.subhead{color:#fff;opacity:.7;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:16px 0 -4px;font-family:"Courier New",monospace}
+:root{--navy:#0b1f2e;--navy2:#123a4f;--manila:#dff5ec;--manila2:#9fd9c2;--muted:#3d6b5c;--line:#bfd9cf;--gold:#f2b632;--blue:#2b7bd8}
+body{background:#0b1f2e;background-image:radial-gradient(circle at 80% 0%,#15506b 0,transparent 55%),linear-gradient(rgba(56,211,159,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(56,211,159,.06) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px}
+.qcard{background-image:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<canvas id="fx"></canvas>
+<script>
+"use strict";
+/* ============ helpers ============ */
+const R=n=>Math.floor(Math.random()*n);
+const pick=a=>a[R(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const sample=(a,n)=>shuffle(a).slice(0,n);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const strip=s=>String(s).replace(/<[^>]+>/g,'');
+const norm=s=>String(s).toLowerCase().replace(/[’‘`]/g,"'").replace(/[.!?]+$/,'').replace(/\s+/g,' ').trim();
+const NOSPACE_BEFORE=/^[,.!?;:)”’]/; const NOSPACE_AFTER=/[(“]$/;
+
+const NAMES=[['Maya','f'],['Leo','m'],['Aisha','f'],['Tom','m'],['Zara','f'],['Sam','m'],['Priya','f'],['Jack','m'],['Ella','f'],['Omar','m'],['Ruby','f'],['Finn','m'],['Isla','f'],['Kai','m'],['Amira','f'],['Noah','m']];
+const nm=()=>pick(NAMES);
+function twoNames(){const s=sample(NAMES,2);return s;}
+const HE=g=>g==='f'?'she':'he';
+const ANIMALS=['fox','rabbit','puppy','kitten','owl','badger','hedgehog','squirrel','pony','goose'];
+const ANADJ=['hungry','clever','sleepy','nervous','tiny','scruffy','curious','playful'];
+const MOVES={crept:['under','behind','past','beside'],raced:['across','through','past'],wandered:['through','across','past','near'],hid:['under','behind','beside'],scurried:['under','across','past','behind'],tiptoed:['past','across','behind']};
+const PREPPLACE={under:['fence','bridge','hedge','table'],behind:['shed','hedge','wall','fence'],through:['garden','field','woods'],across:['field','garden','bridge','playground'],past:['shed','wall','gate','pond'],beside:['pond','wall','gate','shed'],near:['pond','gate','river']};
+const MANNER=['silently','quickly','nervously','happily','carefully','slowly','bravely','quietly'];
+const art=w=>/^[aeiou]/i.test(w)?'an':'a';
+
+/* ============ generator registry ============ */
+const G={};
+function def(id,dom,code,skill,fast,fn){G[id]={id,dom,code,skill,fast,fn};}
+function make(id){const g=G[id];const q=g.fn();q.id=id;q.dom=g.dom;q.code=q.code||g.code;q.skill=g.skill;q.marks=q.marks||1;if(q.type==='order'&&!q.ansText)q.ansText=q.items.join(' → ');return q;}
+
+/* ================= BYTE SQUAD – KS2 Computing ================= */
+const BC={event:'#d9a200',motion:'#4c97ff',looks:'#9966ff',control:'#f5a00f',var:'#ff8c1a',op:'#3fae3f',sense:'#3fa3c9',pen:'#0fae84',sound:'#c45ec4'};
+const V=x=>`<span class="v">${x}</span>`,Bv=x=>`<span class="b">${x}</span>`;
+function code(lines){return `<div class="code">${lines.map(l=>l[1]==='end'?`<div class="blk end" style="background:${BC.control};margin-left:${(l[2]||0)*22}px"></div>`:`<div class="blk${l[3]?' '+l[3]:''}" style="background:${BC[l[1]]};margin-left:${(l[2]||0)*22}px">${l[0]}</div>`).join('')}</div>`;}
+const FLAG=['when 🏁 clicked','event',0,'hat'];
+const dtab=(head,rows)=>`<table class="dtab"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+
+/* ---------- C1 Algorithms & decomposition ---------- */
+const ALGS=[['Make a jam sandwich',['Get two slices of bread','Spread butter on one side of each slice','Spread jam on top of the butter','Put the slices together','Cut the sandwich in half']],
+ ['Plant a seed',['Fill a pot with soil','Make a small hole in the soil','Drop the seed into the hole','Cover the seed with soil','Water the pot']],
+ ['Brush your teeth',['Wet the toothbrush','Put toothpaste on the brush','Brush all your teeth for two minutes','Spit out the toothpaste','Rinse the brush']],
+ ['Log on to a school computer',['Switch on the computer','Click on your username','Type in your password','Press Enter','Wait for the desktop to load']],
+ ['Send an email',['Open your email program','Click “New message”','Type the email address','Write the subject and message','Click Send']]];
+def('al_order','C1','C1','Writing algorithms',false,()=>{
+ const a=pick(ALGS);const n=Math.random()<.5?4:5;const steps=n===5?a[1]:a[1].slice(0,4);
+ return {type:'order',prompt:`This algorithm is for: <b>${a[0]}</b>. Put the steps in the right <b>sequence</b>.`,items:steps,
+  hint:'Imagine you are a robot following the instructions exactly. What must happen first so the next step is possible?',
+  why:['An <b>algorithm</b> is a set of precise, step-by-step instructions to solve a problem or complete a task.','The steps must be in the right <b>sequence</b> (order) – a computer does exactly what it is told, in the order it is told.',...steps.map((s,i)=>`Step ${i+1}: ${s}`)]};
+});
+const TERMS=[['algorithm','a precise set of step-by-step instructions to solve a problem'],['program','an algorithm written in a language a computer can follow'],['decomposition','breaking a big problem into smaller, easier parts'],['debugging','finding and fixing errors (bugs) in an algorithm or program'],['sequence','instructions carried out one after another, in order'],['selection','choosing what to do next using a condition (if… then… else)'],['repetition','repeating instructions using a loop'],['variable','a named store for a value that can change while a program runs'],['abstraction','removing unnecessary detail to focus on what matters'],['input','information that goes into a computer (e.g. a key press)'],['output','information that comes out of a computer (e.g. sound or a picture)']];
+def('al_term','C1','C1–C3','Key computing words',true,()=>{
+ const t=pick(TERMS);const opts=shuffle([t[1],...sample(TERMS.filter(x=>x!==t),3).map(x=>x[1])]);
+ return {type:'tick',prompt:`Which is the best description of <b>${t[0]}</b>?`,options:opts.map(cap),answer:opts.indexOf(t[1]),hint:'Think of a time you have used this idea in Scratch or another coding app.',
+  why:[`<b>${cap(t[0])}</b> means ${t[1]}.`,'Knowing the right words helps you explain how your programs work – that’s part of the computing curriculum.'],ansText:cap(t[1])};
+});
+def('al_match','C1','C1–C3','Key computing words',false,()=>{
+ const ts=sample(TERMS,4);const right=shuffle(ts.map(t=>cap(t[1])));
+ return {type:'match',prompt:'Match each computing word to its meaning.',left:ts.map(t=>t[0]),right,answer:ts.map(t=>right.indexOf(cap(t[1]))),hint:'Start with the one you are surest about.',why:ts.map(t=>`<b>${t[0]}</b> → ${t[1]}`),ansText:'see the matches above'};
+});
+const DECOMP=[['make a maze game in Scratch','Split it into: draw the maze, make the player move, detect walls, add a goal and a timer','Write all the code in one go and see if it works','Start by choosing the colour of the background','Ask a friend to make it instead'],
+ ['plan a class party','Split it into: food, music, games and decorations, and plan each part','Buy lots of food and hope for the best','Start with the decorations and finish when you run out of time','Do everything on the morning of the party'],
+ ['program a robot to tidy a room','Split it into: find an object, pick it up, carry it to the right place, repeat','Tell the robot “tidy the room”','Program it to move forward forever','Tidy the room yourself first'],
+ ['make an animated story','Split it into: characters, backgrounds, what each character says, and when scenes change','Animate everything in one giant script','Pick the music and stop there','Draw the last scene first and work out the rest later']];
+def('al_decomp','C1','C1','Decomposition',true,()=>{
+ const d=pick(DECOMP);const opts=shuffle(d.slice(1));
+ return {type:'tick',prompt:`You need to <b>${d[0]}</b>. Which shows the problem being <b>decomposed</b>?`,options:opts,answer:opts.indexOf(d[1]),hint:'Decomposing means breaking something big into smaller parts.',
+  why:['<b>Decomposition</b> means breaking a big problem into smaller parts that are easier to solve.','Each small part can then be planned, built and tested on its own.',`So: “${d[1]}”`],ansText:d[1]};
+});
+/* robot grid */
+const DIRS=['N','E','S','W'],DV={N:[0,-1],E:[1,0],S:[0,1],W:[-1,0]},ARW={N:'⬆',E:'➡',S:'⬇',W:'⬅'};
+const cellName=(x,y)=>'ABCDE'[x]+(y+1);
+function gridSVG(sx,sy,f){let g=`<svg class="diag" viewBox="0 0 230 230" width="230">`;for(let i=0;i<5;i++){g+=`<text x="${45+i*40}" y="16" font-size="13" text-anchor="middle" font-weight="700">${'ABCDE'[i]}</text><text x="10" y="${48+i*40}" font-size="13" text-anchor="middle" font-weight="700">${i+1}</text>`;for(let j=0;j<5;j++)g+=`<rect x="${25+i*40}" y="${25+j*40}" width="40" height="40" fill="${(i+j)%2?'#f3f7fd':'#fff'}" stroke="#9fb3d1"/>`;}
+ const cx=45+sx*40,cy=45+sy*40;const rot={N:0,E:90,S:180,W:270}[f];g+=`<g transform="translate(${cx} ${cy}) rotate(${rot})"><rect x="-13" y="-11" width="26" height="24" rx="5" fill="#4c97ff"/><circle cx="-5" cy="-2" r="3" fill="#fff"/><circle cx="5" cy="-2" r="3" fill="#fff"/><path d="M-8 -12 L0 -22 L8 -12z" fill="#c0392b"/></g></svg>`;return g;}
+function runRobot(x,y,f,prog,swap){const trace=[];prog.forEach(p=>{if(p[0]==='F'){x+=DV[f][0]*p[1];y+=DV[f][1]*p[1];trace.push(`forward ${p[1]} → now on <b>${cellName(x,y)}</b>`);}else{let t=p[0];if(swap)t=t==='L'?'R':'L';f=DIRS[(DIRS.indexOf(f)+(t==='R'?1:3))%4];trace.push(`turn ${t==='R'?'right':'left'} → now facing ${ARW[f]}`);}});return {x,y,f,trace};}
+def('al_grid','C1','C1','Following an algorithm',true,()=>{
+ for(let tries=0;tries<200;tries++){
+  const sx=R(5),sy=R(5),f=pick(DIRS);let x=sx,y=sy,d=f;const prog=[];let ok=true;const len=3+R(3);
+  for(let k=0;k<len;k++){if(k%2===0||Math.random()<.3){const room=[1,2,3].filter(n=>{const nx=x+DV[d][0]*n,ny=y+DV[d][1]*n;return nx>=0&&nx<5&&ny>=0&&ny<5;});if(!room.length){ok=false;break;}const n=pick(room);prog.push(['F',n]);x+=DV[d][0]*n;y+=DV[d][1]*n;}else{const t=pick(['L','R']);prog.push([t]);d=DIRS[(DIRS.indexOf(d)+(t==='R'?1:3))%4];}}
+  if(!ok||!prog.some(p=>p[0]!=='F'))continue;
+  const r=runRobot(sx,sy,f,prog,false),w=runRobot(sx,sy,f,prog,true);
+  const right=cellName(r.x,r.y);const cands=new Set([right]);if(w.x>=0&&w.x<5&&w.y>=0&&w.y<5)cands.add(cellName(w.x,w.y));cands.add(cellName(sx,sy));
+  while(cands.size<4)cands.add(cellName(R(5),R(5)));const opts=shuffle([...cands].slice(0,4));if(!opts.includes(right))continue;
+  const progHTML=code(prog.map(p=>p[0]==='F'?[`move forward ${V(p[1])}`,'motion']:[`turn ${p[0]==='R'?'right ↻':'left ↺'} ${V('90°')}`,'motion']));
+  return {type:'tick',prompt:`The robot starts on <b>${cellName(sx,sy)}</b>, facing the way its red arrow points (${ARW[f]}). It follows this program. Which square does it finish on?`,stem:`<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">${gridSVG(sx,sy,f)}${progHTML}</div>`,options:opts,answer:opts.indexOf(right),
+   hint:'Use your finger to trace each step on the grid. Turns are from the robot’s point of view, not yours!',
+   why:['Follow the algorithm one instruction at a time – this is called <b>tracing</b>.',`Start: ${cellName(sx,sy)}, facing ${ARW[f]}.`,...r.trace,'Careful with turns: they are the robot’s left and right. If the robot faces you, its right is your left!'],ansText:right};
+ }
+});
+
+/* ---------- C2 Sequence, selection & repetition ---------- */
+def('rep_total','C2','C2','Repetition (loops)',true,()=>{
+ const nest=Math.random()<.35;
+ if(nest){const a=2+R(3),b=2+R(3),s=pick([5,10,20]);return {type:'type',numeric:true,prompt:'How many steps does the sprite move <b>altogether</b>?',stem:code([FLAG,[`repeat ${V(a)}`,'control',0],[`repeat ${V(b)}`,'control',1],[`move ${V(s)} steps`,'motion',2],['','end',1],['','end',0]]),accept:[String(a*b*s)],unit:'steps',
+  hint:'The inside loop runs completely every time the outside loop goes round once.',why:['This is a <b>nested loop</b> – a loop inside a loop.',`The inside loop moves ${b} × ${s} = ${b*s} steps.`,`The outside loop repeats that ${a} times: ${a} × ${b*s} = <b>${a*b*s}</b> steps.`],ansText:`${a*b*s} steps`};}
+ const n=2+R(9),s=pick([5,10,15,20,25,50]);
+ return {type:'type',numeric:true,prompt:'How many steps does the sprite move <b>altogether</b>?',stem:code([FLAG,[`repeat ${V(n)}`,'control',0],[`move ${V(s)} steps`,'motion',1],['','end',0]]),accept:[String(n*s)],unit:'steps',
+  hint:'The block inside the loop runs once for every repeat.',why:['A <b>repeat</b> loop runs the blocks inside it a set number of times.',`It moves ${s} steps, ${n} times.`,`${n} × ${s} = <b>${n*s}</b> steps.`],ansText:`${n*s} steps`};
+});
+const SHAPES=[[3,'triangle'],[4,'square'],[5,'pentagon'],[6,'hexagon'],[8,'octagon']];
+def('rep_shape','C2','C2','Loops that draw shapes',true,()=>{
+ const sh=pick(SHAPES);const ang=360/sh[0];const askAngle=Math.random()<.4;
+ if(askAngle){const opts=shuffle([...new Set([ang,...sample([60,72,90,120,45,180].filter(a=>a!==ang),3)])]).slice(0,4);if(!opts.includes(ang))opts[0]=ang;const o2=shuffle(opts);
+  return {type:'tick',prompt:`What number should go in the <b>turn</b> block so the program draws a regular <b>${sh[1]}</b>?`,stem:code([FLAG,['pen down','pen',0],[`repeat ${V(sh[0])}`,'control',0],[`move ${V(80)} steps`,'motion',1],[`turn right ↻ ${V('?')} degrees`,'motion',1],['','end',0]]),options:o2.map(a=>a+'°'),answer:o2.indexOf(ang),
+   hint:'To get back to where it started, the sprite must turn all the way round – 360° altogether.',why:['To draw a closed regular shape, the sprite turns a full circle (360°) in total.',`It turns ${sh[0]} times, so each turn is 360 ÷ ${sh[0]} = <b>${ang}°</b>.`],ansText:ang+'°'};}
+ const opts=shuffle(sample(SHAPES,4).map(s=>s[1]).filter(x=>x!==sh[1]).slice(0,3).concat(sh[1]));
+ return {type:'tick',prompt:'What shape will this program draw?',stem:code([FLAG,['pen down','pen',0],[`repeat ${V(sh[0])}`,'control',0],[`move ${V(80)} steps`,'motion',1],[`turn right ↻ ${V(ang)} degrees`,'motion',1],['','end',0]]),options:opts,answer:opts.indexOf(sh[1]),
+  hint:'Count how many times the loop repeats – that’s the number of sides.',why:['Each time round the loop, the sprite draws one side and then turns.',`The loop repeats ${sh[0]} times, so the shape has ${sh[0]} sides – a <b>${sh[1]}</b>.`,`Check: ${sh[0]} × ${ang}° = 360°, a full turn.`],ansText:sh[1]};
+});
+def('sel_if','C2','C2','Selection (if… else)',true,()=>{
+ const t=R(3);let lines,right,opts,why;
+ if(t===0){const lim=pick([10,20,50]),sc=pick([lim-5,lim+5,lim+1,lim-1,lim*2]);const win=sc>lim;
+  lines=[FLAG,[`set ${Bv('score')} to ${V(sc)}`,'var',0],[`if ${Bv(`score > ${lim}`)} then`,'control',0],[`say ${V('You win!')}`,'looks',1],['else','control',0],[`say ${V('Try again!')}`,'looks',1],['','end',0]];
+  right=win?'You win!':'Try again!';opts=['You win!','Try again!','Nothing','Both'];why=[`The variable score is set to ${sc}.`,`The condition asks: is ${sc} > ${lim}? ${win?'Yes':'No'}${sc===lim?' (they are equal, so it is not greater)':''}.`,win?'So the “if” part runs.':'So the “else” part runs.'];}
+ else if(t===1){const temp=pick([-5,-1,3,12,25,31]);const msg=temp<0?'Freezing!':temp>28?'Too hot!':'Just right';
+  lines=[FLAG,[`set ${Bv('temp')} to ${V(temp)}`,'var',0],[`if ${Bv('temp < 0')} then`,'control',0],[`say ${V('Freezing!')}`,'looks',1],['else','control',0],[`if ${Bv('temp > 28')} then`,'control',1],[`say ${V('Too hot!')}`,'looks',2],['else','control',1],[`say ${V('Just right')}`,'looks',2],['','end',1],['','end',0]];
+  right=msg;opts=['Freezing!','Too hot!','Just right','Nothing'];why=[`temp is ${temp}.`,`Is ${temp} < 0? ${temp<0?'Yes → “Freezing!”':'No, so check the next condition.'}`,temp<0?'':`Is ${temp} > 28? ${temp>28?'Yes → “Too hot!”':'No → “Just right”.'}`].filter(Boolean);}
+ else {const lives=pick([0,1,2,3]);lines=[FLAG,[`set ${Bv('lives')} to ${V(lives)}`,'var',0],[`if ${Bv('lives = 0')} then`,'control',0],[`say ${V('Game over')}`,'looks',1],['else','control',0],[`say ${V('Keep going!')}`,'looks',1],['','end',0]];right=lives===0?'Game over':'Keep going!';opts=['Game over','Keep going!','Nothing','Both'];why=[`lives is ${lives}.`,`Is lives = 0? ${lives===0?'Yes → “Game over”':'No → the else part: “Keep going!”'}`];}
+ opts=shuffle(opts);
+ return {type:'tick',prompt:'What will the sprite say?',stem:code(lines),options:opts,answer:opts.indexOf(right),hint:'Work out the value of the variable first, then test the condition: true or false?',
+  why:['<b>Selection</b> uses a condition to choose which blocks run.','If the condition is <b>true</b>, the “then” blocks run; if it is <b>false</b>, the “else” blocks run.',...why],ansText:right};
+});
+def('con_table','C2','C2','Sequence, selection or repetition?',false,()=>{
+ const SQ=['move 10 steps, then turn 15 degrees, then say “Hi”','switch costume, wait 1 second, switch costume back','set score to 0, then show the score'];
+ const SL=['if touching the edge then bounce','if key space pressed then jump else stand still','if score = 10 then say “Level up!”'];
+ const RP=['repeat 10: move 5 steps','forever: change colour effect by 25','repeat until touching the wall: move 2 steps'];
+ const rows=shuffle([{html:pick(SQ),ans:0},{html:pick(SL),ans:1},{html:pick(RP),ans:2},Math.random()<.5?{html:pick(SL.filter(x=>!0)),ans:1}:{html:pick(RP),ans:2}]).filter((r,i,a)=>a.findIndex(x=>x.html===r.html)===i);
+ return {type:'table',prompt:'Tick to show whether each piece of code mainly uses <b>sequence</b>, <b>selection</b> or <b>repetition</b>.',cols:['Sequence','Selection','Repetition'],rows,
+  hint:'If → selection. Repeat / forever → repetition. Just one thing after another → sequence.',
+  why:['<b>Sequence</b>: instructions run one after another, in order.','<b>Selection</b>: an “if” chooses what to do depending on a condition.','<b>Repetition</b>: a loop (repeat, forever, repeat until) runs instructions again and again.'],ansText:'see the ticks above'};
+});
+def('sel_cond','C2','C2','Writing conditions',true,()=>{
+ const sc=pick([['say “Freezing!” when the temperature is below 0','temp < 0',['temp > 0','temp = 0','temp > 10']],['open the door when someone is closer than 50 cm','distance < 50',['distance > 50','distance = 100','distance > 0']],['say “High score!” when the score is more than 100','score > 100',['score < 100','score = 0','score < 10']],['end the game when lives reach 0','lives = 0',['lives > 0','lives = 3','lives > 10']]]);
+ const opts=shuffle([sc[1],...sc[2]]);
+ return {type:'tick',prompt:`Which condition should go in the “if” block to <b>${sc[0]}</b>?`,options:opts.map(o=>`if ${o} then`),answer:opts.indexOf(sc[1]),hint:'< means “less than”, > means “more than”, = means “equal to”.',
+  why:['A <b>condition</b> is a question that is either true or false.','<b>&lt;</b> means less than, <b>&gt;</b> means greater than, <b>=</b> means equal to.',`To ${sc[0]}, the condition is <b>${sc[1]}</b>.`],ansText:`if ${sc[1]} then`};
+});
+
+/* ---------- C3 Variables, input & output ---------- */
+def('var_trace','C3','C3','Variables',true,()=>{
+ const name=pick(['score','coins','lives','points']);const a=R(10);const b=1+R(9),c=-(1+R(5));const loop=Math.random()<.5;const n=2+R(4);
+ let lines=[FLAG,[`set ${Bv(name)} to ${V(a)}`,'var',0]],val=a,why=[`${name} starts at ${a}.`];
+ if(loop){lines.push([`repeat ${V(n)}`,'control',0],[`change ${Bv(name)} by ${V(b)}`,'var',1],['','end',0]);val+=n*b;why.push(`The loop adds ${b}, ${n} times: ${n} × ${b} = ${n*b}. ${a} + ${n*b} = ${val}.`);}
+ else{lines.push([`change ${Bv(name)} by ${V(b)}`,'var',0]);val+=b;why.push(`Change by ${b}: ${a} + ${b} = ${val}.`);}
+ lines.push([`change ${Bv(name)} by ${V(c)}`,'var',0]);why.push(`Change by ${c}: ${val} − ${-c} = ${val+c}.`);val+=c;
+ return {type:'type',numeric:true,prompt:`What is the value of <b>${name}</b> when the program finishes?`,stem:code(lines),accept:[String(val)],
+  hint:'Keep a running total on paper. “change by” adds (or, if negative, takes away).',why:['A <b>variable</b> stores a value that can change while the program runs.',...why,`Final value: <b>${val}</b>.`],ansText:String(val)};
+});
+const IO_IN=['keyboard','mouse','microphone','webcam','temperature sensor','light sensor','game controller','scanner'];
+const IO_OUT=['speaker','printer','monitor (screen)','headphones','projector','LED light','motor'];
+def('io_table','C3','C3','Input and output devices',false,()=>{
+ const rows=shuffle([...sample(IO_IN,2).map(h=>({html:h,ans:0})),...sample(IO_OUT,2).map(h=>({html:h,ans:1}))]);
+ return {type:'table',prompt:'Tick to show whether each device is an <b>input</b> or an <b>output</b>.',cols:['Input','Output'],rows,hint:'Input: information goes IN to the computer. Output: information comes OUT of it.',
+  why:['An <b>input</b> device sends information <i>into</i> a computer (keyboard, mouse, microphone, sensors).','An <b>output</b> device takes information <i>out</i> of a computer to the world (screen, speaker, printer, motor, lights).',...rows.map(r=>`${r.html} → <b>${r.ans?'output':'input'}</b>`)],ansText:'see the ticks above'};
+});
+const SYS=[['an automatic night light','a light sensor','an LED lamp','It switches the lamp on when it gets dark.'],['automatic supermarket doors','a motion sensor','a motor that slides the doors','It opens the doors when someone comes near.'],['a greenhouse that keeps plants cool','a temperature sensor','a fan','It turns the fan on when it gets too hot.'],['a burglar alarm','a movement (PIR) sensor','a loud buzzer','It sounds the buzzer when movement is detected.'],['a smart bin lid','a distance sensor','a motor that lifts the lid','It lifts the lid when a hand is close.']];
+def('io_system','C3','C3','Controlling physical systems',true,()=>{
+ const s=pick(SYS);const askIn=Math.random()<.5;const right=askIn?s[1]:s[2];const others=sample(SYS.filter(x=>x!==s),3).map(x=>askIn?x[2]:x[1]);
+ const opts=shuffle([right,others[0],askIn?s[2]:s[1],others[1]]);
+ return {type:'tick',prompt:`A computer controls <b>${s[0]}</b>. ${s[3]} What is the <b>${askIn?'input':'output'}</b>?`,options:opts,answer:opts.indexOf(right),hint:'Sensors sense the world – they are inputs. Things that move, light up or make noise are outputs.',
+  why:['Computers can control physical systems: <b>input → process → output</b>.',`Input: <b>${s[1]}</b> senses what is happening.`,`Process: the program decides what to do (using selection: “if…”).`,`Output: <b>${s[2]}</b> makes something happen.`],ansText:right};
+});
+
+/* ---------- C4 Debugging ---------- */
+def('dbg_square','C4','C4','Debugging programs',false,()=>{
+ const sh=pick(SHAPES.slice(0,4));const ang=360/sh[0];const bug=pick(['count','angle','move']);
+ const lines=[['pen down','pen',0],[`repeat ${V(bug==='count'?sh[0]-1:sh[0])}`,'control',0],[`move ${V(bug==='move'?0:80)} steps`,'motion',1],[`turn right ↻ ${V(bug==='angle'?ang+30:ang)} degrees`,'motion',1]];
+ const ai=bug==='count'?1:bug==='move'?2:3;
+ return {type:'chunks',vertical:true,tapNote:'Tap the block with the bug.',prompt:`This program should draw a regular <b>${sh[1]}</b>, but it has a bug. Which block is wrong?`,chunks:lines.map(l=>code([l])),answer:ai,
+  hint:`A ${sh[1]} has ${sh[0]} sides and each turn should be 360 ÷ ${sh[0]}.`,
+  why:['<b>Debugging</b> means finding and fixing errors. A good way is to trace the program step by step and compare with what it should do.',`A ${sh[1]} needs ${sh[0]} sides, each turn ${ang}°, and the sprite must actually move.`,bug==='count'?`The loop repeats only ${sh[0]-1} times, so one side is missing. Fix: repeat ${sh[0]}.`:bug==='angle'?`The turn is ${ang+30}°, but it should be ${ang}°. Fix: turn ${ang} degrees.`:'The sprite moves 0 steps, so nothing is drawn! Fix: move 80 steps.'],ansText:'the '+(bug==='count'?'repeat':bug==='angle'?'turn':'move')+' block'};
+});
+def('dbg_count','C4','C4','Debugging programs',false,()=>{
+ const target=pick([5,10,20]);const bug=pick(['start','times','step']);
+ const lines=[[`set ${Bv('n')} to ${V(bug==='start'?0:1)}`,'var',0],[`repeat ${V(bug==='times'?target-1:target)}`,'control',0],[`say ${Bv('n')} for ${V(1)} seconds`,'looks',1],[`change ${Bv('n')} by ${V(bug==='step'?2:1)}`,'var',1]];
+ const ai=bug==='start'?0:bug==='times'?1:3;
+ const what=bug==='start'?`0, 1, 2 … ${target-1}`:bug==='times'?`1, 2 … ${target-1}`:`1, 3, 5 … ${2*target-1}`;
+ return {type:'chunks',vertical:true,tapNote:'Tap the block with the bug.',prompt:`This program should make the sprite count from <b>1 to ${target}</b>. It has one bug. Which block is wrong?`,chunks:lines.map(l=>code([l])),answer:ai,
+  hint:'Trace it: what is the first number said? How many numbers? How much does n go up by each time?',
+  why:['Trace the program and write down what it actually says.',`At the moment it says: ${what}.`,bug==='start'?'It starts at 0 instead of 1. Fix: set n to 1.':bug==='times'?`It only repeats ${target-1} times, so it stops one short. Fix: repeat ${target}.`:'n goes up by 2 each time, so it skips numbers. Fix: change n by 1.'],ansText:'the '+(bug==='start'?'set':bug==='times'?'repeat':'change')+' block'};
+});
+def('dbg_predict','C4','C4','Logical reasoning',true,()=>{
+ const n=pick([3,4,5]);const c=pick(['red','blue','green']);const s=pick(['meow','pop','drum']);
+ const lines=[FLAG,[`repeat ${V(n)}`,'control',0],[`play sound ${V(s)}`,'sound',1],[`wait ${V(1)} seconds`,'control',1],['','end',0],[`say ${V('Done!')}`,'looks',0]];
+ const right=`It plays “${s}” ${n} times, then says “Done!”`;
+ const opts=shuffle([right,`It says “Done!” ${n} times`,`It plays “${s}” once, then says “Done!” ${n} times`,`It plays “${s}” forever`]);
+ return {type:'tick',prompt:'Use logical reasoning: what will this program do?',stem:code(lines),options:opts,answer:opts.indexOf(right),hint:'Which blocks are inside the loop, and which come after it?',
+  why:['Only the blocks <b>inside</b> the loop are repeated.',`“play sound” and “wait” are inside the repeat ${n} loop, so they happen ${n} times.`,'“say Done!” is after the loop, so it happens once at the end.'],ansText:right};
+});
+
+/* ---------- C5 Networks & the internet ---------- */
+const NET=[['the internet','a huge network of computer networks that connects the whole world'],['the World Wide Web','all the web pages, linked together, that you view in a browser'],['a router','a device that directs data between networks'],['a server','a computer that stores websites or files and sends them to other computers'],['a web browser','a program used to view web pages'],['a packet','a small chunk of data sent across a network'],['an IP address','a unique number that identifies a device on a network'],['a URL','the address of a web page'],['Wi-Fi','a way of connecting to a network without cables'],['a LAN','a network in one place, such as a school or home']];
+def('net_match','C5','C4–C5','Network words',false,()=>{
+ const ts=sample(NET,4);const right=shuffle(ts.map(t=>cap(t[1])));
+ return {type:'match',prompt:'Match each word to its meaning.',left:ts.map(t=>cap(t[0])),right,answer:ts.map(t=>right.indexOf(cap(t[1]))),hint:'Start with the one you are surest about.',why:ts.map(t=>`<b>${cap(t[0])}</b> → ${t[1]}`),ansText:'see the matches above'};
+});
+def('net_tick','C5','C4','Network words',true,()=>{
+ const t=pick(NET);const opts=shuffle([t[0],...sample(NET.filter(x=>x!==t),3).map(x=>x[0])]);
+ return {type:'tick',prompt:`Which is <b>${t[1]}</b>?`,options:opts.map(cap),answer:opts.indexOf(t[0]),hint:'Think about what each word does in a network.',why:[`<b>${cap(t[0])}</b> is ${t[1]}.`],ansText:cap(t[0])};
+});
+const NTF=[['The internet and the World Wide Web are the same thing.',1,'The web is just one <i>service</i> that runs on the internet. Email, video calls and online games use the internet too.'],['Email is a service that uses the internet.',0,'Email messages travel across the internet.'],['Data is split into packets to travel across the internet.',0,'Packets can take different routes and are put back together at the end.'],['The World Wide Web is part of the internet.',0,'The web is a service that runs on the internet.'],['A LAN covers the whole world.',1,'A LAN (local area network) is in one place, like a school. The internet is the worldwide one.'],['Every web page is stored on your own computer.',1,'Web pages are stored on servers and sent to your computer when you ask for them.'],['A router helps send data to the right place.',0,'Routers direct data between networks.'],['Wi-Fi needs a cable plugged into every device.',1,'Wi-Fi is wireless – it uses radio waves.']];
+def('net_tf','C5','C4','How the internet works',false,()=>{
+ const rows=sample(NTF,4).map(x=>({html:x[0],ans:x[1],w:x[2]}));
+ return {type:'table',prompt:'Tick <b>true</b> or <b>false</b> for each statement.',cols:['True','False'],rows,hint:'Remember: the internet is the network; the web is one service on it.',why:rows.map(r=>`${r.html} → <b>${r.ans?'false':'true'}</b>. ${r.w}`),ansText:'see the ticks above'};
+});
+def('net_url','C5','C4','Web addresses (URLs)',false,()=>{
+ const dom=pick(['www.spacemuseum.org.uk','www.zooclub.co.uk','www.fairfieldprimary.sch.uk','www.dinodig.com']);const path=pick(['/planets/mars.html','/animals/tigers.html','/news/sports-day.html','/games/quiz.html']);
+ const chunks=['https://',dom,path];const ask=pick([[0,'protocol','tells the browser how to talk to the server – https means the connection is secure (encrypted)'],[1,'domain name','is the name of the website (the server it lives on)'],[2,'path to the page','says which page or file on that website you want']]);
+ return {type:'chunks',prompt:`Tap the part of this URL that is the <b>${ask[1]}</b>.`,chunks,answer:ask[0],tapNote:'Tap one part of the web address.',hint:'A URL has three main parts: how to connect, which website, which page.',
+  why:['A <b>URL</b> is the address of a web page.','<b>https://</b> is the protocol, <b>'+dom+'</b> is the domain name, <b>'+path+'</b> is the path to the page.',`The ${ask[1]} ${ask[2]}.`],ansText:chunks[ask[0]]};
+});
+def('net_service','C5','C4','Internet services',true,()=>{
+ const S1=['email','video calling','online games','the World Wide Web','music streaming','online maps'];const not=pick(['a printer cable','a USB memory stick','a calculator app with no connection','a pencil sharpener']);
+ const opts=shuffle([...sample(S1,3),not]);
+ return {type:'tick',prompt:'Which of these is <b>NOT</b> a service that uses the internet?',options:opts,answer:opts.indexOf(not),hint:'Which one works without connecting to the internet at all?',
+  why:['The internet provides many <b>services</b>: the World Wide Web, email, video calls, streaming, online games and more.',`“${not}” doesn’t use the internet.`],ansText:not};
+});
+
+/* ---------- C6 Search & evaluating content ---------- */
+const SRCH=[['how tall the tallest giraffe ever was','tallest giraffe height record','animals','tall','giraffes are cute'],['what time the museum opens on Saturday','Riverside Museum Saturday opening times','museum','opening','things to do'],['how many moons Jupiter has','number of moons of Jupiter','planets','space facts','moon'],['the life cycle of a frog','frog life cycle stages','frogs','pond animals','green']];
+def('src_terms','C6','C5','Searching effectively',true,()=>{
+ const s=pick(SRCH);const opts=shuffle(s.slice(1));
+ return {type:'tick',prompt:`You want to find out <b>${s[0]}</b>. Which search would work best?`,options:opts,answer:opts.indexOf(s[1]),hint:'Good searches use a few specific key words.',
+  why:['Search engines match the words you type to pages on the web.','Use <b>specific key words</b> about exactly what you want to find.','Vague words like “'+s[2]+'” give millions of results that don’t answer your question.'],ansText:s[1]};
+});
+def('src_rank','C6','C5','How results are ranked',true,()=>{
+ const t=R(3);let q,right,wr,why;
+ if(t===0){q='How does a search engine decide which results to show first?';right='It ranks pages using things like how well they match your words and how many other sites link to them';wr=['It shows pages in alphabetical order','It always shows the newest page first','It picks results at random'];why='Search engines use algorithms to rank pages: how well the page matches your key words, how many other sites link to it, how popular and trusted it is, and more.';}
+ else if(t===1){q='Some results at the top of a search are labelled “Sponsored” or “Ad”. What does this mean?';right='A company paid for that result to appear near the top';wr=['It is the most accurate result','It was written by the search engine','It is the safest website'];why='Sponsored results are adverts. Companies pay to have them shown, so they are not necessarily the best answer to your question.';}
+ else {q='Why might two people searching for the same words see different results?';right='Search engines can use things like your location and past searches';wr=['The internet changes every second so results are random','One person typed it louder','Search engines only show results to one person at a time'];why='Search engines can personalise results using your location, language and past searches.';}
+ const opts=shuffle([right,...wr]);
+ return {type:'tick',prompt:q,options:opts,answer:opts.indexOf(right),hint:'Search engines use algorithms to choose and order results.',why:[why,'Being a smart searcher means understanding <b>why</b> results are in the order they are.'],ansText:right};
+});
+const RELY=[['the planet Mars','A national space agency’s website about Mars','A blog with no author or date that says Mars is made of cheese','A comment on a video saying “Mars is hot lol”','An advert for a Mars-themed game'],['how to look after a pet rabbit','A website from a vet or animal charity about rabbit care','A random social media post from someone you don’t know','A pop-up advert selling rabbit toys','A joke website about talking rabbits'],['the Great Fire of London','A museum’s website about the Great Fire of London','An anonymous forum post with no sources','A quiz game with no information','A shopping site selling fire-themed T-shirts']];
+def('src_reliable','C6','C5','Evaluating digital content',true,()=>{
+ const r=pick(RELY);const opts=shuffle(r.slice(1));
+ return {type:'tick',prompt:`You are researching <b>${r[0]}</b>. Which source is most likely to be <b>reliable</b>?`,options:opts,answer:opts.indexOf(r[1]),hint:'Who wrote it? Are they an expert? Is it trying to sell you something?',
+  why:['Not everything online is true. Be <b>discerning</b> – think about where information comes from.','Ask: Who made it? Are they experts? Is there an author and date? Is it trying to sell something or make you laugh?','Check facts using more than one trustworthy source.',`So: “${r[1]}”.`],ansText:r[1]};
+});
+def('src_fact','C6','C5','Fact or opinion?',false,()=>{
+ const F=['Mars is the fourth planet from the Sun.','Water freezes at 0°C.','London is the capital city of England.','A spider has eight legs.','The Moon orbits the Earth.'];const O=['Mars is the most beautiful planet.','Pizza is the best food in the world.','Football is more fun than swimming.','Winter is the worst season.','Cats are better pets than dogs.'];
+ const rows=shuffle([...sample(F,2).map(h=>({html:h,ans:0})),...sample(O,2).map(h=>({html:h,ans:1}))]);
+ return {type:'table',prompt:'Is each statement a <b>fact</b> or an <b>opinion</b>?',cols:['Fact','Opinion'],rows,hint:'A fact can be proved true. An opinion is what someone thinks or feels.',why:['A <b>fact</b> can be checked and proved.','An <b>opinion</b> is someone’s view – other people may disagree.','Online, opinions are sometimes written as if they were facts, so read carefully!'],ansText:'see the ticks above'};
+});
+
+/* ---------- C7 Data & software ---------- */
+def('dat_sheet','C7','C6','Spreadsheets',true,()=>{
+ const items=sample(['Apples','Bananas','Pears','Grapes','Plums'],3);const vals=items.map(()=>2+R(19));const sum=Math.random()<.5;
+ const tbl=`<table class="dtab"><tr><th></th><th>A</th><th>B</th></tr><tr><th>1</th><td><b>Fruit</b></td><td><b>Sold</b></td></tr>${items.map((it,i)=>`<tr><th>${i+2}</th><td>${it}</td><td>${vals[i]}</td></tr>`).join('')}<tr><th>5</th><td><b>Total</b></td><td>?</td></tr></table>`;
+ let f,ans,why;if(sum){f='=SUM(B2:B4)';ans=vals[0]+vals[1]+vals[2];why=`SUM(B2:B4) adds every cell from B2 to B4: ${vals.join(' + ')} = ${ans}.`;}else{const [i,j]=sample([0,1,2],2).sort();f=`=B${i+2}+B${j+2}`;ans=vals[i]+vals[j];why=`B${i+2} is ${vals[i]} and B${j+2} is ${vals[j]}. ${vals[i]} + ${vals[j]} = ${ans}.`;}
+ return {type:'type',numeric:true,prompt:`Cell B5 contains the formula <b>${f}</b>. What number will it show?`,stem:tbl,accept:[String(ans)],hint:'Find each cell using its column letter and row number.',
+  why:['A spreadsheet is made of <b>cells</b>, named by column letter and row number (e.g. B3).','A <b>formula</b> starts with = and calculates using the values in other cells – and updates automatically if they change.',why],ansText:String(ans)};
+});
+def('dat_chart','C7','C6','Presenting data',true,()=>{
+ const c=pick([['how the temperature changed during one day','line graph','A line graph shows how something changes over time.'],['the favourite fruits of everyone in the class','bar chart','A bar chart compares amounts in different groups.'],['how a whole day is split between sleep, school, play and meals','pie chart','A pie chart shows how a whole is split into parts.'],['how tall a sunflower grew each week for 8 weeks','line graph','A line graph shows how something changes over time.'],['how many pupils walk, cycle, bus or drive to school','bar chart','A bar chart compares amounts in different groups.']]);
+ const opts=shuffle(['line graph','bar chart','pie chart','table of names']);
+ return {type:'tick',prompt:`Which is the best way to present data about <b>${c[0]}</b>?`,options:opts,answer:opts.indexOf(c[1]),hint:'Is it change over time, comparing groups, or parts of a whole?',why:[c[2],'Choosing the right chart makes data easy to understand.'],ansText:c[1]};
+});
+const PETS=['Rex','Fluffy','Nibbles','Goldie','Spike','Coco','Bubbles','Shadow'];
+def('dat_query','C7','C6','Searching a database',true,()=>{
+ for(let t=0;t<100;t++){const names=sample(PETS,5);const recs=names.map(n=>({n,type:pick(['dog','cat','rabbit','fish','hamster']),age:1+R(9)}));
+  const qt=pick(recs).type;const ag=2+R(6);const matches=recs.filter(r=>r.type===qt&&r.age>ag);if(matches.length!==1)continue;
+  const right=matches[0].n;const opts=shuffle(names.filter(x=>x!==right).slice(0,3).concat(right));
+  return {type:'tick',prompt:`Which record matches this search? <b>type = ${qt} AND age &gt; ${ag}</b>`,stem:dtab(['Name','Type','Age'],recs.map(r=>[r.n,r.type,r.age])),options:opts,answer:opts.indexOf(right),hint:'AND means BOTH parts must be true.',
+   why:['Each row is a <b>record</b>; each column (Name, Type, Age) is a <b>field</b>.','<b>AND</b> means both conditions must be true.',`Records with type = ${qt}: ${recs.filter(r=>r.type===qt).map(r=>`${r.n} (age ${r.age})`).join(', ')}.`,`Only ${right} is also older than ${ag}.`],ansText:right};}
+});
+def('dat_terms','C7','C6','Database words',false,()=>{
+ const T=[['record','all the information about one item (one row)'],['field','one category of information, e.g. “age” (a column)'],['sort','put the records in order, e.g. A–Z or smallest to largest'],['filter','show only the records that match a rule'],['data','facts and figures collected about something']];
+ const ts=sample(T,4);const right=shuffle(ts.map(t=>cap(t[1])));
+ return {type:'match',prompt:'Match each database word to its meaning.',left:ts.map(t=>t[0]),right,answer:ts.map(t=>right.indexOf(cap(t[1]))),hint:'Think of a table: rows are records, columns are fields.',why:ts.map(t=>`<b>${t[0]}</b> → ${t[1]}`),ansText:'see the matches above'};
+});
+def('sw_choose','C7','C6','Choosing software',true,()=>{
+ const t=pick([['write a letter to the head teacher','word processor'],['work out how much the class trip will cost','spreadsheet'],['make slides to show the class','presentation software'],['edit a photo and remove red-eye','image editor'],['build an interactive game','programming software (like Scratch)'],['record and edit a class podcast','audio editor']]);
+ const all=['word processor','spreadsheet','presentation software','image editor','programming software (like Scratch)','audio editor'];const opts=shuffle([t[1],...sample(all.filter(x=>x!==t[1]),3)]);
+ return {type:'tick',prompt:`Which software would be best to <b>${t[0]}</b>?`,options:opts,answer:opts.indexOf(t[1]),hint:'Each kind of software is designed for a particular job.',why:['Different software is designed for different goals – choosing the right tool is a key computing skill.',`To ${t[0]}, a <b>${t[1]}</b> is the best choice.`],ansText:t[1]};
+});
+const KEYT={q:'Does it have legs?',y:{q:'Does it have more than 4 legs?',y:{q:'Does it have 8 legs?',y:'spider',n:'beetle'},n:{q:'Can it fly?',y:'parrot',n:'dog'}},n:{q:'Does it live in water?',y:{q:'Does it have a shell?',y:'crab',n:'goldfish'},n:'snake'}};
+function keyHTML(k){if(typeof k==='string')return `<span class="ka">${k}</span>`;return `<span class="kq">${k.q}</span><ul><li>Yes → ${keyHTML(k.y)}</li><li>No → ${keyHTML(k.n)}</li></ul>`;}
+function keyLeaves(k,path=[]){if(typeof k==='string')return [[k,path]];return [...keyLeaves(k.y,[...path,[k.q,'yes']]),...keyLeaves(k.n,[...path,[k.q,'no']])];}
+def('dat_tree','C7','C6','Branching databases',true,()=>{
+ const leaves=keyLeaves(KEYT).filter(l=>l[0]!=='crab');const L=pick(leaves);const opts=shuffle([L[0],...sample(leaves.filter(x=>x!==L).map(x=>x[0]),3)]);
+ return {type:'tick',prompt:`Use the branching database. Which animal answers: ${L[1].map(p=>`<i>${p[0]}</i> <b>${p[1]}</b>`).join(', ')}?`,stem:`<div class="key">${keyHTML(KEYT)}</div>`,options:opts,answer:opts.indexOf(L[0]),hint:'Start at the top question and follow the yes/no branches.',
+  why:['A <b>branching database</b> sorts things using yes/no questions.',...L[1].map(p=>`${p[0]} → ${p[1]}`),`You arrive at: <b>${L[0]}</b>.`],ansText:L[0]};
+});
+
+/* ---------- C8 Online safety ---------- */
+def('safe_pwd','C8','C7','Strong passwords',true,()=>{
+ const n=nm()[0];const w=()=>pick(['Tiger','Moon','Purple','Rocket','Cactus','Jelly','Comet']);const strong=`${w()}!${w()}${2+R(7)}$${w()}`;
+ const opts=shuffle([strong,'password123',`${n}${2010+R(6)}`,'abcdef']);
+ return {type:'tick',prompt:'Which is the <b>strongest</b> password?',options:opts,answer:opts.indexOf(strong),hint:'Long, unusual, and a mix of capitals, numbers and symbols.',
+  why:['A strong password is <b>long</b> and hard to guess, with a mix of capital letters, lower-case letters, numbers and symbols.','Avoid names, birthdays and common words like “password”.',`“${strong}” is long, mixed and unpredictable.`,'Never share your password – except with a trusted adult like a parent.'],ansText:strong};
+});
+def('safe_share','C8','C7','Personal information',false,()=>{
+ const OK=['your favourite colour','your favourite book','your favourite animal','which football team you like'];const NO=['your home address','your password','your phone number','which school you go to','your full name and birthday'];
+ const rows=shuffle([...sample(OK,2).map(h=>({html:cap(h),ans:0})),...sample(NO,2).map(h=>({html:cap(h),ans:1}))]);
+ return {type:'table',prompt:'You’re playing an online game. Someone you don’t know asks you questions. Tick to show what is <b>OK to share</b> and what to <b>keep private</b>.',cols:['OK to share','Keep private'],rows,hint:'Could the information help a stranger find you, contact you or get into your accounts?',
+  why:['<b>Personal information</b> could help someone find you, contact you or pretend to be you.','Keep private: address, phone number, school, passwords, full name and birthday, and photos that show where you live.','Things like your favourite colour or book don’t identify you.'],ansText:'see the ticks above'};
+});
+const REPORT=[['Someone you only know from an online game asks to meet you in the park.','Say no and tell a trusted adult straight away'],['You see a video online that makes you feel upset or scared.','Close it and tell a trusted adult'],['Someone in a group chat keeps sending unkind messages about your friend.','Don’t reply, save the messages and tell a trusted adult'],['A message says “You’ve won a free tablet! Click here and type your password.”','Don’t click it – it’s a scam. Tell a trusted adult'],['A stranger online asks you to keep your chats a secret.','Tell a trusted adult – safe people don’t ask you to keep secrets']];
+def('safe_report','C8','C7','Reporting concerns',true,()=>{
+ const r=pick(REPORT);const wr=['Keep it a secret so you don’t get in trouble','Reply and ask them lots of questions','Forward it to all your friends','Ignore it and keep using the app as normal'];const opts=shuffle([r[1],...sample(wr,3)]);
+ return {type:'tick',prompt:`<b>${r[0]}</b> What should you do?`,options:opts,answer:opts.indexOf(r[1]),hint:'Who could help you?',
+  why:['If something online worries you or someone asks you to do something that feels wrong, <b>tell a trusted adult</b> – a parent, carer or teacher.','You can also use the <b>report</b> button on most apps and websites, or contact Childline (0800 1111).','You will not be in trouble for telling.'],ansText:r[1]};
+});
+const SMART=[['S – Safe','Keep your personal information safe'],['M – Meet','Never meet someone you only know online without a trusted adult'],['A – Accepting','Think before accepting files, messages or friend requests from people you don’t know'],['R – Reliable','Remember that information online might not be true'],['T – Tell','Tell a trusted adult if anything online worries you']];
+def('safe_smart','C8','C7','SMART rules',false,()=>{
+ const ts=sample(SMART,4);const right=shuffle(ts.map(t=>t[1]));
+ return {type:'match',prompt:'Match each letter of the <b>SMART</b> online safety rules to what it means.',left:ts.map(t=>t[0]),right,answer:ts.map(t=>right.indexOf(t[1])),hint:'The first letter of each word is a clue!',why:SMART.map(t=>`<b>${t[0]}</b>: ${t[1]}`),ansText:'see the matches above'};
+});
+def('safe_footprint','C8','C7','Digital footprint & respect',true,()=>{
+ const t=R(3);let q,right,wr,why;
+ if(t===0){q='What is a <b>digital footprint</b>?';right='The trail of information you leave online, like posts, photos and comments';wr=['A picture of your foot saved on a computer','The number of steps a fitness watch counts','A virus that follows you around the internet'];why='Your digital footprint is everything you post, share and do online. It can stay there for a very long time, so think before you post.';}
+ else if(t===1){q='Before you post a photo of your friend online, what should you do?';right='Ask your friend if they are happy for you to post it';wr=['Post it – it’s your photo','Add a funny caption first','Post it and delete it later if they complain'];why='Being <b>respectful</b> online means asking permission before sharing pictures or information about other people.';}
+ else {q='Which is a <b>respectful</b> way to behave online?';right='Writing kind comments and thinking about how others will feel';wr=['Joining in when others are being unkind','Sharing someone’s secret in a group chat','Using CAPITAL LETTERS to shout at people'];why='Treat people online the way you would face to face. If you wouldn’t say it in person, don’t type it.';}
+ const opts=shuffle([right,...wr]);
+ return {type:'tick',prompt:q,options:opts,answer:opts.indexOf(right),hint:'Think about how your actions online affect you and other people.',why:[why],ansText:right};
+});
+
+/* ---------- config ---------- */
+const DOMS={
+ C1:{name:'Algorithm Academy',tab:'C1',icon:'🧭',desc:'Algorithms, decomposition and following instructions.'},
+ C2:{name:'Loop & Choose Lab',tab:'C2',icon:'🔁',desc:'Sequence, selection (if… else) and repetition (loops).'},
+ C3:{name:'Variable Vault',tab:'C3',icon:'📦',desc:'Variables, inputs, outputs and controlling physical systems.'},
+ C4:{name:'Bug Hunt',tab:'C4',icon:'🐞',desc:'Debugging and using logical reasoning to predict programs.'},
+ C5:{name:'Network Nexus',tab:'C5',icon:'🌐',desc:'The internet, the World Wide Web, servers, routers and URLs.'},
+ C6:{name:'Search Station',tab:'C6',icon:'🔎',desc:'Searching well, how results are ranked, and spotting reliable info.'},
+ C7:{name:'Data Dock',tab:'C7',icon:'📊',desc:'Spreadsheets, databases, charts and choosing software.'},
+ C8:{name:'Safety Shield',tab:'C8',icon:'🛡️',desc:'Using technology safely, respectfully and responsibly.'}
+};
+const GLOSS={
+ C1:[['Algorithm','Precise step-by-step instructions to solve a problem.','A recipe; directions to the park',['al_order','al_term']],['Decomposition','Breaking a big problem into smaller parts.','Game → player, enemies, score, levels',['al_decomp']],['Tracing','Following an algorithm step by step to see what it does.','Following robot instructions on a grid',['al_grid']]],
+ C2:[['Sequence','Instructions carried out in order.','move, turn, move',['con_table']],['Selection','Using a condition to decide what happens.','if score > 10 then say “Win!”',['sel_if','sel_cond']],['Repetition','Repeating instructions with a loop.','repeat 4: move 50, turn 90',['rep_total','rep_shape']]],
+ C3:[['Variable','A named store for a value that can change.','score, lives, timer',['var_trace']],['Input & output','Input goes in to a computer; output comes out.','keyboard (input), speaker (output)',['io_table']],['Physical systems','Sensors (input) → program → motors, lights, buzzers (output).','Night light: light sensor → LED',['io_system']]],
+ C4:[['Bug','An error in an algorithm or program.','repeat 3 instead of repeat 4',['dbg_square','dbg_count']],['Debugging','Finding and fixing bugs, often by tracing.','Checking each block in order',['dbg_square','dbg_count']],['Logical reasoning','Working out what a program will do before running it.','Which blocks are inside the loop?',['dbg_predict']]],
+ C5:[['Internet','A worldwide network of networks.','Connects computers all over the world',['net_match','net_tf']],['World Wide Web','Web pages linked together, viewed in a browser – one service on the internet.','www.example.org',['net_tf','net_service']],['URL','The address of a web page.','https:// + domain + path',['net_url']],['Server & router','Servers store and send pages; routers direct data.','A school’s web server',['net_tick','net_match']]],
+ C6:[['Key words','Specific words that make a search work well.','frog life cycle stages',['src_terms']],['Ranking','How a search engine orders results; ads are paid for.','“Sponsored” results',['src_rank']],['Reliability','Whether information can be trusted.','Expert, author, date, not selling',['src_reliable','src_fact']]],
+ C7:[['Spreadsheet','Cells in rows and columns; formulas calculate.','=SUM(B2:B4)',['dat_sheet']],['Database','Records (rows) and fields (columns) you can search.','type = cat AND age > 3',['dat_query','dat_terms']],['Branching database','Sorts items with yes/no questions.','Does it have legs?',['dat_tree']],['Presenting data','Choosing the right chart.','line graph for change over time',['dat_chart','sw_choose']]],
+ C8:[['Personal information','Information that could identify or locate you.','address, school, password',['safe_share','safe_pwd']],['Report concerns','Tell a trusted adult or use the report button.','Childline 0800 1111',['safe_report','safe_smart']],['Digital footprint','The trail you leave online.','posts, photos, comments',['safe_footprint']]]
+};
+const BOT=(sz=64)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 64 64" aria-hidden="true"><line x1="32" y1="4" x2="32" y2="12" stroke="#c9d3ee" stroke-width="3"/><circle cx="32" cy="5" r="4" fill="#ff5c7a"/><rect x="12" y="12" width="40" height="30" rx="9" fill="#38d39f"/><rect x="18" y="18" width="28" height="16" rx="6" fill="#0d2b3e"/><circle cx="26" cy="26" r="4" fill="#7ff5ff"/><circle cx="38" cy="26" r="4" fill="#7ff5ff"/><rect x="5" y="22" width="7" height="12" rx="3" fill="#2aa77d"/><rect x="52" y="22" width="7" height="12" rx="3" fill="#2aa77d"/><rect x="18" y="44" width="28" height="16" rx="5" fill="#4c97ff"/><rect x="24" y="48" width="6" height="6" rx="1" fill="#ffd34d"/><rect x="34" y="48" width="6" height="6" rx="1" fill="#ff8c1a"/></svg>`;
+const CFG={key:'byteSquad_v1',title:'Byte Squad',sub:'KS2 Computing Missions',mascot:BOT,heroTab:'MISSION CONTROL',
+ welcome:r=>`<b>Welcome aboard Station Kilobyte, ${r}!</b> I’m Byte. Glitches are popping up all over the station – algorithms, loops, networks, data and online safety. Solve each one and the case notes will show you <i>why</i> the answer works.`,
+ casesHead:'🛰️ Missions – one for each part of the KS2 computing curriculum',testHead:'🧪 Test yourself',
+ patrol:{icon:'🚀',title:'Mixed Mission',desc:'12 questions from every area of the computing curriculum.'},
+ mocks:[{icon:'📝',title:'Quick Check',desc:'16 questions · 15 minutes · no hints. Marked at the end with full explanations.',n:16,mins:15,tab:'TEST',trophy:'mockhalf'},{icon:'🏁',title:'End-of-KS2 Challenge',desc:'32 questions · 30 minutes, covering all 8 missions.',n:32,mins:30,tab:'TEST',trophy:'mockfull'}],
+ rapid:{icon:'⚡',title:'Speed Run'},cold:{icon:'🐛',title:'Glitch Log',desc:'Skills that need another go. Fix them to clear the log!',empty:'No glitches logged – all systems go!'},
+ locker:{icon:'📟',title:'Code Book'},hint:{icon:'💡',name:'Hint'},whyTitle:'🧠 SYSTEM NOTES – why is this the answer?',
+ failStamp:'GLITCH LOGGED',failMsg:'This one’s gone into the Glitch Log – you can fix it later.',
+ stampsOk:['FIXED','DEBUGGED','ONLINE','CORRECT'],quipsOk:['Bug squashed!','Beep boop – correct!','Code compiled perfectly!','System online!','Flawless logic!','You’re a natural coder!'],quipsBad:['Error 404: answer not found… try again!','Hmm, that didn’t compute.','A glitch in the logic – look again.','Not quite, coder.'],
+ words:{next:'Next glitch →',close:'Finish mission →',closedTitle:'🚀 MISSION COMPLETE',reportTitle:'📟 Mission report',verdict:'📝 Your results',home:'Back to Mission Control',backHome:'← Mission Control'},
+ endMsgs:['This mission needs another go. Read the system notes and try again – every coder hits bugs!','A good start – some glitches slipped through. Check your Glitch Log!','Solid work. A couple of bugs left to squash.','Outstanding! Station Kilobyte is running perfectly.'],
+ mockNote:'There is no SATs test for computing – your teacher assesses it during the year. Use this to check what you know and find the areas to practise.',
+ specialDom:'C8',confetti:['#38d39f','#4c97ff','#ffd34d','#ff5c7a','#9966ff'],
+ ranks:[[0,'Trainee Tech'],[100,'Bug Spotter'],[300,'Junior Coder'],[600,'Coder'],[1000,'Senior Coder'],[1600,'Systems Engineer'],[2500,'Chief Engineer'],[4000,'Station Commander']],
+ trophies:[['first','🚀','Lift Off','Finish any mission'],['perfect','💎','Zero Bugs','Get 10/10 in a mission'],['allcases','🛰️','Full Station Tour','Finish all eight missions'],['allstars','⭐','Station Commander’s Star','3 stars on every mission'],['special','🛡️','Safety Champion','3 stars on Safety Shield'],['streak5','🔥','On a Roll','5 correct in a row'],['streak10','🌟','Infinite Loop','10 correct in a row'],['sharp','🧠','Pure Logic','8+ in a mission with no hints'],['cold3','🐛','Exterminator','Fix 3 logged glitches'],['mockhalf','📝','Quick Checker','Finish a Quick Check'],['mockfull','🏁','Challenge Complete','Finish the End-of-KS2 Challenge'],['mock80','🏆','Top of the Class','Score 80%+ in a test'],['rapid10','⚡','Fast Processor','10+ in a Speed Run'],['rapid20','🌩️','Supercomputer','20+ in a Speed Run'],['curious','🤔','Curious Coder','Open 15 “Why?” explanations'],['locker','📟','Code Book Expert','Drill 5 terms from the Code Book']],
+ briefDesc:'What KS2 computing covers and how it is assessed.',
+ briefing:()=>`<h2>📋 Briefing: KS2 Computing</h2>
+ <p><b>Good news: there is no SATs paper for computing!</b> Your teacher assesses your computing during Years 3–6, using the national curriculum. This site helps you practise everything it covers, in the style of SATs questions, so you’re ready for anything.</p>
+ <h3>What the KS2 computing curriculum says you should be able to do</h3>
+ <div class="gloss">
+ <div class="gitem"><b>🧭🐞 Design, write and debug programs</b><div class="ex">…including controlling or simulating physical systems, and solving problems by breaking them into smaller parts (decomposition).</div><button class="btn sec" data-try="al_decomp">Try one</button></div>
+ <div class="gitem"><b>🔁📦 Sequence, selection, repetition and variables</b><div class="ex">…and work with different kinds of input and output.</div><button class="btn sec" data-try="sel_if">Try one</button></div>
+ <div class="gitem"><b>🐞 Logical reasoning</b><div class="ex">Explain how simple algorithms work, and find and correct errors in algorithms and programs.</div><button class="btn sec" data-try="dbg_count">Try one</button></div>
+ <div class="gitem"><b>🌐 Networks and the internet</b><div class="ex">Understand computer networks, including the internet, the services they provide (like the World Wide Web) and how they help us communicate and collaborate.</div><button class="btn sec" data-try="net_tf">Try one</button></div>
+ <div class="gitem"><b>🔎 Search technologies</b><div class="ex">Search effectively, know how results are selected and ranked, and be careful when judging what you find.</div><button class="btn sec" data-try="src_reliable">Try one</button></div>
+ <div class="gitem"><b>📊 Software, systems and data</b><div class="ex">Choose and combine software to create programs and content, including collecting, analysing and presenting data.</div><button class="btn sec" data-try="dat_query">Try one</button></div>
+ <div class="gitem"><b>🛡️ Using technology safely</b><div class="ex">Be safe, respectful and responsible; know what is and isn’t acceptable behaviour; and know ways to report concerns.</div><button class="btn sec" data-try="safe_report">Try one</button></div></div>
+ <h3>Question types you’ll meet</h3><p><span class="tag-type">Tick one</span><span class="tag-type">Tick-box tables</span><span class="tag-type">Match pairs</span><span class="tag-type">Put steps in order</span><span class="tag-type">Find the bug</span><span class="tag-type">Work out a number</span></p>
+ <h3>Top tips</h3><ol><li><b>Trace it!</b> Follow code one block at a time and keep track of variables on paper.</li><li><b>Inside or outside?</b> Only blocks <i>inside</i> a loop are repeated.</li><li><b>True or false?</b> An “if” runs its “then” part only when the condition is true.</li><li><b>Robot’s view.</b> On grid puzzles, turns are the robot’s left and right, not yours.</li><li><b>Stop and tell.</b> For online safety, the answer is almost always: tell a trusted adult.</li></ol>
+ <p class="small">The government plans a new national curriculum for first teaching from September 2028. Until then, this curriculum stays in place.</p>`
+};
+/* ============ state ============ */
+const KEY=CFG.key;
+const blankState=()=>({points:0,stars:{},cases:{},cold:{},coldCleared:0,trophies:{},rapidBest:0,whys:0,bestStreak:0,drills:[],mocks:0,sound:true});
+let S=blankState();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)S=Object.assign(S,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const RANKS=CFG.ranks;
+const rank=()=>{let r=RANKS[0];RANKS.forEach(x=>{if(S.points>=x[0])r=x;});return r;};
+const nextRank=()=>RANKS.find(x=>x[0]>S.points);
+const TROPHIES=CFG.trophies;
+function award(id){if(S.trophies[id])return;const t=TROPHIES.find(x=>x[0]===id);if(!t)return;S.trophies[id]=Date.now();save();toast(`<span style="font-size:32px">${t[1]}</span><div><b>Trophy unlocked!</b><br>${t[2]}</div>`);sfx('trophy');confetti();}
+
+/* ============ sound & fx ============ */
+let AC=null;
+function sfx(k){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const seq={good:[[660,.08],[880,.12]],bad:[[220,.18]],trophy:[[523,.1],[659,.1],[784,.1],[1046,.2]],tick:[[500,.03]],stamp:[[140,.1]]}[k]||[];let t=AC.currentTime;seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=k==='bad'||k==='stamp'?'square':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);t+=d;});}catch(e){}}
+function toast(html){const d=document.createElement('div');d.className='toast';d.innerHTML=html;document.body.appendChild(d);setTimeout(()=>d.remove(),3200);}
+function flash(c){const d=document.createElement('div');d.className='flash';d.style.background=c;document.body.appendChild(d);setTimeout(()=>d.remove(),500);}
+const cv=document.getElementById('fx');let parts=[],raf=null;
+function confetti(){const W=cv.width=innerWidth,H=cv.height=innerHeight;for(let i=0;i<120;i++)parts.push({x:W/2,y:H/3,vx:(Math.random()-.5)*14,vy:Math.random()*-12-2,c:pick(CFG.confetti),s:4+Math.random()*6,r:Math.random()*6,life:90+R(40)});if(!raf)loop();}
+function loop(){const x=cv.getContext('2d');x.clearRect(0,0,cv.width,cv.height);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.r+=.2;p.life--;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore();});parts=parts.filter(p=>p.life>0&&p.y<cv.height+20);raf=parts.length?requestAnimationFrame(loop):(x.clearRect(0,0,cv.width,cv.height),null);}
+const MASCOT=CFG.mascot;
+
+/* ============ question rendering ============ */
+const app=document.getElementById('app');
+let Q=null;
+const PALETTE_COL=['#2f6fb5','#c0392b','#25854f','#b8860b','#7d3c98','#16a085'];
+function joinHTML(toks,fn){let h='';toks.forEach((t,i)=>{const sp=i>0&&!NOSPACE_BEFORE.test(t)&&!NOSPACE_AFTER.test(toks[i-1])?' ':'';h+=sp+fn(t,i);});return h;}
+function qBody(q){
+ let h=`<div class="qmeta"><span>${esc(q.code)} · ${esc(q.skill)}</span><span>${q.marks} mark</span></div><p class="prompt">${q.prompt}</p>`;
+ if(q.note)h+=`<p class="note">${q.note}</p>`;
+ if(q.stem)h+=`<div class="stem">${q.stem}</div>`;
+ const u=q.ui;
+ if(q.type==='tick'){h+=`<div class="opts">${q.options.map((o,i)=>`<button class="opt${u.sel===i?' sel':''}" data-o="${i}"><span class="box"></span><span>${o}</span></button>`).join('')}</div>`;}
+ else if(q.type==='circle'){h+=`<div class="stem">${joinHTML(q.tokens,(t,i)=>/\w/.test(t)?`<button class="tok click${u.sel.includes(i)?' sel':''}" data-t="${i}">${esc(t)}</button>`:`<span class="tok p">${esc(t)}</span>`)}</div>`;}
+ else if(q.type==='chunks'){h+=q.vertical?`<div class="stem vlist">${q.chunks.map((c,i)=>`<button class="chunk${u.sel===i?' sel':''}" data-c="${i}">${c}</button>`).join('')}</div><p class="note">${q.tapNote||'Tap the part you want to choose.'}</p>`:`<div class="stem">${q.chunks.map((c,i)=>`<button class="chunk${u.sel===i?' sel':''}" data-c="${i}">${c}</button>`).join(' ')}</div><p class="note">${q.tapNote||'Tap a part to underline it.'}</p>`;}
+ else if(q.type==='table'){h+=`<div style="overflow-x:auto"><table class="tt"><tr><th></th>${q.cols.map(c=>`<th>${c}</th>`).join('')}</tr>${q.rows.map((r,ri)=>`<tr data-r="${ri}"><td>${r.html}</td>${q.cols.map((c,ci)=>`<td><button class="cell${u.sel[ri]===ci?' sel':''}" data-cell="${ri},${ci}" aria-label="${strip(c)}"></button></td>`).join('')}</tr>`).join('')}</table></div>`;}
+ else if(q.type==='match'){h+=`<div class="match"><div class="mcol">${q.left.map((l,i)=>`<button class="mitem${u.act===i?' act':''}" data-l="${i}">${l}${u.pairs[i]!=null?`<span class="tag" style="background:${PALETTE_COL[i]}">${i+1}</span>`:''}</button>`).join('')}</div><div class="mcol">${q.right.map((r,j)=>{const li=u.pairs.indexOf(j);return `<button class="mitem" data-rr="${j}">${r}${li>=0?`<span class="tag" style="background:${PALETTE_COL[li]}">${li+1}</span>`:''}</button>`;}).join('')}</div></div><p class="note">Tap an item on the left, then its partner on the right.</p>`;}
+ else if(q.type==='type'){h+=`<input class="typed" id="typed" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.numeric?'inputmode="decimal"':''} placeholder="${q.placeholder||''}" value="${esc(u.val||'')}">${q.unit?` <b>${q.unit}</b>`:''}`;}
+ else if(q.type==='gaps'){h+=`<div class="stem gapline">${q.words.map((w,i)=>{let s=`<span>${esc(w)}</span>`;if(i<q.words.length-1)s+=` <button class="gap${u.sel[i]?' filled':''}" data-g="${i}">${u.sel[i]?esc(u.sel[i]):'&nbsp;'}</button> `;return s;}).join('')}</div><div class="palette">Mark: ${q.palette.map(p=>`<button class="pbtn${u.mark===p?' on':''}" data-p="${esc(p)}">${esc(p)}</button>`).join('')} <span>then tap a gap.</span></div>`;}
+ else if(q.type==='order'){h+=`<div class="ordslots">${q.items.map((_,k)=>{const it=u.sel[k];return `<button class="oslot${it!=null?' filled':''}" data-os="${k}"><span class="onum">${k+1}</span><span>${it!=null?q.items[it]:'<span class="small">tap an item below</span>'}</span></button>`;}).join('')}</div><div class="opool">${q.shuf.map(i=>u.sel.includes(i)?'':`<button class="oitem" data-oi="${i}">${q.items[i]}</button>`).join('')}</div><p class="note">Tap the items in order. Tap a numbered box to take an item back out.</p>`;}
+ return h;
+}
+function initUI(q){q.ui={sel:q.type==='tick'||q.type==='chunks'?null:q.type==='table'?q.rows.map(()=>null):q.type==='gaps'?{}:[],act:null,pairs:q.type==='match'?q.left.map(()=>null):null,val:'',mark:q.palette?q.palette[0]:null};
+ if(q.type==='order'&&!q.shuf){let s;do{s=shuffle(q.items.map((_,i)=>i));}while(s.every((v,i)=>v===i));q.shuf=s;}}
+function answered(q){const u=q.ui;switch(q.type){case 'tick':case 'chunks':return u.sel!=null;case 'circle':return u.sel.length>0;case 'table':return u.sel.every(x=>x!=null);case 'match':return u.pairs.every(x=>x!=null);case 'type':return norm(u.val).length>0;case 'gaps':return Object.keys(u.sel).length>0;case 'order':return u.sel.length===q.items.length;}}
+const numEq=(a,b)=>{const x=parseFloat(String(a).replace(/[,\s]/g,'')),y=parseFloat(String(b).replace(/[,\s]/g,''));return !isNaN(x)&&!isNaN(y)&&Math.abs(x-y)<1e-9&&/^-?[\d.,\s]+$/.test(String(a).trim());};
+function isRight(q){const u=q.ui;switch(q.type){
+ case 'tick':case 'chunks':return u.sel===q.answer;
+ case 'circle':{const a=[...q.answer].sort().join(),b=[...u.sel].sort().join();return a===b;}
+ case 'table':return q.rows.every((r,i)=>u.sel[i]===r.ans);
+ case 'match':return q.answer.every((a,i)=>u.pairs[i]===a);
+ case 'type':return q.accept.some(a=>q.numeric?numEq(u.val,a):norm(a)===norm(u.val));
+ case 'gaps':if(q.check)return q.check(u.sel);{const k1=Object.keys(u.sel).sort().join(),k2=Object.keys(q.answer).sort().join();return k1===k2&&Object.keys(q.answer).every(k=>u.sel[k]===q.answer[k]);}
+ case 'order':return u.sel.length===q.items.length&&u.sel.every((v,i)=>v===i);
+}}
+function reveal(q,root){const u=q.ui;
+ if(q.type==='tick'){root.querySelectorAll('.opt').forEach((b,i)=>{if(i===q.answer)b.classList.add('right');else if(i===u.sel)b.classList.add('wrong');});}
+ if(q.type==='chunks'){root.querySelectorAll('.chunk').forEach((b,i)=>{if(i===q.answer)b.classList.add('right');else if(i===u.sel)b.classList.add('wrong');});}
+ if(q.type==='circle'){root.querySelectorAll('.tok.click').forEach(b=>{const i=+b.dataset.t;const inA=q.answer.includes(i),inS=u.sel.includes(i);b.classList.remove('sel');if(inA&&inS)b.classList.add('right');else if(inA)b.classList.add('miss');else if(inS)b.classList.add('wrong');});}
+ if(q.type==='table'){q.rows.forEach((r,ri)=>{const tr=root.querySelector(`tr[data-r="${ri}"]`);tr.classList.add(u.sel[ri]===r.ans?'rowok':'rowbad');tr.querySelector(`[data-cell="${ri},${r.ans}"]`).classList.add('ans');});}
+ if(q.type==='match'){root.querySelectorAll('[data-l]').forEach((b,i)=>b.classList.add(u.pairs[i]===q.answer[i]?'right':'wrong'));}
+ if(q.type==='type'){const el=root.querySelector('#typed');el.classList.add(isRight(q)?'right':'wrong');el.disabled=true;}
+ if(q.type==='gaps'){const ok=isRight(q);root.querySelectorAll('.gap').forEach(b=>{const g=b.dataset.g;if(ok){if(u.sel[g])b.classList.add('right');}else{const want=q.answer[g];const have=u.sel[g];if(want){b.textContent=want;b.classList.add(have===want?'right':'wrong');b.classList.add('filled');}else if(have){b.classList.add('wrong');}}});}
+ if(q.type==='order'){root.querySelectorAll('.oslot').forEach((b,k)=>{b.classList.add(u.sel[k]===k?'right':'wrong');if(u.sel[k]!==k)b.insertAdjacentHTML('beforeend',` <span class="small">→ should be: <b>${q.items[k]}</b></span>`);});}
+ root.querySelectorAll('button.opt,button.tok,button.chunk,button.cell,button.mitem,button.gap,button.pbtn,button.oslot,button.oitem').forEach(b=>b.disabled=true);
+}
+function whyHTML(q,open){return `<div class="why"${open?'':' hidden'} id="whybox"><h4>${CFG.whyTitle}</h4><ol>${q.why.map(w=>`<li>${w}</li>`).join('')}</ol><div class="ans">Answer: ${q.ansText}</div></div>`;}
+function bindQ(root,q,onChange){
+ root.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const u=q.ui;let hit=true;
+  if(b.dataset.o!=null)u.sel=+b.dataset.o;
+  else if(b.dataset.t!=null){const i=+b.dataset.t;u.sel=u.sel.includes(i)?u.sel.filter(x=>x!==i):[...u.sel,i];}
+  else if(b.dataset.c!=null)u.sel=+b.dataset.c;
+  else if(b.dataset.cell){const [r,c]=b.dataset.cell.split(',').map(Number);u.sel[r]=c;}
+  else if(b.dataset.l!=null)u.act=+b.dataset.l;
+  else if(b.dataset.rr!=null){if(u.act==null)return;const j=+b.dataset.rr;u.pairs=u.pairs.map(x=>x===j?null:x);u.pairs[u.act]=j;const nx=u.pairs.indexOf(null);u.act=nx>=0?nx:null;}
+  else if(b.dataset.p!=null)u.mark=b.dataset.p;
+  else if(b.dataset.g!=null){const g=b.dataset.g;if(u.sel[g]===u.mark)delete u.sel[g];else u.sel[g]=u.mark;}
+  else if(b.dataset.oi!=null){u.sel.push(+b.dataset.oi);}
+  else if(b.dataset.os!=null){const k=+b.dataset.os;if(u.sel[k]!=null)u.sel.splice(k,1);}
+  else hit=false;
+  if(hit){sfx('tick');onChange();}
+ };
+ const ti=root.querySelector('#typed');if(ti){ti.oninput=()=>{q.ui.val=ti.value;onChange(true);};ti.onkeydown=e=>{if(e.key==='Enter'){const c=document.getElementById('checkBtn');if(c&&!c.disabled)c.click();}};}
+}
+
+/* ============ sessions ============ */
+const byDom=d=>Object.values(G).filter(g=>g.dom===d).map(g=>g.id);
+function buildList(ids,n){const out=[];let last=null;for(let i=0;i<n;i++){let pool=ids.filter(x=>x!==last);if(!pool.length)pool=ids;const id=pick(pool);out.push(make(id));last=id;}return out;}
+function weightedList(n,W){if(!W){W={};Object.entries(DOMS).forEach(([k,d])=>W[k]=d.weight||1);}const tw=Object.values(W).reduce((a,b)=>a+b,0);const keys=Object.keys(W);const counts={};let tot=0;keys.forEach(d=>{counts[d]=Math.floor(W[d]/tw*n);tot+=counts[d];});
+ const rem=keys.slice().sort((a,b)=>(W[b]/tw*n-counts[b])-(W[a]/tw*n-counts[a]));for(let i=0;tot<n;i++,tot++)counts[rem[i%rem.length]]++;
+ let ids=[];keys.forEach(d=>{const pool=shuffle(byDom(d));for(let i=0;i<counts[d];i++)ids.push(pool[i%pool.length]);});return shuffle(ids).map(make);}
+function start(mode,opts={}){
+ let list,title,timer=null;
+ if(mode==='case'){list=buildList(byDom(opts.dom),10);title=`${DOMS[opts.dom].icon} ${DOMS[opts.dom].name}`;}
+ else if(mode==='patrol'){list=weightedList(12);title=CFG.patrol.icon+' '+CFG.patrol.title;}
+ else if(mode==='cold'){const ids=Object.keys(S.cold).filter(k=>G[k]);list=buildList(ids.length?ids:Object.keys(G),Math.min(8,Math.max(ids.length*2,4)));title=CFG.cold.icon+' '+CFG.cold.title;}
+ else if(mode==='drill'){list=buildList(opts.ids,5);title=`🧰 Drill: ${opts.term}`;if(!S.drills.includes(opts.term)){S.drills.push(opts.term);save();if(S.drills.length>=5)award('locker');}}
+ else if(mode==='mock'){const m=CFG.mocks[opts.m];list=weightedList(m.n,m.weights);title=m.icon+' '+m.title;timer=m.mins*60;}
+ else if(mode==='rapid'){list=[];title=CFG.rapid.icon+' '+CFG.rapid.title;timer=90;}
+ Q={mode,opts,list,i:0,title,res:[],streak:0,pts:0,hintsUsed:0,timer,ended:false};
+ list.forEach(initUI);
+ if(mode==='rapid')nextRapid();
+ if(timer){clearInterval(window._tm);window._tm=setInterval(tick,1000);}
+ renderQ();window.scrollTo(0,0);
+}
+function nextRapid(){const ids=Object.values(G).filter(g=>g.fast).map(g=>g.id);const q=make(pick(ids));initUI(q);Q.list.push(q);Q.i=Q.list.length-1;}
+function tick(){if(!Q||Q.ended){clearInterval(window._tm);return;}Q.timer--;const el=document.getElementById('timer');if(el){el.textContent=fmt(Q.timer);el.classList.toggle('low',Q.timer<=(Q.mode==='rapid'?10:120));}if(Q.timer<=0){clearInterval(window._tm);finish();}}
+const fmt=s=>`${Math.floor(Math.max(0,s)/60)}:${String(Math.max(0,s)%60).padStart(2,'0')}`;
+function renderQ(){
+ const q=Q.list[Q.i];q.attempt=q.attempt||0;
+ const rapid=Q.mode==='rapid',mock=Q.mode==='mock';
+ const dots=rapid?`<span class="rapidscore">${Q.pts}</span>`:`<div class="dots">${Q.list.map((x,i)=>{const r=Q.res[i];return `<span class="dot${r?(r.ok?(r.full?' ok':' half'):' bad'):''}${i===Q.i?' cur':''}"></span>`;}).join('')}</div>`;
+ app.innerHTML=`${topbar()}<div class="qbar"><span class="ttl">${Q.title}${rapid?'':` · ${Q.i+1}/${Q.list.length}`}</span>${dots}${Q.timer!=null?`<span class="timer" id="timer">${fmt(Q.timer)}</span>`:''}${!rapid&&!mock&&Q.streak>=3?`<span class="pill">🔥 ${Q.streak} in a row</span>`:''}<button class="iconbtn" id="quit">${mock?'✕ Stop & mark':rapid?'✕ Stop':'✕ Leave'}</button></div>
+ <div class="qcard" id="qc">${qBody(q)}<div id="fbarea"></div><div class="actions" id="acts"></div></div>`;
+ document.getElementById('quit').onclick=()=>{const qb=document.getElementById('quit');if(mock&&!qb.dataset.sure){qb.dataset.sure=1;qb.textContent='Tap again to mark now';return;}if(mock||rapid)finish();else home();};
+ const qc=document.getElementById('qc');
+ const refresh=(typing)=>{if(!typing){const fb=document.getElementById('fbarea').innerHTML;qc.innerHTML=qBody(q)+`<div id="fbarea">${fb}</div><div class="actions" id="acts"></div>`;bindQ(qc,q,refresh);}drawActs();};
+ bindQ(qc,q,refresh);
+ function drawActs(){const a=document.getElementById('acts');const can=answered(q);
+  if(rapid)a.innerHTML=`<button class="btn" id="checkBtn" ${can?'':'disabled'}>Lock it in ✔</button><button class="btn sec" id="skip">Skip (−3s)</button>`;
+  else if(mock)a.innerHTML=`<button class="btn" id="checkBtn">${Q.i===Q.list.length-1?'Finish paper':'Next question →'}</button><span class="small">No hints in test mode – just like the real thing!</span>`;
+  else a.innerHTML=`<button class="btn" id="checkBtn" ${can?'':'disabled'}>${q.attempt?'Check again':'Check answer'}</button>${q.hinted?'':`<button class="btn gold" id="hintBtn">${CFG.hint.icon} ${CFG.hint.name}</button>`}<button class="btn sec" id="whyFirst">📖 Show me the rule</button>`;
+  const c=document.getElementById('checkBtn');if(c)c.onclick=check;
+  const h=document.getElementById('hintBtn');if(h)h.onclick=()=>{q.hinted=true;Q.hintsUsed++;document.getElementById('fbarea').innerHTML=`<div class="fb hint"><div class="mini">${CFG.hint.icon}</div><div><b>${CFG.hint.name}:</b> ${q.hint}<br><span class="small">(Using a clue halves the points for this question.)</span></div></div>`;drawActs();};
+  const wf=document.getElementById('whyFirst');if(wf)wf.onclick=()=>{q.hinted=true;const g=Object.values(GLOSS).flat().find(x=>x[3].includes(q.id));document.getElementById('fbarea').innerHTML=`<div class="fb hint"><div class="mini">📖</div><div><b>${g?g[0]:q.skill}:</b> ${g?g[1]+' <i>e.g. '+g[2]+'</i>':q.hint}<br><span class="small">(Peeking at the rule halves the points.)</span></div></div>`;drawActs();};
+  const sk=document.getElementById('skip');if(sk)sk.onclick=()=>{Q.timer-=3;Q.streak=0;nextRapid();renderQ();};
+ }
+ drawActs();
+ function check(){
+  const ok=isRight(q);const fbA=document.getElementById('fbarea');const acts=document.getElementById('acts');
+  if(mock){Q.res[Q.i]={ok,full:ok,q};if(Q.i<Q.list.length-1){Q.i++;renderQ();}else finish();return;}
+  if(rapid){Q.res.push({ok,q});if(ok){Q.pts++;Q.streak++;flash('#52c27e');sfx('good');nextRapid();renderQ();}else{Q.streak=0;flash('#e0605a');sfx('bad');reveal(q,qc);acts.innerHTML='';fbA.innerHTML=`<div class="fb bad"><div class="mini">${MASCOT(40)}</div><div><b>Answer:</b> ${q.ansText}</div></div>`;setTimeout(()=>{if(!Q.ended){nextRapid();renderQ();}},1600);}return;}
+  if(ok){
+   const full=!q.hinted&&q.attempt===0;let p=full?10:5;if(full){Q.streak++;if(Q.streak>=3)p+=2;}else Q.streak=0;
+   S.bestStreak=Math.max(S.bestStreak,Q.streak);if(Q.streak>=5)award('streak5');if(Q.streak>=10)award('streak10');
+   Q.pts+=p;S.points+=p;Q.res[Q.i]={ok:true,full,q};
+   if(Q.mode==='cold'&&S.cold[q.id]){delete S.cold[q.id];S.coldCleared++;if(S.coldCleared>=3)award('cold3');}
+   save();reveal(q,qc);sfx('good');sfx('stamp');const pp=document.getElementById('ptsPill');if(pp)pp.innerHTML=`${rank()[1]} · <b>${S.points}</b> pts`;
+   qc.insertAdjacentHTML('beforeend',`<div class="stamp">${pick(CFG.stampsOk)}</div>`);
+   fbA.innerHTML=`<div class="fb good"><div class="mini">${MASCOT(44)}</div><div><b>${pick(CFG.quipsOk)}</b> +${p} points${Q.streak>=3&&full?' (streak bonus!)':''}</div></div>${whyHTML(q,false)}`;
+   acts.innerHTML=`<button class="btn green" id="nextBtn">${Q.i===Q.list.length-1?CFG.words.close:CFG.words.next}</button><button class="btn sec" id="whyBtn">🤔 Why is that right?</button>`;
+  } else if(q.attempt===0){
+   q.attempt=1;sfx('bad');
+   fbA.innerHTML=`<div class="fb bad"><div class="mini">${MASCOT(44)}</div><div><b>${pick(CFG.quipsBad)}</b><br>Take a <b>second look</b> (for half points) – or open the notes to see the answer.</div></div>`;
+   acts.innerHTML=`<button class="btn" id="again">🔁 Second look</button><button class="btn sec" id="giveup">📂 Show me the answer</button>`;
+   document.getElementById('again').onclick=()=>{fbA.innerHTML=`<div class="fb hint"><div class="mini">${CFG.hint.icon}</div><div><b>Clue:</b> ${q.hint}</div></div>`;drawActs();};
+   document.getElementById('giveup').onclick=()=>fail();
+   return;
+  } else {fail();return;}
+  bindNext();
+ }
+ function fail(){const fbA=document.getElementById('fbarea'),acts=document.getElementById('acts');Q.streak=0;Q.res[Q.i]={ok:false,q};S.cold[q.id]=(S.cold[q.id]||0)+1;save();reveal(q,qc);sfx('bad');
+  qc.insertAdjacentHTML('beforeend',`<div class="stamp r">${CFG.failStamp}</div>`);
+  fbA.innerHTML=`<div class="fb bad"><div class="mini">${MASCOT(44)}</div><div><b>${CFG.failMsg}</b> Here’s how it works:</div></div>${whyHTML(q,true)}`;
+  acts.innerHTML=`<button class="btn" id="nextBtn">${Q.i===Q.list.length-1?CFG.words.close:CFG.words.next}</button>`;bindNext();}
+ function bindNext(){document.getElementById('nextBtn').onclick=()=>{if(Q.i<Q.list.length-1){Q.i++;renderQ();}else finish();};const w=document.getElementById('whyBtn');if(w)w.onclick=()=>{const b=document.getElementById('whybox');b.hidden=!b.hidden;if(!b.hidden){S.whys++;save();if(S.whys>=15)award('curious');}};}
+}
+function finish(){
+ if(!Q||Q.ended)return;Q.ended=true;clearInterval(window._tm);
+ if(Q.mode==='rapid')return endRapid();
+ if(Q.mode==='mock')return endMock();
+ const n=Q.list.length,correct=Q.res.filter(r=>r&&r.ok).length,full=Q.res.filter(r=>r&&r.full).length;const pct=correct/n;
+ const stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;
+ if(Q.mode==='case'){const d=Q.opts.dom;S.cases[d]=true;S.stars[d]=Math.max(S.stars[d]||0,stars);award('first');if(correct===10)award('perfect');if(Object.keys(DOMS).every(k=>S.cases[k]))award('allcases');if(Object.keys(DOMS).every(k=>S.stars[k]===3))award('allstars');if(d===CFG.specialDom&&stars===3)award('special');if(Q.hintsUsed===0&&correct>=8)award('sharp');}
+ save();if(stars>=2)confetti();
+ const bySkill={};Q.res.forEach(r=>{if(!r)return;const k=r.q.skill;bySkill[k]=bySkill[k]||[0,0];bySkill[k][1]++;if(r.ok)bySkill[k][0]++;});
+ const missed=Q.res.filter(r=>r&&!r.ok);
+ app.innerHTML=`${topbar()}<div class="panel"><h2>${stars>=2?CFG.words.closedTitle:CFG.words.reportTitle}</h2>
+ <div class="hero" data-tab="REPORT" style="margin:24px 0 18px">${MASCOT(70)}<div class="speech">${CFG.endMsgs[stars]}</div></div>
+ <div class="kv"><div>Correct<b>${correct}/${n}</b></div><div>First time, no clues<b>${full}</b></div><div>Points earned<b>+${Q.pts}</b></div>${Q.mode==='case'?`<div>Stars<b>${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</b></div>`:''}</div>
+ <h3>Results by skill</h3><div class="bars">${Object.entries(bySkill).map(([k,v])=>`<div class="bar"><span>${k}</span><div class="track"><div class="fill" style="width:${v[0]/v[1]*100}%;background:${v[0]===v[1]?'var(--green)':v[0]?'var(--gold)':'var(--red)'}"></div></div><span>${v[0]}/${v[1]}</span></div>`).join('')}</div>
+ ${missed.length?`<h3>Added to ${CFG.cold.title}</h3><div class="review">${missed.map((r,i)=>reviewItem(r,i)).join('')}</div>`:''}
+ <div class="actions">${Q.mode!=='cold'?`<button class="btn" id="again">Go again (new questions)</button>`:''}<button class="btn sec" id="hq">${CFG.words.home}</button></div></div>`;
+ bindReview();const a=document.getElementById('again');if(a)a.onclick=()=>start(Q.mode,Q.opts);document.getElementById('hq').onclick=home;window.scrollTo(0,0);
+}
+function reviewItem(r,i){return `<div class="ritem ${r.ok?'ok':'no'}"><div><b>${r.ok?'✔':'✘'} ${esc(r.q.skill)}</b> <span class="small">${esc(r.q.code)}</span></div><div>${r.q.prompt}</div><button class="btn sec" style="padding:5px 10px;font-size:13px;margin-top:6px" data-rv="${i}">Why?</button><div class="why" hidden id="rv${i}">${r.q.stem?`<div class="stem" style="font-size:15px">${r.q.stem}</div>`:''}<ol>${r.q.why.map(w=>`<li>${w}</li>`).join('')}</ol><div class="ans">Answer: ${r.q.ansText}</div></div></div>`;}
+function bindReview(){app.querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>{const w=document.getElementById('rv'+b.dataset.rv);w.hidden=!w.hidden;if(!w.hidden){S.whys++;save();if(S.whys>=15)award('curious');}});}
+function endMock(){
+ const m=CFG.mocks[Q.opts.m];const n=Q.list.length;Q.list.forEach((q,i)=>{if(!Q.res[i])Q.res[i]={ok:false,q,skipped:true};});
+ const correct=Q.res.filter(r=>r.ok).length;const pct=correct/n;S.mocks++;
+ S.points+=correct*5;award(m.trophy);if(pct>=.8)award('mock80');
+ Q.res.forEach(r=>{if(!r.ok)S.cold[r.q.id]=(S.cold[r.q.id]||0)+1;});save();if(pct>=.6)confetti();
+ const dom={};Q.res.forEach(r=>{const d=r.q.dom;dom[d]=dom[d]||[0,0];dom[d][1]++;if(r.ok)dom[d][0]++;});
+ app.innerHTML=`${topbar()}<div class="panel"><h2>${CFG.words.verdict}</h2>
+ <div class="hero" data-tab="RESULTS" style="margin:24px 0 18px">${MASCOT(70)}<div class="speech">You scored <b>${correct} out of ${n}</b> (${Math.round(pct*100)}%). ${pct>=.8?'A superb performance!':pct>=.6?'A strong result. Tidy up the weaker areas below and you’ll be flying.':pct>=.4?'Good effort under pressure. Focus on the red bars below – that’s where the marks are hiding.':'Tough one! Work through the topics in red, then come back and try again.'}</div></div>
+ <p class="small">${CFG.mockNote}</p>
+ <h3>Marks by topic</h3><div class="bars">${Object.keys(DOMS).filter(d=>dom[d]).map(d=>`<div class="bar"><span>${DOMS[d].icon} ${DOMS[d].name}</span><div class="track"><div class="fill" style="width:${dom[d][0]/dom[d][1]*100}%;background:${dom[d][0]/dom[d][1]>=.75?'var(--green)':dom[d][0]/dom[d][1]>=.5?'var(--gold)':'var(--red)'}"></div></div><span>${dom[d][0]}/${dom[d][1]}</span></div>`).join('')}</div>
+ <h3>Question by question</h3><div class="review">${Q.res.map((r,i)=>reviewItem(r,i)).join('')}</div>
+ <div class="actions"><button class="btn sec" id="hq">${CFG.words.home}</button></div></div>`;
+ bindReview();document.getElementById('hq').onclick=home;window.scrollTo(0,0);
+}
+function endRapid(){
+ const best=S.rapidBest;S.rapidBest=Math.max(S.rapidBest,Q.pts);S.points+=Q.pts*3;if(Q.pts>=10)award('rapid10');if(Q.pts>=20)award('rapid20');save();
+ const wrong=Q.res.filter(r=>!r.ok);
+ app.innerHTML=`${topbar()}<div class="panel"><h2>${CFG.rapid.icon} Time’s up!</h2><div class="hero" data-tab="SPEED" style="margin:24px 0 18px">${MASCOT(70)}<div class="speech">You got <b>${Q.pts}</b> right in 90 seconds. ${Q.pts>best?'🎉 A new personal best!':`Your best is ${S.rapidBest}.`}</div></div>
+ ${wrong.length?`<h3>Ones that got away</h3><div class="review">${wrong.map((r,i)=>reviewItem(r,i)).join('')}</div>`:''}
+ <div class="actions"><button class="btn" id="again">Go again</button><button class="btn sec" id="hq">${CFG.words.home}</button></div></div>`;
+ bindReview();document.getElementById('again').onclick=()=>start('rapid');document.getElementById('hq').onclick=home;
+}
+
+/* ============ pages ============ */
+function topbar(){const r=rank();return `<header class="top"><div class="logo" id="logo">${MASCOT(46)}<h1>${CFG.title}<small>${CFG.sub}</small></h1></div><span class="pill" id="ptsPill">${r[1]} · <b>${S.points}</b> pts</span><button class="iconbtn" id="snd" title="Sound">${S.sound?'🔊':'🔈'}</button></header>`;}
+function bindTop(){const l=document.getElementById('logo');if(l)l.onclick=()=>{if(Q&&!Q.ended&&(Q.mode==='mock'||Q.mode==='rapid'))return;home();};const s=document.getElementById('snd');if(s)s.onclick=()=>{S.sound=!S.sound;save();s.textContent=S.sound?'🔊':'🔈';};}
+new MutationObserver(bindTop).observe(app,{childList:true});
+function home(){
+ Q=null;clearInterval(window._tm);const r=rank(),nx=nextRank();const coldN=Object.keys(S.cold).filter(k=>G[k]).length;
+ let folders='',lastGroup=null;
+ Object.entries(DOMS).forEach(([k,d])=>{if(d.group&&d.group!==lastGroup){folders+=`<div class="subhead" style="grid-column:1/-1">${d.group}</div>`;lastGroup=d.group;}
+  folders+=`<button class="folder" data-tab="${d.tab}" data-dom="${k}"><h3>${d.icon} ${d.name}</h3><p>${d.desc}</p>${d.note?`<span class="weight">${d.note}</span>`:''}<div class="stars">${'★'.repeat(S.stars[k]||0)}<span style="opacity:.3">${'★'.repeat(3-(S.stars[k]||0))}</span></div></button>`;});
+ app.innerHTML=`${topbar()}
+ <div class="hero" data-tab="${CFG.heroTab}">${MASCOT(84)}<div><div class="speech">${CFG.welcome(r[1])}</div><p class="small" style="margin-top:8px">${nx?`${nx[0]-S.points} points to promotion: <b>${nx[1]}</b>`:'You have reached the top rank!'} · ${Object.keys(S.trophies).length}/${TROPHIES.length} trophies</p></div></div>
+ <div class="secthead">${CFG.casesHead}</div>
+ <div class="grid">${folders}<button class="folder special" data-tab="MIXED" id="patrol"><h3>${CFG.patrol.icon} ${CFG.patrol.title}</h3><p>${CFG.patrol.desc}</p></button></div>
+ <div class="secthead">${CFG.testHead}</div>
+ <div class="grid">${CFG.mocks.map((m,i)=>`<button class="folder red" data-tab="${m.tab}" data-mock="${i}"><h3>${m.icon} ${m.title}</h3><p>${m.desc}</p></button>`).join('')}
+ <button class="folder special" data-tab="SPEED" id="rapid"><h3>${CFG.rapid.icon} ${CFG.rapid.title}</h3><p>90 seconds. How many can you get? Skipping costs 3 seconds! Best: <b>${S.rapidBest}</b></p></button>
+ <button class="folder ${coldN?'':'green'}" data-tab="RETRY" id="cold"><h3>${CFG.cold.icon} ${CFG.cold.title} (${coldN})</h3><p>${coldN?CFG.cold.desc:CFG.cold.empty}</p></button></div>
+ <div class="secthead">🧰 Toolkit</div>
+ <div class="grid"><button class="folder green" data-tab="BRIEF" id="brief"><h3>📋 Briefing: what to expect</h3><p>${CFG.briefDesc}</p></button>
+ <button class="folder green" data-tab="TERMS" id="locker"><h3>${CFG.locker.icon} ${CFG.locker.title}</h3><p>Every key term explained with an example – and a 5-question drill for each.</p></button>
+ <button class="folder green" data-tab="TROPHY" id="tro"><h3>🏆 Trophy Cabinet</h3><p>${Object.keys(S.trophies).length} of ${TROPHIES.length} unlocked.</p></button></div>`;
+ app.querySelectorAll('[data-dom]').forEach(b=>b.onclick=()=>start('case',{dom:b.dataset.dom}));
+ app.querySelectorAll('[data-mock]').forEach(b=>b.onclick=()=>start('mock',{m:+b.dataset.mock}));
+ const on=(id,f)=>document.getElementById(id).onclick=f;
+ on('patrol',()=>start('patrol'));on('rapid',()=>start('rapid'));
+ on('cold',()=>{if(!coldN){toast(`${CFG.cold.icon} <div>${CFG.cold.empty}</div>`);return;}start('cold');});
+ on('brief',briefing);on('locker',locker);on('tro',trophies);
+ window.scrollTo(0,0);
+}
+function back(){return `<div class="actions" style="margin-top:0;margin-bottom:12px"><button class="btn sec" id="hqb">${CFG.words.backHome}</button></div>`;}
+function briefing(){
+ app.innerHTML=`${topbar()}${back()}<div class="panel">${CFG.briefing()}</div>`;
+ document.getElementById('hqb').onclick=home;
+ app.querySelectorAll('[data-try]').forEach(b=>b.onclick=()=>start('drill',{ids:[b.dataset.try],term:'Try it: '+G[b.dataset.try].skill}));
+ window.scrollTo(0,0);
+}
+function locker(){
+ app.innerHTML=`${topbar()}${back()}<div class="panel"><h2>${CFG.locker.icon} ${CFG.locker.title}</h2><p>Every term you need. Tap <b>Drill</b> to practise that skill with 5 fresh questions.</p>
+ ${Object.entries(GLOSS).map(([d,arr])=>`<h3>${DOMS[d].icon} ${DOMS[d].name}</h3><div class="gloss">${arr.map((g,i)=>`<div class="gitem"><b>${g[0]}</b> – ${g[1]}<div class="ex">e.g. ${g[2]}</div><button class="btn sec" data-d="${d}" data-i="${i}">Drill this ▶</button></div>`).join('')}</div>`).join('')}</div>`;
+ document.getElementById('hqb').onclick=home;
+ app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const g=GLOSS[b.dataset.d][+b.dataset.i];start('drill',{ids:g[3],term:g[0]});});
+ window.scrollTo(0,0);
+}
+function trophies(){
+ app.innerHTML=`${topbar()}${back()}<div class="panel"><h2>🏆 Trophy Cabinet</h2><p>Rank: <b>${rank()[1]}</b> · ${S.points} points · best streak ${S.bestStreak} · rapid best ${S.rapidBest}</p>
+ <div class="troph">${TROPHIES.map(t=>`<div class="tro${S.trophies[t[0]]?' got':''}"><span class="ic">${t[1]}</span><div><b>${t[2]}</b><small>${t[3]}</small></div></div>`).join('')}</div>
+ <h3>Ranks</h3><p class="small">${RANKS.map(r=>`${r[1]} (${r[0]})`).join(' → ')}</p>
+ <div class="actions"><button class="btn red" id="reset">Reset all progress</button></div></div>`;
+ document.getElementById('hqb').onclick=home;
+ document.getElementById('reset').onclick=e=>{const rb=e.target;if(!rb.dataset.sure){rb.dataset.sure=1;rb.textContent='Tap again to wipe everything';return;}const snd=S.sound;S=blankState();S.sound=snd;save();home();};
+ window.scrollTo(0,0);
+}
+window.addEventListener('resize',()=>{cv.width=innerWidth;cv.height=innerHeight;});
+home();
+</script>
+</body>
+</html>

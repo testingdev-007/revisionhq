@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inspector Clause: The Grammar Case Files</title>
+<style>
+:root{--navy:#14213d;--navy2:#1f3160;--manila:#f4e4bc;--manila2:#e6cf94;--paper:#fffdf6;--ink:#1f2430;--muted:#6b6250;--red:#c0392b;--green:#25854f;--gold:#e0a526;--blue:#2f6fb5;--line:#d9cfb4}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--navy);background-image:radial-gradient(circle at 20% 0%,#24386b 0,transparent 55%),repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 14px);font-family:"Trebuchet MS",Verdana,system-ui,sans-serif;color:var(--ink);font-size:17px;line-height:1.45}
+.tw{font-family:"Courier New",Courier,monospace}
+button{font:inherit;cursor:pointer}
+#app{max-width:980px;margin:0 auto;padding:12px 14px 60px}
+header.top{display:flex;align-items:center;gap:12px;color:#fff;padding:6px 2px 14px;flex-wrap:wrap}
+header.top .logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;min-width:220px}
+header.top h1{font-family:"Courier New",monospace;font-size:22px;margin:0;letter-spacing:.5px;line-height:1.1}
+header.top h1 small{display:block;font-size:12px;color:#c9d3ee;letter-spacing:2px;text-transform:uppercase}
+.pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:5px 12px;font-size:14px;white-space:nowrap}
+.pill b{color:var(--gold)}
+.iconbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:10px;padding:5px 10px}
+.hero{display:flex;gap:16px;align-items:center;background:var(--manila);border-radius:6px 16px 16px 16px;padding:16px 18px;box-shadow:0 8px 0 var(--manila2),0 14px 30px rgba(0,0,0,.35);margin:6px 0 26px;position:relative}
+.hero:before{content:"CASE FILES";position:absolute;top:-22px;left:0;background:var(--manila);padding:3px 16px;border-radius:8px 8px 0 0;font:700 12px "Courier New",monospace;letter-spacing:3px;color:var(--muted)}
+.hero p{margin:4px 0}
+.speech{background:#fff;border-radius:14px;padding:10px 14px;position:relative;box-shadow:0 2px 0 var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.folder{background:var(--manila);border:0;text-align:left;border-radius:4px 12px 12px 12px;padding:16px 14px 12px;position:relative;box-shadow:0 5px 0 var(--manila2),0 10px 20px rgba(0,0,0,.3);transition:transform .15s;margin-top:14px;color:var(--ink)}
+.folder:hover{transform:translateY(-3px) rotate(-.4deg)}
+.folder:before{content:attr(data-tab);position:absolute;top:-17px;left:0;background:var(--manila);padding:2px 12px;border-radius:7px 7px 0 0;font:700 11px "Courier New",monospace;letter-spacing:2px;color:var(--muted)}
+.folder h3{margin:0 0 4px;font-family:"Courier New",monospace;font-size:17px}
+.folder p{margin:0;font-size:13.5px;color:#4a4436}
+.folder .stars{margin-top:8px;font-size:18px;letter-spacing:2px}
+.folder.special{background:#dfe9f7;box-shadow:0 5px 0 #b4c6e3,0 10px 20px rgba(0,0,0,.3)}
+.folder.special:before{background:#dfe9f7}
+.folder.red{background:#f6d5cf;box-shadow:0 5px 0 #e2aaa0,0 10px 20px rgba(0,0,0,.3)}
+.folder.red:before{background:#f6d5cf}
+.folder.green{background:#d6eedc;box-shadow:0 5px 0 #a9d6b6,0 10px 20px rgba(0,0,0,.3)}
+.folder.green:before{background:#d6eedc}
+.secthead{color:#fff;font-family:"Courier New",monospace;letter-spacing:3px;text-transform:uppercase;font-size:13px;margin:30px 0 4px;opacity:.85}
+.weight{display:inline-block;font-size:11px;background:rgba(0,0,0,.08);border-radius:6px;padding:1px 6px;margin-top:6px}
+/* question */
+.qwrap{position:relative}
+.qbar{display:flex;align-items:center;gap:10px;color:#fff;margin-bottom:10px;flex-wrap:wrap}
+.qbar .ttl{font-family:"Courier New",monospace;font-weight:700;flex:1;min-width:180px}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.2)}
+.dot.ok{background:#52c27e}.dot.half{background:var(--gold)}.dot.bad{background:#e0605a}.dot.cur{outline:2px solid #fff}
+.qcard{background:var(--paper);border-radius:14px;padding:22px 20px 18px;box-shadow:0 12px 30px rgba(0,0,0,.35);position:relative;background-image:linear-gradient(transparent 31px,rgba(47,111,181,.07) 32px);background-size:100% 32px;min-height:260px}
+.qmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:-8px 0 10px;font-family:"Courier New",monospace}
+.prompt{font-size:19px;font-weight:700;margin:0 0 14px}
+.stem{background:#fff;border:2px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:20px;margin:0 0 14px;line-height:2}
+.note{font-size:13.5px;color:var(--muted);margin:-6px 0 12px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:12px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:17.5px;color:var(--ink)}
+.opt:hover{border-color:var(--blue)}
+.opt .box{flex:0 0 26px;height:26px;border:2.5px solid #555;border-radius:4px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--blue);margin-top:1px}
+.opt.sel{border-color:var(--blue);background:#eef4fc}
+.opt.sel .box:after{content:"✓"}
+.opt.right{border-color:var(--green);background:#e5f5ea}
+.opt.wrong{border-color:var(--red);background:#fbe9e7}
+.opt ul{margin:4px 0 0;padding-left:20px}
+.tok{display:inline-block;border:2.5px solid transparent;border-radius:50%;padding:0 6px;margin:0 1px;background:none;font-size:20px;color:var(--ink);line-height:1.5}
+.tok.click:hover{border-color:#b9c9e6;border-style:dashed}
+.tok.sel{border-color:var(--red);border-style:solid}
+.tok.right{border-color:var(--green);border-style:solid;background:#e5f5ea}
+.tok.miss{border-color:var(--green);border-style:dashed}
+.tok.wrong{border-color:var(--red);background:#fbe9e7}
+.tok.p{padding:0;margin-left:-4px}
+.chunk{background:none;border:0;border-bottom:3px dashed transparent;padding:2px 3px;font-size:20px;color:var(--ink);line-height:1.6;border-radius:4px}
+.chunk:hover{background:#eef4fc}
+.chunk.sel{border-bottom:4px solid var(--red)}
+.chunk.right{border-bottom:4px solid var(--green);background:#e5f5ea}
+.chunk.wrong{border-bottom:4px solid var(--red);background:#fbe9e7}
+table.tt{border-collapse:collapse;width:100%;background:#fff;font-size:16.5px}
+table.tt th,table.tt td{border:1.5px solid #bdb39a;padding:8px;text-align:center}
+table.tt th{background:#f3ecd9;font-size:14px}
+table.tt td:first-child{text-align:left}
+.cell{width:30px;height:30px;border:2.5px solid #555;border-radius:4px;background:#fff;font-weight:900;color:var(--blue);font-size:18px;padding:0}
+.cell.sel:after{content:"✓"}
+tr.rowok td{background:#e5f5ea}
+tr.rowbad td{background:#fbe9e7}
+.cell.ans{outline:3px solid var(--green);outline-offset:2px}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px}
+.mcol{display:grid;gap:9px;align-content:start}
+.mitem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px;text-align:left;font-size:16px;position:relative;color:var(--ink);min-height:46px}
+.mitem.act{border-color:var(--blue);box-shadow:0 0 0 3px #cfe0f7}
+.mitem .tag{position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.mitem.right{border-color:var(--green)}
+.mitem.wrong{border-color:var(--red)}
+.typed{font-size:20px;padding:10px 12px;border:2.5px solid #888;border-radius:10px;width:min(100%,360px);font-family:inherit}
+.typed.right{border-color:var(--green);background:#e5f5ea}
+.typed.wrong{border-color:var(--red);background:#fbe9e7}
+.gapline{font-size:21px;line-height:2.4}
+.gap{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:34px;vertical-align:middle;border:2px dashed #b9c9e6;border-radius:8px;background:#f7faff;margin:0 2px;padding:0 3px;font-size:22px;font-weight:900;color:var(--blue)}
+.gap.filled{border-style:solid;border-color:var(--blue);background:#eef4fc}
+.gap.right{border-color:var(--green);color:var(--green);background:#e5f5ea}
+.gap.wrong{border-color:var(--red);color:var(--red);background:#fbe9e7}
+.palette{display:flex;gap:8px;margin:12px 0 0;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.pbtn{width:46px;height:42px;border-radius:10px;border:2px solid var(--line);background:#fff;font-size:24px;font-weight:900}
+.pbtn.on{border-color:var(--blue);background:#dfeafa}
+.box2{display:inline-block;width:22px;height:24px;border:2px solid #333;vertical-align:middle;margin:0 2px;background:#fff}
+.hl{background:#ffe38a;padding:0 3px;border-radius:3px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:700;font-size:16px;background:var(--blue);color:#fff;box-shadow:0 4px 0 #1f4f86}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #1f4f86}
+.btn.sec{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.gold{background:var(--gold);color:#2a1e00;box-shadow:0 4px 0 #a87a10}
+.btn.red{background:var(--red);box-shadow:0 4px 0 #8a2419}
+.btn.green{background:var(--green);box-shadow:0 4px 0 #17593a}
+.btn[disabled]{opacity:.45;cursor:default}
+.fb{margin-top:14px;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.fb.good{background:#e5f5ea;border:2px solid #9ad3ae}
+.fb.bad{background:#fbe9e7;border:2px solid #efb0a8}
+.fb.hint{background:#fff6da;border:2px solid #ecd27e}
+.fb .mini{flex:0 0 44px}
+.why{margin-top:12px;background:#f3f7fd;border:2px solid #c8d8f0;border-radius:12px;padding:12px 16px}
+.why h4{margin:0 0 6px;font-family:"Courier New",monospace;letter-spacing:1px}
+.why ol{margin:0;padding-left:22px}
+.why li{margin:5px 0}
+.why .ans{margin-top:8px;font-weight:700;color:var(--green)}
+.stamp{position:absolute;right:18px;top:40px;z-index:3;border:5px solid var(--green);color:var(--green);font:900 26px "Courier New",monospace;padding:4px 12px;transform:rotate(-12deg);border-radius:8px;opacity:.85;animation:stamp .35s ease-out;pointer-events:none;background:rgba(255,255,255,.6)}
+.stamp.r{border-color:var(--red);color:var(--red)}
+@keyframes stamp{0%{transform:rotate(-12deg) scale(2.4);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:.85}}
+.panel{background:var(--paper);border-radius:14px;padding:20px;box-shadow:0 12px 30px rgba(0,0,0,.35);margin-bottom:16px}
+.panel h2{font-family:"Courier New",monospace;margin:0 0 10px}
+.panel h3{font-family:"Courier New",monospace;margin:18px 0 6px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:10px 0}
+.kv div{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px}
+.kv b{display:block;font-size:24px;font-family:"Courier New",monospace}
+.bars .bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:14px}
+.bars .bar span:first-child{flex:0 0 210px}
+.bars .track{flex:1;height:14px;background:#eee4cc;border-radius:7px;overflow:hidden}
+.bars .fill{height:100%;background:var(--blue)}
+.troph{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tro{background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;opacity:.5;filter:grayscale(1)}
+.tro.got{opacity:1;filter:none;border-color:var(--gold);background:#fff8e2}
+.tro .ic{font-size:30px}
+.tro b{display:block;font-size:14px}
+.tro small{font-size:12.5px;color:var(--muted)}
+.gloss{display:grid;gap:10px}
+.gitem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.gitem b{font-family:"Courier New",monospace;font-size:16px}
+.gitem .ex{font-size:14.5px;color:#3d4a63;margin-top:3px}
+.gitem .btn{padding:6px 12px;font-size:13px;margin-top:6px}
+.review{display:grid;gap:8px}
+.ritem{background:#fff;border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.ritem.ok{border-left:8px solid var(--green)}.ritem.no{border-left:8px solid var(--red)}
+.timer{font-family:"Courier New",monospace;font-weight:700;font-size:20px;background:rgba(0,0,0,.25);padding:3px 10px;border-radius:8px}
+.timer.low{color:#ffb3a8}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#fff8e2;border:3px solid var(--gold);border-radius:14px;padding:10px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:50;animation:pop .4s}
+@keyframes pop{0%{transform:translateX(-50%) scale(.6);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:30;animation:fl .5s forwards}
+@keyframes fl{0%{opacity:.35}100%{opacity:0}}
+.rapidscore{font:900 40px "Courier New",monospace;color:#fff}
+.small{font-size:13.5px;color:var(--muted)}
+.tag-type{display:inline-block;background:#eef4fc;border:1px solid #c8d8f0;border-radius:6px;padding:1px 7px;font-size:12.5px;margin:2px}
+@media (max-width:640px){
+ body{font-size:16px}.stem,.tok,.chunk,.gapline{font-size:18px}.prompt{font-size:17px}
+ .match{grid-template-columns:1fr 1fr;gap:8px}.mitem{font-size:14px}
+ .bars .bar span:first-child{flex-basis:130px}
+ .stamp{font-size:18px;top:auto;bottom:12px}
+ header.top h1{font-size:18px}
+ table.tt{font-size:14px}table.tt th{font-size:10.5px;padding:5px 2px;word-break:break-word}table.tt td{padding:5px 3px}table.tt td:first-child{min-width:128px}.cell{width:26px;height:26px}
+ .qbar .ttl{min-width:0;font-size:14px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<canvas id="fx"></canvas>
+<script>
+"use strict";
+/* ============ helpers ============ */
+const R=n=>Math.floor(Math.random()*n);
+const pick=a=>a[R(a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=R(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const sample=(a,n)=>shuffle(a).slice(0,n);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const strip=s=>String(s).replace(/<[^>]+>/g,'');
+const norm=s=>String(s).toLowerCase().replace(/[’‘`]/g,"'").replace(/[.!?]+$/,'').replace(/\s+/g,' ').trim();
+const NOSPACE_BEFORE=/^[,.!?;:)”’]/; const NOSPACE_AFTER=/[(“]$/;
+
+const NAMES=[['Maya','f'],['Leo','m'],['Aisha','f'],['Tom','m'],['Zara','f'],['Sam','m'],['Priya','f'],['Jack','m'],['Ella','f'],['Omar','m'],['Ruby','f'],['Finn','m'],['Isla','f'],['Kai','m'],['Amira','f'],['Noah','m']];
+const nm=()=>pick(NAMES);
+function twoNames(){const s=sample(NAMES,2);return s;}
+const HE=g=>g==='f'?'she':'he';
+const ANIMALS=['fox','rabbit','puppy','kitten','owl','badger','hedgehog','squirrel','pony','goose'];
+const ANADJ=['hungry','clever','sleepy','nervous','tiny','scruffy','curious','playful'];
+const MOVES={crept:['under','behind','past','beside'],raced:['across','through','past'],wandered:['through','across','past','near'],hid:['under','behind','beside'],scurried:['under','across','past','behind'],tiptoed:['past','across','behind']};
+const PREPPLACE={under:['fence','bridge','hedge','table'],behind:['shed','hedge','wall','fence'],through:['garden','field','woods'],across:['field','garden','bridge','playground'],past:['shed','wall','gate','pond'],beside:['pond','wall','gate','shed'],near:['pond','gate','river']};
+const MANNER=['silently','quickly','nervously','happily','carefully','slowly','bravely','quietly'];
+const art=w=>/^[aeiou]/i.test(w)?'an':'a';
+
+/* ============ generator registry ============ */
+const G={};
+function def(id,dom,code,skill,fast,fn){G[id]={id,dom,code,skill,fast,fn};}
+function make(id){const g=G[id];const q=g.fn();q.id=id;q.dom=g.dom;q.code=q.code||g.code;q.skill=g.skill;q.marks=q.marks||1;return q;}
+
+const DEF={
+ noun:'A <b>noun</b> names a person, place, thing or idea. Test: can you put “the” or “a” in front of it – or is it a name?',
+ verb:'A <b>verb</b> is a doing or being word. Test: can you change its tense (walk → walked)?',
+ adjective:'An <b>adjective</b> describes a noun – it tells you more about a person, place or thing.',
+ adverb:'An <b>adverb</b> adds to a verb (or an adjective/another adverb). It often tells you <i>how, when, where</i> or <i>how often</i>.',
+ preposition:'A <b>preposition</b> links a noun (or pronoun) to the rest of the sentence, showing place, time or cause. It is followed by a noun phrase – not a whole clause.',
+ determiner:'A <b>determiner</b> comes before a noun to say which one or how many: <i>the, a, an, this, those, some, every, my</i>…',
+ conjunction:'A <b>conjunction</b> joins words or clauses together: <i>and, but, or, because, when, although, if</i>…',
+ pronoun:'A <b>pronoun</b> stands in for a noun so we don’t repeat it: <i>I, you, he, she, it, we, they, him, her, us, them</i>…'
+};
+
+/* -------- G1 word classes -------- */
+function tmplA(){const adj=pick(ANADJ),an=pick(ANIMALS),v=pick(Object.keys(MOVES)),pr=pick(MOVES[v]),pl=pick(PREPPLACE[pr]),ad=pick(MANNER);
+ return [['The','determiner',`“The” sits before the noun “${an}”.`],[adj,'adjective',`“${adj}” describes the noun “${an}”.`],[an,'noun',`“${an}” names a thing (an animal).`],[v,'verb',`“${v}” is the action – what the ${an} did.`],[ad,'adverb',`“${ad}” tells us <i>how</i> the ${an} ${v}.`],[pr,'preposition',`“${pr}” links the verb to “the ${pl}” and shows <i>where</i>.`],['the','determiner',`“the” sits before the noun “${pl}”.`],[pl,'noun',`“${pl}” names a place or thing.`],['.','']];}
+function tmplB(){const t=pick(['Yesterday','Later','Earlier','Soon']),n=nm()[0],v=pick(['found','dropped','spotted','buried','lost']),adj=pick(['shiny','tiny','old','mysterious','golden','crumpled']),o=pick(['key','coin','map','shell','feather','letter']),pr=pick(['beside','under','near','behind']),pl=pick(PREPPLACE[pr]);const d=art(adj);
+ return [[t,'adverb',`“${t}” is an adverb telling us <i>when</i> it happened.`],[',',''],[n,'noun',`“${n}” is a name – a proper noun.`],[v,'verb',`“${v}” is the action – what ${n} did.`],[d,'determiner',`“${d}” sits before the noun phrase “${adj} ${o}”.`],[adj,'adjective',`“${adj}” describes the noun “${o}”.`],[o,'noun',`“${o}” names a thing.`],[pr,'preposition',`“${pr}” links “the ${pl}” to the rest of the sentence and shows <i>where</i>.`],['the','determiner',`“the” sits before the noun “${pl}”.`],[pl,'noun',`“${pl}” names a place or thing.`],['.','']];}
+function tmplC(){const [n,g]=nm();const f=pick([['laughed','loudly',['happy','excited']],['cheered','loudly',['excited','proud']],['sighed','sadly',['bored','tired']],['smiled','shyly',['nervous','happy']],['yawned','sleepily',['tired','bored']],['waited','patiently',['calm','relaxed']]]);const fe=pick(f[2]);const p=HE(g);
+ return [[n,'noun',`“${n}” is a name – a proper noun.`],[f[0],'verb',`“${f[0]}” is the action – what ${n} did.`],[f[1],'adverb',`“${f[1]}” tells us <i>how</i> ${n} ${f[0]}.`],['because','conjunction','“because” joins the two clauses and gives a reason.'],[p,'pronoun',`“${p}” replaces the noun “${n}” so we don’t repeat the name.`],['was','verb','“was” is a <i>being</i> verb (part of “to be”).'],[fe,'adjective',`“${fe}” describes ${n} (the pronoun “${p}”).`],['.','']];}
+function tmplD(){const [a,b]=twoNames();const gm=pick(['chess','football','cards','tennis']);const pr=pick(['after','before']);const tn=pick(['lunch','school','dinner','breakfast']);
+ return [[a[0],'noun',`“${a[0]}” is a name – a proper noun.`],['and','conjunction','“and” joins the two names together.'],[b[0],'noun',`“${b[0]}” is a name – a proper noun.`],['played','verb','“played” is the action.'],[gm,'noun',`“${gm}” names a thing (a game).`],[pr,'preposition',`“${pr}” is followed by the noun “${tn}” – no verb follows it, so here it is a preposition showing <i>time</i>.`],[tn,'noun',`“${tn}” names a thing (a meal or time of day).`],['.','']];}
+def('wc_circle','G1','G1.1–G1.8','Word classes',true,()=>{
+ const toks=pick([tmplA,tmplB,tmplC,tmplD])();
+ const classes=[...new Set(toks.map(t=>t[1]).filter(Boolean))];
+ const cls=pick(classes);const ans=toks.map((t,i)=>t[1]===cls?i:-1).filter(i=>i>=0);
+ const many=ans.length>1;
+ return {type:'circle',prompt:many?`Circle <b>all</b> the <b>${cls}s</b> in the sentence below.`:`Circle the <b>${cls}</b> in the sentence below.`,
+  tokens:toks.map(t=>t[0]),answer:ans,code:{noun:'G1.1',verb:'G1.2',adjective:'G1.3',conjunction:'G1.4',pronoun:'G1.5',adverb:'G1.6',preposition:'G1.7',determiner:'G1.8'}[cls],
+  hint:DEF[cls]+(many?` There is more than one!`:''),
+  why:[DEF[cls],...ans.map(i=>toks[i][2])],ansText:ans.map(i=>`“${toks[i][0]}”`).join(', ')};
+});
+const WCT={
+ noun:[['Turn on the <u>light</u>, please.','“the light” – it names a thing, with “the” in front.'],['That was a brilliant <u>catch</u>!','“a brilliant catch” – a thing, with a determiner and adjective in front.'],['There was a loud <u>crash</u> outside.','“a loud crash” – it names a thing (a sound).'],['The <u>dance</u> lasted an hour.','“The dance” – it names a thing.'],['He opened his birthday <u>present</u>.','“his birthday present” – it names a thing.'],['We sat at the <u>back</u> of the bus.','“the back” – it names a place/part of something.']],
+ verb:[['Please <u>light</u> the candles carefully.','It is the action (a command) – you could say “lit” in the past.'],['Did you <u>catch</u> the ball?','It is the action – what you did to the ball.'],['We <u>dance</u> every Friday.','It is the action – “we dance / we danced”.'],['The waves <u>crash</u> against the rocks.','It is the action of the waves – “crash / crashed”.'],['They <u>present</u> the awards at the end.','It is the action – “they present / presented”.']],
+ adjective:[['My school bag is very <u>light</u>.','It describes the noun “bag”.'],['That is the <u>right</u> answer.','It describes the noun “answer” – which answer? the right one.'],['It was a <u>fast</u> race.','It describes the noun “race”.'],['We used the <u>back</u> door.','It describes the noun “door” – which door?'],['It was a <u>quiet</u> afternoon.','It describes the noun “afternoon”.']],
+ adverb:[['Cheetahs run <u>fast</u>.','It tells you <i>how</i> cheetahs run – it adds to the verb “run”.'],['Turn <u>right</u> at the shop.','It tells you <i>where/which way</i> to turn – it adds to the verb.'],['Please come <u>back</u> soon.','It tells you <i>where</i> to come – it adds to the verb.'],['She <u>always</u> walks to school.','It tells you <i>how often</i> she walks.'],['He worked <u>hard</u> all day.','It tells you <i>how</i> he worked.'],['The bell rang <u>early</u>.','It tells you <i>when</i> the bell rang.']]
+};
+def('wc_table','G1','G1.1–G1.6','Same word, different job',false,()=>{
+ const cols=['noun','verb','adjective','adverb'];
+ const rows=shuffle(cols.map((c,ci)=>{const it=pick(WCT[c]);return {html:it[0],ans:ci,why:it[1]};}));
+ return {type:'table',prompt:'Tick <b>one</b> box in each row to show the word class of the underlined word.',cols:cols.map(cap),rows,
+  hint:'Look at the job the word is doing in <i>this</i> sentence. Is it naming, doing, describing a noun, or adding to a verb?',
+  why:['The same word can belong to different word classes – it depends on the job it does in the sentence.',...rows.map(r=>`${r.html} → <b>${cols[r.ans]}</b>: ${r.why}`)],ansText:'see the ticks above'};
+});
+const PC={after:[['We played outside after lunch.','Meet me after the match.','She felt tired after the long walk.'],['We played outside after we had eaten lunch.','Meet me after the match finishes.','She felt tired after she had walked home.']],
+ before:[['Wash your hands before dinner.','I woke up before sunrise.','Check your answers before the end.'],['Wash your hands before you eat dinner.','I woke up before the sun rose.','Check your answers before time runs out.']],
+ until:[['We stayed at the park until six o’clock.','The shop is shut until Monday.','Keep going until the next corner.'],['We stayed at the park until it got dark.','The shop is shut until the owner returns.','Keep stirring until the sauce thickens.']],
+ since:[['I have lived here since 2020.','It has rained since breakfast.','We have been friends since Year 2.'],['I have lived here since I was born.','It has rained since we arrived.','We have been friends since we met in Year 2.']]};
+def('wc_prepconj','G1','G1.7','Preposition or conjunction?',true,()=>{
+ const w=pick(Object.keys(PC));const wantConj=Math.random()<.5;
+ const right=pick(PC[w][wantConj?1:0]);const others=sample(PC[w][wantConj?0:1],2);
+ const opts=shuffle([right,...others]);const hl=s=>s.replace(new RegExp('\\b'+w+'\\b'),`<b>${w}</b>`);
+ return {type:'tick',code:wantConj?'G1.4':'G1.7',prompt:`Tick the sentence in which <b>${w}</b> is used as a <b>${wantConj?'conjunction':'preposition'}</b>.`,
+  options:opts.map(hl),answer:opts.indexOf(right),
+  hint:`Look at what comes straight after “${w}”. Is it just a noun phrase, or a whole clause with its own verb?`,
+  why:[`“${w}” can be a preposition <i>or</i> a conjunction.`,'A <b>preposition</b> is followed by a noun or noun phrase (no verb): “after <u>lunch</u>”.','A <b>conjunction</b> is followed by a clause – a subject and its own verb: “after <u>we had eaten</u> lunch”.',`In the answer, “${w}” is followed by ${wantConj?'a clause with its own verb':'just a noun phrase'}.`],ansText:hl(right)};
+});
+const FRONT=[['Without a sound','the cat crept across the kitchen'],['Later that evening','we toasted marshmallows'],['Every Saturday morning','{N} goes swimming'],['In the distance','a wolf howled'],['As quickly as possible','the firefighters unrolled the hose'],['After the storm','the beach was covered in shells'],['Under the old bridge','a troll was sleeping'],['Once upon a time','there lived a clever goat'],['Before breakfast','{N} fed the chickens'],['At the end of the day','the tired builders went home']];
+const fillN=s=>s.replace(/\{N\}/g,()=>nm()[0]);
+def('wc_fronted','G1','G1.6a','Fronted adverbials',true,()=>{
+ const ps=sample(FRONT,4).map(p=>[p[0],fillN(p[1])]);
+ const right=`${ps[0][0]}, ${ps[0][1]}.`;
+ const d1=`${cap(ps[1][1])} ${ps[1][0].toLowerCase()}.`;
+ const d2=`${cap(ps[2][1])} ${ps[2][0].toLowerCase()}.`;
+ const d3=`${cap(ps[3][1])}.`;
+ const opts=shuffle([right,d1,d2,d3]);
+ return {type:'tick',prompt:'Tick the sentence that has a <b>fronted adverbial</b>.',options:opts,answer:opts.indexOf(right),
+  hint:'“Fronted” means at the front – before the main clause. Look for a comma too!',
+  why:['An <b>adverbial</b> is a word or phrase that tells you how, when, where or how often something happens.','When it is moved to the <b>front</b> of the sentence (before the main clause) it is a <b>fronted adverbial</b> – and it is followed by a comma.',`“${ps[0][0]}” comes before the main clause “${ps[0][1]}”.`,'In two of the other sentences the adverbial comes at the end, so it is not fronted.'],ansText:right};
+});
+const AN=['hour','honest mistake','umbrella','eagle','igloo','owl','elephant','astronaut','uncle','orange'];
+const AA=['unicorn','university','uniform','one-way street','horse','house','useful tool','European city','yellow kite'];
+def('wc_aan','G1','G1.8','a or an?',false,()=>{
+ const rows=shuffle([...sample(AN,2).map(w=>({html:`___ ${w}`,w,ans:1})),...sample(AA,2).map(w=>({html:`___ ${w}`,w,ans:0}))]);
+ rows.forEach(r=>{const tricky=/^(hour|honest|unicorn|university|uniform|one|useful|European)/.test(r.w);r.why=tricky?(r.ans?`“${r.w.split(' ')[0]}” starts with a silent h, so it begins with a vowel <i>sound</i>.`:`“${r.w.split(' ')[0]}” starts with a “y” or “w” sound, which is a consonant <i>sound</i>.`):(r.ans?'It begins with a vowel sound.':'It begins with a consonant sound.');});
+ return {type:'table',prompt:'Tick to show whether each word should have <b>a</b> or <b>an</b> in front of it.',cols:['a','an'],rows,
+  hint:'Say it aloud! It is the first <i>sound</i> that matters, not the first letter.',
+  why:['Use <b>an</b> before a vowel <i>sound</i> and <b>a</b> before a consonant <i>sound</i>.',...rows.map(r=>`<b>${r.ans?'an':'a'}</b> ${r.w}: ${r.why}`)],ansText:'see the ticks above'};
+});
+const SUBJ=['the excited puppy','my older brother','Grandma','the noisy seagull','the football team','our teacher','the clumsy giant','a curious robot'];
+const VOBJ=[['found','a gold coin','find'],['dropped','the shopping bags','drop'],['ate','the last sandwich','eat'],['carried','a heavy box','carry'],['lost','the treasure map','lose'],['painted','the garden fence','paint'],['chased','a red balloon','chase'],['fixed','the broken clock','fix']];
+def('wc_subjobj','G1','G1.9','Subject and object',false,()=>{
+ const s=pick(SUBJ),vo=pick(VOBJ),fr=Math.random()<.5?pick(['After school,','On Monday,','Without warning,','Last night,']):null;const tail=Math.random()<.5?pick(['in the park','before tea','at the fair','by the river']):null;
+ const chunks=[];if(fr)chunks.push(fr);chunks.push(fr?s:cap(s));chunks.push(vo[0]);chunks.push(vo[1]+(tail?'':'.'));if(tail)chunks.push(tail+'.');
+ const askS=Math.random()<.5;const si=fr?1:0;const ai=askS?si:si+2;
+ return {type:'chunks',prompt:`Underline the <b>${askS?'subject':'object'}</b> of the sentence.`,chunks,answer:ai,
+  hint:`Find the verb first (“${vo[0]}”). Then ask: <i>who or what</i> ${askS?'did it':'had it done to them'}?`,
+  why:['The <b>subject</b> is who or what does the verb. The <b>object</b> is who or what the verb is done to.',`The verb is “${vo[0]}”.`,`Who ${vo[0]}? → <b>${s}</b> – that’s the subject.`,`What did ${s} ${vo[2]}? → <b>${vo[1]}</b> – that’s the object.`,fr?`“${fr}” is a fronted adverbial – it is neither subject nor object.`:'Subjects usually come before the verb; objects usually come after it.'].filter(Boolean),ansText:chunks[ai]};
+});
+def('wc_pronoun','G1','G1.5','Pronouns',true,()=>{
+ const [a,b]=twoNames();const t=R(6);let s,ans,opts,why;
+ if(t===0){s=`<u>${a[0]} and I</u> went to the cinema.`;ans='We';opts=['We','Us','They','Them'];why='“'+a[0]+' and I” is the subject of the sentence (they did the going), and it includes me – so the pronoun is <b>we</b>.';}
+ else if(t===1){s=`<u>${a[0]} and ${b[0]}</u> built a sandcastle.`;ans='They';opts=['They','Them','We','Their'];why='Two other people are the subject (they did the building) – so the subject pronoun <b>they</b>.';}
+ else if(t===2){s=`Mr Khan thanked <u>${a[0]} and ${b[0]}</u>.`;ans='them';opts=['them','they','their','us'];why='The two names are the <i>object</i> (they were thanked), so we use the object pronoun <b>them</b>.';}
+ else if(t===3){s=`Mrs Jones gave the prize to <u>${a[0]} and me</u>.`;ans='us';opts=['us','we','them','our'];why='“'+a[0]+' and me” is the object and includes me – so the object pronoun <b>us</b>.';}
+ else if(t===4){const own=pick([['me','my bag','mine'],['you','your bag','yours'],['us','our bag','ours'],[a[0],a[0]+'’s bag',a[1]==='f'?'hers':'his'],[`${a[0]} and ${b[0]}`,`${a[0]} and ${b[0]}’s bag`,'theirs']]);
+  s=`This bag belongs to ${own[0]}. It is <u>${own[1]}</u>.`;ans=own[2];opts=sample(['mine','yours','ours','hers','his','theirs'].filter(x=>x!==ans),3).concat(ans);why=`A <b>possessive pronoun</b> shows who something belongs to and replaces the whole noun phrase: “It is <b>${ans}</b>.”`;}
+ else {s=`<u>${a[0]}</u> found a wallet on the bus.`;ans=cap(HE(a[1]));opts=[ans,ans==='He'?'She':'He','They',ans==='He'?'Him':'Her'];why=`${a[0]} is one person and is the subject, so the subject pronoun is <b>${ans.toLowerCase()}</b>.`;}
+ opts=shuffle([...new Set(opts)]);
+ return {type:'tick',prompt:'Which pronoun could replace the underlined words?',stem:s,options:opts,answer:opts.indexOf(ans),
+  hint:'Is the underlined part <i>doing</i> the verb (subject) or having it done to it (object)? Or does it show who owns something?',
+  why:[DEF.pronoun,why],ansText:ans};
+});
+const RELS=[['who','The {p} ___ lives next door has a parrot.','“who” is used for people.'],['whose','The {p} ___ bike was stolen called the police.','“whose” shows that something belongs to someone.'],['where','This is the {pl} ___ we found the treasure.','“where” is used for places.'],['which','The {t} ___ I borrowed was torn.','“which” is used for things (“that” would work too).'],['when','I remember the day ___ we moved house.','“when” is used for times.']];
+def('wc_relpron','G1','G1.5b','Relative pronouns',true,()=>{
+ const r=pick(RELS);const s=r[1].replace('{p}',pick(['girl','man','boy','woman','farmer','teacher'])).replace('{pl}',pick(['beach','cave','park','attic'])).replace('{t}',pick(['book','umbrella','map','coat'])).replace('___','<span class="box2"></span>');
+ const opts=shuffle([r[0],...sample(RELS.filter(x=>x[0]!==r[0]).map(x=>x[0]),3)]);
+ return {type:'tick',prompt:'Which <b>relative pronoun</b> completes the sentence?',stem:s,options:opts,answer:opts.indexOf(r[0]),
+  hint:'Does the word in front of the box refer to a person, a thing, a place or a time? Or does someone own something?',
+  why:['A <b>relative pronoun</b> starts a relative clause that gives more information about a noun.',r[2],'The others don’t fit: who = people, which = things, where = places, when = times, whose = belonging.'],ansText:r[0]};
+});
+
+/* -------- G2 functions of sentences -------- */
+const FN={
+ statement:['The {a} is asleep in its basket','{N} has finished the puzzle','When the bell rings, we line up','{N} wondered what time it was','I know where you hid the biscuits'],
+ question:['Where did you put the {t}','Have you seen my {t}','Can {N} come to the park','You like pizza, don’t you','Why is the sky blue'],
+ command:['Put the {t} on the table','When the bell rings, line up quietly','Please close the door','Don’t touch the wet paint','Before you leave, switch off the lights'],
+ exclamation:['What a brilliant idea that is','How quickly the time has flown','What an enormous {a} that is','How beautiful the sunset looks']};
+const FNWHY={statement:'A <b>statement</b> tells you something. The subject usually comes before the verb.',question:'A <b>question</b> asks something – it may start with a question word (where, why…), start with a verb (Can…? Have…?) or end with a question tag (…don’t you?).',command:'A <b>command</b> tells someone to do something. It uses the verb’s bossy (imperative) form, often with no subject – even if a subordinate clause comes first!',exclamation:'In SATs, an <b>exclamation</b> starts with <i>What</i> or <i>How</i> and is a full sentence with a verb: “What a mess <u>you have made</u>!”'};
+const fillFN=s=>fillN(s).replace('{a}',pick(['tiger','whale','spider','dinosaur'])).replace('{t}',pick(['scissors','torch','keys','remote control']));
+const TRICKY=s=>/wondered|know where|When the bell rings, we|Before you leave|line up quietly|don’t you/.test(s);
+def('fn_table','G2','G2.1–G2.4','Statement, question, command, exclamation',false,()=>{
+ const types=['statement','question','command','exclamation'];
+ const rows=shuffle(types.map((t,i)=>{const raw=pick(FN[t]);const s=fillFN(raw);return {html:s,ans:i,raw,t};}));
+ return {type:'table',prompt:'Tick one box in each row to show the <b>sentence type</b>.',note:'The end punctuation has been removed – use the grammar to decide!',cols:types.map(cap),rows,
+  hint:'Commands are bossy (a verb telling you to do something). Exclamations start with “What” or “How” and have a verb.',
+  why:rows.map(r=>`“${r.html}” → <b>${r.t}</b>. ${FNWHY[r.t]}${TRICKY(r.raw)?' <i>(Tricky one!)</i>':''}`),ansText:'see the ticks above'};
+});
+def('fn_which','G2','G2.1–G2.4','Spot the sentence type',true,()=>{
+ const types=['statement','question','command','exclamation'];const t=pick(types);
+ const right=fillFN(pick(FN[t]));const others=shuffle(types.filter(x=>x!==t)).map(x=>fillFN(pick(FN[x])));
+ const opts=shuffle([right,...others]);
+ return {type:'tick',prompt:`Which sentence is ${t==='exclamation'?'an':'a'} <b>${t}</b>?`,note:'The end punctuation has been removed.',options:opts,answer:opts.indexOf(right),
+  hint:FNWHY[t],why:[FNWHY[t],`“${right}” is the ${t}.`],ansText:right};
+});
+const TAGS=[['You’re coming to the party','aren’t you',['isn’t it','don’t you','won’t you']],['{F} can swim','can’t she',['can she','doesn’t she','isn’t she']],['They didn’t win','did they',['didn’t they','do they','won’t they']],['We should leave soon','shouldn’t we',['should we','won’t we','don’t we']],['It was cold yesterday','wasn’t it',['isn’t it','was it','didn’t it']],['{M} has finished','hasn’t he',['has he','didn’t he','isn’t he']],['You won’t forget','will you',['won’t you','do you','are you']]];
+def('fn_tag','G2','G2.2','Question tags',true,()=>{
+ const t=pick(TAGS);const s=t[0].replace('{F}',pick(NAMES.filter(n=>n[1]==='f'))[0]).replace('{M}',pick(NAMES.filter(n=>n[1]==='m'))[0]);
+ const opts=shuffle([t[1],...t[2]]);const neg=/n’t/.test(t[0]);
+ return {type:'tick',prompt:'Which <b>question tag</b> completes the sentence?',stem:`${s}, <span class="box2"></span>?`,options:opts,answer:opts.indexOf(t[1]),
+  hint:'Positive sentence → negative tag. Negative sentence → positive tag. Keep the same helping verb.',
+  why:['A <b>question tag</b> turns a statement into a question.',neg?'The sentence is negative (it has n’t), so the tag is <b>positive</b>.':'The sentence is positive, so the tag is <b>negative</b>.','The tag reuses the same helping verb and a pronoun that matches the subject.',`So: “${s}, <b>${t[1]}</b>?”`],ansText:t[1]};
+});
+
+/* -------- G3 combining words, phrases, clauses -------- */
+const SUBS=[['because it was raining','we stayed inside'],['although she was tired','{F} finished the race'],['when the bell rang','the children lined up'],['if you finish early','you can read a book'],['unless it snows','the match will go ahead'],['while the baby slept','we tiptoed past'],['as soon as the film ended','everyone cheered'],['before the guests arrived','Dad tidied the kitchen'],['even though the sea was cold','{F} went for a swim']];
+const fillF=s=>s.replace('{F}',pick(NAMES.filter(n=>n[1]==='f'))[0]);
+def('cl_sub','G3','G3.4','Main and subordinate clauses',false,()=>{
+ const p=pick(SUBS);const sub=p[0],main=fillF(p[1]);const subFirst=Math.random()<.5;const askSub=Math.random()<.65;
+ const chunks=subFirst?[cap(sub)+',',main+'.']:[cap(main),sub+'.'];
+ const ai=askSub?(subFirst?0:1):(subFirst?1:0);const conj=sub.split(' ').slice(0,sub.startsWith('as soon')?3:sub.startsWith('even')?2:1).join(' ');
+ return {type:'chunks',prompt:`Underline the <b>${askSub?'subordinate':'main'} clause</b> in the sentence.`,chunks,answer:ai,
+  hint:'A subordinate clause starts with a subordinating conjunction (because, although, when, if…) and doesn’t make sense on its own.',
+  why:['A <b>main clause</b> makes sense on its own.',`A <b>subordinate clause</b> begins with a subordinating conjunction – here “${conj}” – and does not make sense on its own.`,`Main clause: “${main}”. Subordinate clause: “${sub}”.`,subFirst?'When the subordinate clause comes first, it is followed by a comma.':'The subordinate clause can come at the end too – it is still subordinate.'],ansText:chunks[ai]};
+});
+def('cl_rel','G3','G3.1a','Relative clauses',false,()=>{
+ const [n,g]=nm();const t=R(5);let chunks,ai,rp;
+ if(t===0){const p=pick(['man','woman','boy','girl']);chunks=[`The ${p}`,'who lives next door',`has a pet ${pick(['parrot','tortoise','snake'])}.`];ai=1;rp='who';}
+ else if(t===1){chunks=[`My ${pick(['uncle','aunt','cousin'])},`,`who is a ${pick(['chef','pilot','vet','builder'])},`,`${pick(['cooked us a huge dinner','came to visit at the weekend','told us a funny story'])}.`];ai=1;rp='who';}
+ else if(t===2){chunks=[`We visited the ${pick(['castle','palace','tower'])}`,`where the ${pick(['king','queen'])} once lived.`];ai=1;rp='where';}
+ else if(t===3){chunks=[`The ${pick(['key','scarf','phone','glove'])}`,`that ${n} lost`,`was under the sofa.`];ai=1;rp='that';}
+ else {chunks=[`The ${pick(ANIMALS)},`,`which had been asleep all day,`,`suddenly ran off.`];ai=1;rp='which';}
+ return {type:'chunks',prompt:'Underline the <b>relative clause</b> in the sentence.',chunks,answer:ai,
+  hint:'Look for a relative pronoun: who, which, where, when, whose or that.',
+  why:['A <b>relative clause</b> adds information about a noun. It starts with a relative pronoun (who, which, where, when, whose, that).',`Here it starts with “${rp}” and tells us more about “${strip(chunks[0]).replace(/,$/,'')}”.`,'The sentence still makes sense without it – try reading it with the relative clause removed!'],ansText:chunks[ai]};
+});
+const CONJ=[['We took our umbrellas','because','it looked like rain.',['although','until','unless']],['The path was icy,','so','we walked carefully.',['because','although','unless']],['','Although','the film was long, nobody got bored.',['Because','So','Unless']],['You can’t go out','unless','you tidy your room.',['because','although','so']],['We waited at the gate','until','the bus arrived.',['although','so','unless']],['','If','it is sunny tomorrow, we will have a picnic.',['Although','So','Because']],['I wanted to win,','but','I came second.',['because','if','until']]];
+def('cl_conj','G3','G3.3–G3.4','Choosing conjunctions',true,()=>{
+ const c=pick(CONJ);const opts=shuffle([c[1],...c[3]]);
+ const meaning={because:'gives a reason',so:'shows a result',although:'shows a contrast – something surprising',unless:'means “except if”',until:'means “up to the time that”',if:'shows a condition',but:'shows a contrast'};
+ return {type:'tick',prompt:'Which conjunction best completes the sentence?',stem:`${c[0]} <span class="box2"></span> ${c[2]}`,options:opts,answer:opts.indexOf(c[1]),
+  hint:'Read the sentence with each word. Which one makes the meaning work?',
+  why:['A conjunction joins clauses – and each one has a different meaning.',`“${c[1]}” ${meaning[c[1].toLowerCase()]}.`,`${c[0]} <b>${c[1]}</b> ${c[2]}`],ansText:c[1]};
+});
+def('cl_phrase','G3','G3.1','Clause or phrase?',false,()=>{
+ const P=['after the long journey','the tiny spotted ladybird','under the old bridge','in the morning','with a loud bang','the tallest tree in the forest'];
+ const C=['after the journey ended','the ladybird flew away','we hid under the bridge','because it was morning','when the door banged','the tree fell down'];
+ const rows=shuffle([...sample(P,2).map(h=>({html:h,ans:1})),...sample(C,2).map(h=>({html:h,ans:0}))]);
+ return {type:'table',prompt:'Tick to show whether each group of words is a <b>clause</b> or a <b>phrase</b>.',cols:['Clause','Phrase'],rows,
+  hint:'Hunt for a verb! A clause has a verb (and usually a subject). A phrase doesn’t.',
+  why:['A <b>clause</b> contains a verb (and usually a subject doing it).','A <b>phrase</b> is a group of words without a verb of its own.',...rows.map(r=>`“${r.html}” → <b>${r.ans?'phrase':'clause'}</b>`)],ansText:'see the ticks above'};
+});
+def('cl_np','G3','G3.2','Expanded noun phrases',true,()=>{
+ const a=pick(ANIMALS),adj=pick(ANADJ),f=pick(['a fluffy tail','huge ears','a muddy nose','bright eyes','a stripy scarf']);
+ const right=`the ${adj} ${a} with ${f}`;
+ const d=shuffle([`ran quickly down the road`,`because it was late`,`she smiled and waved`,`is jumping very high`]).slice(0,3);
+ const opts=shuffle([right,...d]);
+ return {type:'tick',prompt:'Which of these is an <b>expanded noun phrase</b>?',options:opts,answer:opts.indexOf(right),
+  hint:'Find the option built around a noun, with extra words describing it.',
+  why:['A <b>noun phrase</b> is a group of words built around a noun.','It is <b>expanded</b> when we add describing words – adjectives before the noun and/or a prepositional phrase after it.',`“the <u>${adj}</u> <b>${a}</b> <u>with ${f}</u>” – the noun is “${a}”.`,'The other options contain verbs or conjunctions instead.'],ansText:right};
+});
+def('cl_conjtype','G3','G3.3–G3.4','Co-ordinating or subordinating?',false,()=>{
+ const CO=[['We wanted to play outside <u>but</u> it was raining.','but'],['You can have juice <u>or</u> milk.','or'],['{N} grabbed a coat <u>and</u> ran outside.','and']];
+ const SU=[['We stayed in <u>because</u> it was raining.','because'],['<u>Although</u> it was late, we kept reading.','Although'],['I’ll call you <u>when</u> I get home.','when'],['You can come <u>if</u> you finish your work.','if'],['The dog barked <u>until</u> we opened the door.','until']];
+ const rows=shuffle([...sample(CO,2).map(r=>({html:fillN(r[0]),ans:0,w:r[1]})),...sample(SU,2).map(r=>({html:r[0],ans:1,w:r[1]}))]);
+ return {type:'table',prompt:'Is the underlined conjunction <b>co-ordinating</b> or <b>subordinating</b>?',cols:['Co-ordinating','Subordinating'],rows,
+  hint:'Co-ordinating conjunctions join two equal parts: and, but, or.',
+  why:['<b>Co-ordinating</b> conjunctions (and, but, or) join two parts of equal importance – each clause could stand alone.','<b>Subordinating</b> conjunctions (because, although, when, if, until…) start a subordinate clause that depends on the main clause.',...rows.map(r=>`“${r.w}” → <b>${r.ans?'subordinating':'co-ordinating'}</b>`)],ansText:'see the ticks above'};
+});
+
+/* -------- G4 verbs -------- */
+const VERBS=[['walk','walks','walked','walking','walked','to school'],['play','plays','played','playing','played','the piano'],['finish','finishes','finished','finishing','finished','the puzzle'],['paint','paints','painted','painting','painted','a picture'],['bake','bakes','baked','baking','baked','a cake'],['climb','climbs','climbed','climbing','climbed','the tree'],['write','writes','wrote','writing','written','a letter'],['eat','eats','ate','eating','eaten','an apple'],['swim','swims','swam','swimming','swum','in the lake'],['draw','draws','drew','drawing','drawn','a map'],['sing','sings','sang','singing','sung','a song'],['build','builds','built','building','built','a den'],['throw','throws','threw','throwing','thrown','the ball']];
+const FORMS={'simple present':v=>v[1],'simple past':v=>v[2],'present progressive':v=>'is '+v[3],'past progressive':v=>'was '+v[3],'present perfect':v=>'has '+v[4],'past perfect':v=>'had '+v[4]};
+const FWHY={'simple present':'one verb word in the present (e.g. walks)','simple past':'one verb word in the past (e.g. walked, wrote)','present progressive':'<b>is/am/are + -ing</b> – happening right now','past progressive':'<b>was/were + -ing</b> – was in progress in the past','present perfect':'<b>has/have + past participle</b> – happened in the past but still linked to now','past perfect':'<b>had + past participle</b> – happened before another past event'};
+const FN_ORDER=Object.keys(FORMS);
+def('vb_table','G4','G4.1','Tenses and verb forms',false,()=>{
+ const fs=sample(FN_ORDER,4).sort((a,b)=>FN_ORDER.indexOf(a)-FN_ORDER.indexOf(b));const vs=sample(VERBS,4);const ns=sample(NAMES,4);
+ const rows=shuffle(fs.map((f,i)=>({html:`${ns[i][0]} <u>${FORMS[f](vs[i])}</u> ${vs[i][5]}.`,ans:i,f})));
+ return {type:'table',prompt:'Tick one box in each row to show the form of the underlined verb.',cols:fs.map(cap),rows,
+  hint:'Look for helper verbs: is/was + -ing = progressive. has/had + participle = perfect.',
+  why:[...rows.map(r=>`${r.html} → <b>${r.f}</b>: ${FWHY[r.f]}.`)],ansText:'see the ticks above'};
+});
+def('vb_tick','G4','G4.1','Spot the verb form',true,()=>{
+ const f=pick(FN_ORDER);const v=pick(VERBS);const n=nm()[0];const others=sample(FN_ORDER.filter(x=>x!==f),3);
+ const mk=x=>`${n} ${FORMS[x](v)} ${v[5]}.`;const opts=shuffle([mk(f),...others.map(mk)]);
+ return {type:'tick',code:f.includes('perfect')?'G4.1b':f.includes('progressive')?'G4.1d':'G4.1a',prompt:`Tick the sentence written in the <b>${f}</b>.`,options:opts,answer:opts.indexOf(mk(f)),
+  hint:`The ${f} is ${FWHY[f]}.`,why:[`The ${f} is ${FWHY[f]}.`,`So: “${mk(f)}”`,'Check the others: '+others.map(x=>`“${FORMS[x](v)}” = ${x}`).join('; ')+'.'],ansText:mk(f)};
+});
+def('vb_write','G4','G4.1b','Writing verb forms',false,()=>{
+ const f=pick(['present perfect','past progressive','present progressive','past perfect']);const v=pick(VERBS);const [n,g]=nm();const plural=Math.random()<.35;
+ const subj=plural?pick(['The children','My friends','They']):n;
+ let form=FORMS[f](v);if(plural)form=form.replace(/^is /,'are ').replace(/^was /,'were ').replace(/^has /,'have ');
+ return {type:'type',prompt:`Complete the sentence using the <b>${f}</b> form of the verb <b>to ${v[0]}</b>.`,stem:`${subj} <span class="box2" style="width:120px"></span> ${v[5]}.`,accept:[form],placeholder:'type the verb…',
+  hint:`The ${f} is ${FWHY[f]}.${plural?' The subject is plural!':''}`,
+  why:[`The ${f} is ${FWHY[f]}.`,plural?`“${subj}” is plural, so use ${form.split(' ')[0]}.`:`“${subj}” is one person, so use ${form.split(' ')[0]}.`,`${subj} <b>${form}</b> ${v[5]}.`],ansText:form};
+});
+def('vb_consist','G4','G4.2','Tense consistency',true,()=>{
+ const [v1,v2]=sample(VERBS,2);const n=nm()[0];const past=Math.random()<.5;
+ const start=past?['Yesterday',',']:['Every','morning',','];
+ const w1=past?v1[2]:v1[1],w2=past?v2[1]:v2[2];
+ const toks=[...start,n,w1,...v1[5].split(' '),'and','then',w2,...v2[5].split(' ')];toks.push('.');
+ const ai=toks.indexOf(w2,start.length+2+v1[5].split(' ').length);
+ return {type:'circle',prompt:'One verb is in the <b>wrong tense</b>. Circle it.',tokens:toks,answer:[ai],
+  hint:past?'“Yesterday” tells you the time. Which verb doesn’t fit?':'“Every morning” tells you it is a habit – present tense. Which verb doesn’t fit?',
+  why:['Tenses should stay <b>consistent</b> unless the time really changes.',past?'“Yesterday” tells us this happened in the past, so both verbs should be in the past tense.':'“Every morning” tells us this is a regular habit, so both verbs should be in the present tense.',`“${w2}” should be “<b>${past?v2[2]:v2[1]}</b>”.`],ansText:`“${w2}” (should be “${past?v2[2]:v2[1]}”)`};
+});
+def('vb_modal','G4','G4.1c','Modal verbs',true,()=>{
+ const m=pick(['might','could','will','should','may','must','can']);const v=pick(VERBS);const n=nm()[0];
+ const toks=['If','it','stops','raining',',',n,m,v[0],...v[5].split(' '),'later','.'];
+ return {type:'circle',prompt:'Circle the <b>modal verb</b> in the sentence.',tokens:toks,answer:[6],
+  hint:'Modal verbs are helpers that show how likely or necessary something is.',
+  why:['<b>Modal verbs</b> help the main verb and show possibility, certainty or obligation: <i>can, could, may, might, will, would, shall, should, must</i>.',`Here “${m}” helps the main verb “${v[0]}”.`,'“stops” is a verb too – but it is not a modal verb.'],ansText:`“${m}”`};
+});
+def('vb_certain','G4','G4.1c','How certain? (modals)',true,()=>{
+ const most=Math.random()<.5;const n=nm()[0];const act=pick(['win the race','be late','find the treasure','score a goal']);
+ const right=most?`${n} will ${act}.`:`${n} might ${act}.`;
+ const others=most?[`${n} might ${act}.`,`${n} could ${act}.`,`${n} may ${act}.`]:[`${n} will ${act}.`,`${n} is going to ${act}.`,`${n} must ${act}.`];
+ const opts=shuffle([right,...others]);
+ return {type:'tick',prompt:`Which sentence shows that it is <b>${most?'most':'least'} certain</b>?`,options:opts,answer:opts.indexOf(right),
+  hint:'Modal verbs show how likely something is. “might / may / could” = possible. “will / must” = sure.',
+  why:['Modal verbs change how certain a sentence sounds.','<i>might, may, could</i> → it is only possible.','<i>will, must, is going to</i> → it is certain or very sure.',`So the ${most?'most':'least'} certain is “${right}”`],ansText:right};
+});
+const PASS=[['the dog','chased','chased','the postman',0,'chasing',0],['the storm','destroyed','destroyed','the old barn',0,'destroying',0],['our class','planted','planted','the trees',1,'planting',0],['a famous artist','painted','painted','the mural',0,'painting',0],['the chef','cooked','cooked','the meal',0,'cooking',0],['the goalkeeper','saved','saved','the penalty',0,'saving',0],['the wind','blew','blown','the leaves',1,'blowing',0],['a bee','stung','stung','my sister',0,'stinging',0],['the children','built','built','the snowman',0,'building',1]];
+def('vb_passive','G4','G4.4','Active and passive',true,()=>{
+ const [p,o]=sample(PASS,2);const be=p[4]?'were':'was',be2=p[4]?'are':'is';const findPass=Math.random()<.6;
+ const passive=`${cap(p[3])} ${be} ${p[2]} by ${p[0]}.`;const active=`${cap(p[0])} ${p[1]} ${p[3]}.`;
+ const prog=`${cap(p[0])} ${p[6]?'were':'was'} ${p[5]} ${p[3]}.`;
+ const other=`${cap(o[0])} ${o[1]} ${o[3]}.`;const oPass=`${cap(o[3])} ${o[4]?'were':'was'} ${o[2]} by ${o[0]}.`;
+ const right=findPass?passive:active;const opts=shuffle(findPass?[passive,active,prog,other]:[active,passive,oPass,`${cap(p[0])} ${p[6]?'were':'was'} ${p[5]} ${p[3]}.`]);
+ return {type:'tick',prompt:findPass?'Tick the sentence written in the <b>passive voice</b>.':`Which sentence is the <b>active</b> version, in the same tense, of: <i>“${passive}”</i>`,options:opts,answer:opts.indexOf(right),
+  hint:'In the passive, the thing the action happens to comes first, and you’ll often see “was/were + verb + by…”.',
+  why:['In the <b>active voice</b> the subject does the action: “'+active+'”','In the <b>passive voice</b> the thing the action is done to becomes the subject, and the doer moves after “by” (or disappears): “'+passive+'”','Passive = <b>was/were</b> + past participle (+ by …).',findPass?'“'+prog+'” is the past progressive – still active, because '+p[0]+' is doing it.':'Keep the same tense when you switch: “'+be+' '+p[2]+'” (simple past passive) → “'+p[1]+'” (simple past active).'],ansText:right};
+});
+def('vb_subj','G4','G4.3','The subjunctive',true,()=>{
+ const R1=['If I were taller, I could reach the top shelf.','The head teacher insisted that every pupil wear a coat.','It is essential that he be on time.','I wish it were the weekend.','If she were here, she would know what to do.','The coach demanded that the team arrive early.'];
+ const W=['If I was taller, I could reach the top shelf.','The head teacher insisted that every pupil wears a coat.','It is essential that he is on time.','I wish it was the weekend.','If she was here, she would know what to do.','The coach demanded that the team arrives early.'];
+ const i=R(R1.length);const right=R1[i];const others=sample(W.filter((x,j)=>j!==i),3);const opts=shuffle([right,...others]);
+ return {type:'tick',code:'G4.3 / G7.4',prompt:'Tick the sentence that uses the <b>subjunctive</b> form.',options:opts,answer:opts.indexOf(right),
+  hint:'The subjunctive is a formal form. Look for “If I were…” or “that he be / that she wear”.',
+  why:['The <b>subjunctive</b> is a formal verb form used for wishes, “if” situations that aren’t real, and demands.','In wishes and imaginary “if” sentences, use <b>were</b> instead of was: “If I <b>were</b>…”, “I wish it <b>were</b>…”.','After demands like insist/demand/essential that…, use the plain verb with no -s: “that every pupil <b>wear</b>”, “that he <b>be</b>”.',`So: “${right}”`],ansText:right};
+});
+
+/* -------- G5 punctuation -------- */
+def('pu_caps','G5','G5.1','Capital letters',true,()=>{
+ const n=nm()[0].toLowerCase();let toks,caps;
+ if(Math.random()<.5){const d=pick(['monday','tuesday','wednesday','thursday','friday','saturday']),c=pick(['london','cardiff','edinburgh','manchester','belfast','paris']);
+  toks=['on',d,',',n,'and','i','visited',c,'with','our',pick(['uncle','aunt','grandad','cousins']),'.'];caps=[0,1,3,5,7];}
+ else {const m=pick(['january','march','april','june','july','october']),c=pick(['spain','france','italy','canada','japan','india']);
+  toks=['in',m,',','my','cousin',n,'flew','to',c,'with','her','dog','.'];caps=[0,1,5,8];}
+ return {type:'circle',prompt:'Circle <b>all</b> the words that should start with a <b>capital letter</b>.',tokens:toks,answer:caps,
+  hint:'Capitals for: the start of a sentence, names of people and places, days, months – and “I”.',
+  why:['Capital letters are needed for: the first word of a sentence, names of people and places (proper nouns), days of the week, months – and the pronoun “I”.',...caps.map(i=>`“${toks[i]}” → <b>${cap(toks[i])}</b>`),'Ordinary nouns like “cousin” or “uncle” don’t need capitals.'],ansText:caps.map(i=>cap(toks[i])).join(', ')};
+});
+function gapsQ(words){return words;}
+def('pu_list','G5','G5.5','Commas in lists',false,()=>{
+ const n=nm()[0];const items=sample(['torch','map','compass','whistle','snack','blanket','rope','notebook'],4);
+ const words=[n,'packed'];const idx=[];items.forEach((it,i)=>{if(i===3)words.push('and');words.push(art(it));words.push(it+(i===3?'.':''));if(i<3)idx.push(words.length-1);});
+ const req=[idx[0],idx[1]],opt=idx[2];
+ const ans={};req.forEach(g=>ans[g]=',');
+ return {type:'gaps',prompt:'Insert the <b>two missing commas</b> in the list.',words,palette:[','],answer:ans,
+  check:m=>{const ks=Object.keys(m).map(Number);return req.every(g=>m[g]===',')&&ks.every(k=>req.includes(k)||(k===opt&&m[k]===','));},
+  hint:'Commas separate the items in a list – but you normally don’t need one before the final “and”.',
+  why:['In a list, commas separate the items.','The last two items are joined by “and”, so no comma is needed before “and” (we haven’t marked you down if you added one).',`${n} packed ${art(items[0])} ${items[0]}<b>,</b> ${art(items[1])} ${items[1]}<b>,</b> ${art(items[2])} ${items[2]} and ${art(items[3])} ${items[3]}.`],ansText:'commas after “'+items[0]+'” and “'+items[1]+'”'};
+});
+def('pu_fronted','G5','G5.6b','Commas after fronted adverbials',false,()=>{
+ const p=pick(FRONT);const adv=p[0].split(' '),main=fillN(p[1]).split(' ');main[main.length-1]+='.';
+ const words=[...adv,...main];const g=adv.length-1;
+ return {type:'gaps',prompt:'Insert a <b>comma</b> in the correct place.',words,palette:[','],answer:{[g]:','},
+  hint:'Find where the “when / where / how” part at the start finishes and the main clause begins.',
+  why:['A <b>fronted adverbial</b> is a word or phrase at the start of a sentence that tells you when, where or how.','It is followed by a comma, which separates it from the main clause.',`<b>${p[0]},</b> ${fillN(p[1])}.`],ansText:`after “${adv[adv.length-1]}”`};
+});
+const AMB=[['Which sentence shows that Grandma is being invited to eat with us?','Let’s eat, Grandma!','Let’s eat Grandma!','The comma shows Grandma is the person being spoken to – not the food!'],['Which sentence tells us that <b>three</b> people went shopping?','My sister, Amy and I went shopping.','My sister Amy and I went shopping.','With the comma, “my sister” and “Amy” are two different people – a list of three. Without it, Amy <i>is</i> my sister.'],['Which sentence is about people who travel?','Most of the time, travellers worry about their luggage.','Most of the time travellers worry about their luggage.','The comma separates “Most of the time” – otherwise it seems to be about <i>time travellers</i>!'],['Which sentence shows that Mum is being spoken to?','I’m going to cook, Mum.','I’m going to cook Mum.','The comma shows Mum is being spoken to. Without it, Mum might end up in the oven!'],['Which sentence tells us there are <b>four</b> things on the menu?','On the menu: cheese, salad, sandwiches and crisps.','On the menu: cheese salad, sandwiches and crisps.','Each comma separates an item, so cheese and salad are two separate things.']];
+def('pu_ambig','G5','G5.6a','Commas to avoid ambiguity',true,()=>{
+ const a=pick(AMB);const opts=shuffle([a[1],a[2]]);
+ return {type:'tick',prompt:a[0],options:opts,answer:opts.indexOf(a[1]),hint:'Read each one aloud with a pause where the comma is. How does the meaning change?',
+  why:['Commas can change the meaning of a sentence – they help avoid ambiguity (two possible meanings).',a[3]],ansText:a[1]};
+});
+def('pu_apos','G5','G5.8','Apostrophes: contraction or possession?',false,()=>{
+ const P=[()=>{const n=nm()[0];return `${n}<u>’s</u> ${pick(['coat','bike','lunchbox','scarf'])} is ${pick(['red','blue','new','muddy'])}.`;},()=>`The dog<u>’s</u> lead is by the door.`,()=>`The ${pick(['teacher','captain','baker'])}<u>’s</u> ${pick(['keys','phone','hat'])} went missing.`,()=>`We borrowed Gran<u>’s</u> umbrella.`];
+ const C=[()=>{const n=nm()[0];return `${n}<u>’s</u> ${pick(['late again','feeling better','the winner'])} today.`;},()=>`The dog<u>’s</u> barking again.`,()=>`It<u>’s</u> raining outside.`,()=>`We<u>’re</u> going to the zoo.`,()=>`I<u>’ve</u> lost my pencil.`];
+ const rows=shuffle([...sample(P,2).map(f=>({html:f(),ans:1})),...sample(C,2).map(f=>({html:f(),ans:0}))]);
+ return {type:'table',prompt:'Is the apostrophe used for a <b>contraction</b> or for <b>possession</b>?',cols:['Contraction','Possession'],rows,
+  hint:'Try expanding it: if “’s” can become “is” or “has”, it’s a contraction. If something belongs to someone, it’s possession.',
+  why:['A <b>contraction</b> apostrophe shows missing letters: it’s = it <b>i</b>s, we’re = we a<b>re</b>.','A <b>possession</b> apostrophe shows something belongs to someone: the dog’s lead = the lead belonging to the dog.',...rows.map(r=>`${r.html} → <b>${r.ans?'possession':'contraction'}</b>`)],ansText:'see the ticks above'};
+});
+def('pu_plural','G5','G5.8','Plural possession',true,()=>{
+ if(Math.random()<.35){const ir=pick([['children','child','toys'],['men','man','boots'],['women','woman','bags'],['people','person','votes']]);
+  const right=`the ${ir[0]}’s ${ir[2]}`;const opts=shuffle([right,`the ${ir[0]}s’ ${ir[2]}`,`the ${ir[1]}s’ ${ir[2]}`,`the ${ir[0]}s ${ir[2]}`]);
+  return {type:'tick',prompt:`Which shows that the ${ir[2]} belong to more than one ${ir[1]}?`,options:opts,answer:opts.indexOf(right),hint:`What is the plural of “${ir[1]}”? Does it already end in s?`,
+   why:[`The plural of ${ir[1]} is <b>${ir[0]}</b> – it doesn’t end in s.`,'When a plural doesn’t end in s, add <b>’s</b> to show possession.',`So: <b>${right}</b>.`],ansText:right};}
+ const n=pick(['boy','girl','teacher','player','dog','twin']),t=pick(['coats','bags','bikes','books','bowls']);
+ const right=`the ${n}s’ ${t}`;const opts=shuffle([right,`the ${n}’s ${t}`,`the ${n}s ${t}`,`the ${n}s’s ${t}`]);
+ return {type:'tick',prompt:`Which shows that the ${t} belong to <b>more than one</b> ${n}?`,options:opts,answer:opts.indexOf(right),hint:'First make the plural. Then decide where the apostrophe goes.',
+  why:[`More than one ${n} = <b>${n}s</b> (plural, ends in s).`,'For a plural ending in s, just add an apostrophe <b>after</b> the s.',`So: <b>${right}</b>. (“the ${n}’s ${t}” would mean just one ${n}.)`],ansText:right};
+});
+const CONTR=[['do not',"don't",'We <u>do not</u> have enough time.'],['cannot',"can't",'I <u>cannot</u> find my glasses.'],['will not',"won't",'The car <u>will not</u> start.'],['I am',"I'm",'<u>I am</u> going to the park.'],['they are',"they're",'Look – <u>they are</u> here!'],['should have',"should've",'You <u>should have</u> asked first.'],['it is',"it's",'I think <u>it is</u> going to snow.'],['could not',"couldn't",'We <u>could not</u> see the stage.'],['you are',"you're",'<u>You are</u> the winner!'],['has not',"hasn't",'The bus <u>has not</u> arrived.'],['they will',"they'll",'I hope <u>they will</u> come.'],['we would',"we'd",'<u>We would</u> love to help.']];
+def('pu_contr','G5','G5.8','Contractions',false,()=>{
+ const c=pick(CONTR);const disp=c[1].replace("'",'’');
+ return {type:'type',prompt:'Write the <b>contracted form</b> of the underlined words.',stem:c[2],accept:[c[1]],placeholder:'e.g. isn’t',
+  hint:'Squash the words together and use an apostrophe where letters are missing.',
+  why:['A <b>contraction</b> joins two words and uses an apostrophe to show where letters have been missed out.',c[0]==='will not'?'“will not” is unusual – it becomes <b>won’t</b>.':c[0]==='cannot'?'“cannot” loses one n and the o → <b>can’t</b>.':`“${c[0]}” → <b>${disp}</b>.`,'Put the apostrophe exactly where the missing letters were.'],ansText:disp};
+});
+def('pu_speech','G5','G5.7','Inverted commas',true,()=>{
+ const isQ=Math.random()<.4;const n=nm()[0];
+ const L=isQ?pick(['Where are my trainers','Can I have a turn','Is it time for lunch yet','Who left the door open']):pick(['I can see the sea','The bus is late again','We need more glue','My shoelace has come undone','It is my turn to choose']);
+ const v=isQ?pick(['asked','wondered']):pick(['said','whispered','announced','explained']);const p=isQ?'?':',';const end=isQ?'?':'.';
+ let right,wrongs,formA=Math.random()<.55;
+ if(formA){right=`“${L}${p}” ${v} ${n}.`;wrongs=[`“${L}” ${v} ${n}.`,`“${L}”${p} ${v} ${n}.`,`“${L}${p}” ${cap(v)} ${n}.`,`${L}${p}” ${v} ${n}.`];if(!isQ)wrongs.push(`“${L}.” ${v} ${n}.`);}
+ else {right=`${n} ${v}, “${L}${end}”`;wrongs=[`${n} ${v} “${L}${end}”`,`${n} ${v}, “${L}”${end}`,`${n} ${v}, “${L.charAt(0).toLowerCase()+L.slice(1)}${end}”`,`${n} ${v}, “${L}${end}`];}
+ const opts=shuffle([right,...sample(wrongs,3)]);
+ return {type:'tick',prompt:'Which sentence is punctuated <b>correctly</b>?',options:opts,answer:opts.indexOf(right),
+  hint:'The punctuation that belongs to the spoken words goes <i>inside</i> the inverted commas.',
+  why:['Inverted commas go around the <b>exact words spoken</b>.','Punctuation belonging to the speech goes <b>inside</b> the closing inverted commas.',formA?(isQ?'A question keeps its question mark inside, then the reporting clause continues in lower case.':'If the reporting clause (“'+v+' '+n+'”) comes after, end the speech with a <b>comma</b> inside the inverted commas – not a full stop.'):'If the reporting clause comes first, put a <b>comma</b> before the opening inverted commas, and start the speech with a capital letter.',formA?'The word after the speech (“'+v+'”) does not need a capital letter.':'',`So: ${right}`].filter(Boolean),ansText:right};
+});
+const PAR=[['My uncle','who is a chef','cooked dinner for everyone.'],['The Eiffel Tower','which is in Paris','is very tall.'],['Our teacher','Mrs Patel','loves poetry.'],['The giant panda','a rare animal','eats mostly bamboo.'],['{N}','the best swimmer in our class','won a gold medal.'],['The old castle','built over 800 years ago','is now a museum.'],['My best friend','who lives next door','has a pet snake.']];
+def('pu_paren','G5','G5.9','Parenthesis',false,()=>{
+ const p=pick(PAR).slice();p[0]=fillN(p[0]);const pre=p[0].split(' '),par=p[1].split(' '),post=p[2].split(' ');const words=[...pre,...par,...post];const a=pre.length-1,b=pre.length+par.length-1;
+ return {type:'gaps',prompt:'Insert a <b>pair</b> of commas, brackets or dashes to show the <b>parenthesis</b>.',words,palette:[',','(',')','–'],answer:{[a]:',',[b]:','},
+  check:m=>{const ks=Object.keys(m).map(Number);if(ks.length!==2||!ks.includes(a)||!ks.includes(b))return false;const x=m[a],y=m[b];return (x===','&&y===',')||(x==='('&&y===')')||(x==='–'&&y==='–');},
+  hint:'Parenthesis is extra information. Find the words you could remove and the sentence would still make sense.',
+  why:['<b>Parenthesis</b> is a word or phrase added to a sentence as extra information.','It is marked off with a <b>pair</b> of commas, brackets or dashes – one at each end. (Don’t mix them!)',`The extra information is “${p[1]}”. Remove it and the sentence still works: “${p[0]} ${p[2]}”`,`${p[0]} <b>(</b>${p[1]}<b>)</b> ${p[2]}`],ansText:`around “${p[1]}”`};
+});
+def('pu_box','G5','G5.10–G5.13','Colons, semi-colons and hyphens',true,()=>{
+ const t=R(3);const [na,nb]=twoNames();const n=na[0],n2=nb[0];let s,ans,opts,why;const B='<span class="box2"></span>';
+ if(t===0){s=pick([`You will need three things${B} a pencil, a ruler and a rubber.`,`${n} had packed everything${B} a tent, a torch and a stove.`,`There are four seasons${B} spring, summer, autumn and winter.`]);ans='colon';opts=['colon','semi-colon','comma','hyphen'];why='A <b>colon</b> introduces a list after a clause that makes sense on its own.';}
+ else if(t===1){s=pick([`The match was cancelled${B} the pitch was flooded.`,`${n} loves painting${B} ${n2} prefers football.`,`It was getting dark${B} we hurried home.`]);ans='semi-colon';opts=['semi-colon','comma','hyphen','question mark'];why='A <b>semi-colon</b> joins two closely related main clauses (each could be a sentence on its own). A comma can’t do this job on its own.';}
+ else {s=pick([`The man${B}eating shark swam closer.`,`My grandma is eighty${B}two years old.`,`We need to re${B}cover the old sofa.`]);ans='hyphen';opts=['hyphen','dash','comma','colon'];why='A <b>hyphen</b> joins words or parts of words (no spaces) to make the meaning clear: man-eating, eighty-two, re-cover. A dash has spaces and separates clauses.';}
+ opts=shuffle(opts);
+ return {type:'tick',prompt:'Which punctuation mark should go in the box?',stem:s,options:opts,answer:opts.indexOf(ans),hint:'Look at what is on each side of the box. A list? Two sentences? Two parts of one word?',
+  why:[why,t===1?'(A colon or a dash could also join these clauses, but they aren’t options here.)':''].filter(Boolean),ansText:ans};
+});
+const HYPH=[['Which sentence shows the shark eats people?','The man-eating shark circled the boat.','The man eating shark circled the boat.','The hyphen joins “man-eating” into one describing word. Without it, it sounds like a man is eating a shark!'],['Which sentence means the sofa was given a new cover?','We re-covered the sofa.','We recovered the sofa.','“Re-cover” means cover again. “Recover” means get back or get better.'],['Which sentence uses a hyphen correctly?','My sister is twenty-one today.','My sister is twenty one-today.','Numbers from twenty-one to ninety-nine are joined with a hyphen.'],['Which sentence tells us the dog is small and eats a lot?','We have a little-known dog.','We have a little, hungry dog.','Tricky! “Little-known” means not many people know about it. The comma version gives two separate facts: little <i>and</i> hungry.']];
+def('pu_hyph','G5','G5.13','Hyphens',true,()=>{
+ const h=pick(HYPH);const right=h[3].startsWith('Tricky')?h[2]:h[1];const opts=shuffle([h[1],h[2]]);
+ return {type:'tick',prompt:h[0],options:opts,answer:opts.indexOf(right),hint:'Hyphens join words together to make one meaning.',why:['A <b>hyphen</b> ( - ) joins words or parts of words to avoid ambiguity.',h[3]],ansText:right};
+});
+const BUL=[['To make a sandwich, you will need:',['bread','butter','cheese','tomato']],['For the school trip, bring:',['a packed lunch','a waterproof coat','a drink','sensible shoes']],['In your pencil case, you should have:',['a pencil','a ruler','a rubber','a sharpener']]];
+def('pu_bullet','G5','G5.14','Bullet points',false,()=>{
+ const b=pick(BUL);const its=b[1];const ul=a=>`${b[0]}<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+ const goodLower=its.slice(),goodCaps=its.map(x=>cap(x)+'.');const right=Math.random()<.5?goodLower:goodCaps;
+ const w1=its.map((x,i)=>i%2?cap(x):x),w2=its.map((x,i)=>i===1||i===3?x+'.':x),w3=its.map((x,i)=>i<2?cap(x)+'.':x+',');
+ const all=[right,w1,w2,w3].map(ul);const r=all[0];const opts=shuffle(all);
+ return {type:'tick',prompt:'Which list of bullet points is punctuated <b>consistently</b>?',options:opts,answer:opts.indexOf(r),hint:'Every bullet point should start and end in the same way.',
+  why:['Bullet points can be punctuated in different ways – the important thing is to be <b>consistent</b>.','Either start every point with a capital letter (and end with a full stop), or use lower case with no punctuation – but do the same for <i>every</i> point.','The correct list treats each bullet point exactly the same way.'],ansText:'the consistent list'};
+});
+const MARKS=[['semi-colon','The sun was setting<b class="hl">;</b> it was time to go home.'],['colon','Bring the following<b class="hl">:</b> a coat, a hat and some gloves.'],['dash','I opened the box <b class="hl">–</b> it was empty!'],['hyphen','My sister is twenty<b class="hl">-</b>one today.'],['brackets','The museum <b class="hl">(</b>which opened in 1900<b class="hl">)</b> is free to visit.'],['apostrophe','We couldn<b class="hl">’</b>t find the key.'],['inverted commas','<b class="hl">“</b>Hurry up,<b class="hl">”</b> called Dad.'],['comma','After the film<b class="hl">,</b> we went home.']];
+def('pu_name','G5','G5.1–G5.14','Name that punctuation',true,()=>{
+ const m=pick(MARKS);const opts=shuffle([m[0],...sample(MARKS.filter(x=>x[0]!==m[0]).map(x=>x[0]),3)]);
+ const what={'semi-colon':'joins two related main clauses','colon':'introduces a list or explanation','dash':'marks a break between clauses (it has spaces round it)','hyphen':'joins words with no spaces','brackets':'mark parenthesis – extra information','apostrophe':'shows missing letters or possession','inverted commas':'go around the words that are spoken','comma':'separates parts of a sentence – here, after a fronted adverbial'};
+ return {type:'tick',prompt:'What is the name of the highlighted punctuation?',stem:m[1],options:opts,answer:opts.indexOf(m[0]),hint:'Think about the job it is doing in this sentence.',
+  why:[`This is a <b>${m[0]}</b> – it ${what[m[0]]}.`,'Knowing the names of punctuation marks is worth marks on its own in the SATs!'],ansText:m[0]};
+});
+
+/* -------- G6 vocabulary -------- */
+const SYN=[['enormous','huge','tiny'],['ancient','old','modern'],['furious','angry','calm'],['brave','courageous','cowardly'],['begin','start','finish'],['delighted','pleased','disappointed'],['gloomy','dark','bright'],['reluctant','unwilling','eager'],['rapid','fast','slow'],['damp','wet','dry'],['vanish','disappear','appear'],['exhausted','tired','energetic'],['fragile','delicate','sturdy'],['timid','shy','bold'],['peculiar','strange','ordinary'],['generous','giving','selfish']];
+def('vo_syn','G6','G6.1','Synonyms and antonyms',true,()=>{
+ const s=pick(SYN);const isSyn=Math.random()<.5;const others=sample(SYN.filter(x=>x!==s),2);
+ const right=isSyn?s[1]:s[2];const opts=shuffle([right,isSyn?s[2]:s[1],...others.map(o=>o[isSyn?1:2])]);
+ return {type:'tick',code:'G6.1',prompt:isSyn?`Which word is closest in meaning to <b>${s[0]}</b>?`:`Which word is most nearly <b>opposite</b> in meaning to <b>${s[0]}</b>?`,options:opts,answer:opts.indexOf(right),
+  hint:isSyn?'A synonym has the same or similar meaning. Watch out – the opposite is hiding in there too!':'An antonym is an opposite. Watch out – a word meaning the same is hiding in there too!',
+  why:[isSyn?'A <b>synonym</b> is a word with the same or similar meaning.':'An <b>antonym</b> is a word with the opposite meaning.',`“${s[0]}” means about the same as “${s[1]}”, and the opposite of “${s[2]}”.`,`So the answer is <b>${right}</b>.`],ansText:right};
+});
+const PRE=[['happy','un'],['kind','un'],['lock','un'],['agree','dis'],['appear','dis'],['honest','dis'],['possible','im'],['patient','im'],['polite','im'],['visible','in'],['correct','in'],['active','in'],['regular','ir'],['responsible','ir'],['legal','il'],['logical','il']];
+def('vo_prefix','G6','G6.2','Prefixes',true,()=>{
+ const p=pick(PRE);const opts=shuffle([p[1],...sample(['un','dis','im','in','ir','il','mis'].filter(x=>x!==p[1]),3)]);
+ const note={im:'<b>im-</b> is used before words starting with m or p.',ir:'<b>ir-</b> is used before words starting with r.',il:'<b>il-</b> is used before words starting with l.',un:'<b>un-</b> means “not” (or reverses a verb: lock → unlock).',dis:'<b>dis-</b> means “not” or reverses the meaning.',in:'<b>in-</b> means “not”.'};
+ return {type:'tick',prompt:`Which prefix makes the word <b>${p[0]}</b> mean the opposite?`,options:opts.map(o=>o+'-'),answer:opts.indexOf(p[1]),hint:'Try each one in front of the word. Which makes a real word?',
+  why:['A <b>prefix</b> is added to the start of a word to change its meaning.',note[p[1]],`${p[0]} → <b>${p[1]}${p[0]}</b>`],ansText:p[1]+p[0]};
+});
+const PM=[['super- (superhero)','above / greater than'],['anti- (antiseptic)','against'],['auto- (autograph)','self / own'],['re- (rewrite)','again or back'],['mis- (misspell)','wrongly'],['sub- (submarine)','under / below'],['inter- (international)','between'],['de- (defrost)','undo / remove']];
+def('vo_match','G6','G6.2','Prefix meanings',false,()=>{
+ const ps=sample(PM,4);const right=shuffle(ps.map(p=>p[1]));
+ return {type:'match',prompt:'Match each <b>prefix</b> to its meaning.',left:ps.map(p=>p[0]),right,answer:ps.map(p=>right.indexOf(p[1])),hint:'Use the example word to help you work out what the prefix means.',
+  why:['Knowing what a prefix means helps you work out new words.',...ps.map(p=>`<b>${p[0]}</b> → ${p[1]}`)],ansText:'see the matches above'};
+});
+const SUF=[['dark','adjective','noun','darkness',['darkly','darken','darker']],['kind','adjective','noun','kindness',['kindly','kinder','unkind']],['happy','adjective','noun','happiness',['happily','happier','unhappy']],['enjoy','verb','noun','enjoyment',['enjoyable','enjoyed','enjoying']],['move','verb','noun','movement',['movable','moved','moving']],['agree','verb','noun','agreement',['agreeable','agreed','agreeing']],['pure','adjective','verb','purify',['purely','purer','purity']],['active','adjective','verb','activate',['actively','activity','inactive']],['solid','adjective','verb','solidify',['solidly','solids','solidity']],['real','adjective','verb','realise',['really','reality','unreal']],['danger','noun','adjective','dangerous',['dangers','endanger','dangerously']],['hope','noun','adjective','hopeful',['hoped','hoping','hopes']],['beauty','noun','adjective','beautiful',['beautify','beauties','beautifully']],['quick','adjective','adverb','quickly',['quicker','quickest','quickness']],['careful','adjective','adverb','carefully',['carefulness','careless','care']]];
+def('vo_suffix','G6','G6.3','Suffixes',true,()=>{
+ const s=pick(SUF);const opts=shuffle([s[3],...s[4]]);const suf=s[3].slice(s[3].search(/(ness|ment|ify|ate|ise|ous|ful|ly)$/));
+ return {type:'tick',prompt:`Which word changes the ${s[1]} <b>${s[0]}</b> into ${art(s[2])} <b>${s[2]}</b>?`,options:opts,answer:opts.indexOf(s[3]),hint:`Suffixes that make ${s[2]}s include: ${({noun:'-ness, -ment, -ity',verb:'-ify, -ate, -ise',adjective:'-ful, -ous, -less',adverb:'-ly'})[s[2]]}.`,
+  why:['A <b>suffix</b> is added to the end of a word and can change its word class.',`Adding <b>-${suf}</b> turns “${s[0]}” into the ${s[2]} “${s[3]}”.`,s[2]==='noun'?'Test: can you put “the” in front? “the '+s[3]+'” ✓':s[2]==='verb'?'Test: can you use it as an action? “to '+s[3]+'” ✓':s[2]==='adjective'?'Test: can it describe a noun? “a '+s[3]+' thing” ✓':'Test: can it describe how something is done? “'+s[3]+'” ✓'],ansText:s[3]};
+});
+const FAM=[['sign',['signal','signature','design'],'sing'],['child',['childhood','children','childish'],'chill'],['act',['action','actor','react'],'acre'],['help',['helpful','helpless','helper'],'hello'],['school',['schoolbag','preschool','schooling'],'scold'],['friend',['friendly','friendship','unfriendly'],'fried'],['magic',['magician','magical','magically'],'magnet'],['play',['player','playful','replay'],'plate']];
+def('vo_family','G6','G6.4','Word families',true,()=>{
+ const f=pick(FAM);const opts=shuffle([...f[1],f[2]]);
+ return {type:'tick',prompt:`Which word is <b>NOT</b> in the same word family as <b>${f[0]}</b>?`,options:opts,answer:opts.indexOf(f[2]),hint:'Word families share a root word AND a related meaning. Looking similar isn’t enough!',
+  why:['A <b>word family</b> is a group of words built from the same root word, with linked meanings.',`${f[1].join(', ')} all come from “${f[0]}” and are linked in meaning.`,`“${f[2]}” looks a bit similar but has nothing to do with the meaning of “${f[0]}”.`],ansText:f[2]};
+});
+
+/* -------- G7 Standard English and formality -------- */
+const SE=[['We *was late for school.','were','With “we”, Standard English uses <b>were</b>.'],['I *done my homework last night.','did','“Done” needs a helper (I <i>have</i> done). On its own, use <b>did</b>.'],['*Them books on the shelf are mine.','Those','Use <b>those</b> before a noun – not “them”.'],['{N} played really *good in the match.','well','“Played” is a verb, so it needs the adverb <b>well</b>, not the adjective “good”.'],['I haven’t got *nothing to do.','anything','“Haven’t” is already negative, so use <b>anything</b> (no double negatives).'],['They *come to see us yesterday.','came','“Yesterday” is in the past, so use <b>came</b>.'],['Can I borrow *them pencils?','those','Use <b>those</b> before a noun – not “them”.'],['You *was right about the weather.','were','With “you”, Standard English uses <b>were</b>.'],['I *seen a fox in the garden.','saw','“Seen” needs a helper (I <i>have</i> seen). On its own, use <b>saw</b>.'],['She should *of told us.','have','It sounds like “should of” but it is really “should <b>have</b>” (should’ve).'],['{N} and *me went to the cinema.','I','Test it: you’d say “<b>I</b> went”, not “me went”.']];
+def('se_circle','G7','G7.1','Standard English',true,()=>{
+ const e=pick(SE);const s=fillN(e[0]);const toks=s.replace(/([.?!])$/,' $1').split(' ');const ai=toks.findIndex(t=>t.startsWith('*'));toks[ai]=toks[ai].slice(1);
+ return {type:'circle',prompt:'Circle the word that is <b>not</b> Standard English.',tokens:toks,answer:[ai],hint:'Read it aloud as if you were a newsreader. Which word would they change?',
+  why:['<b>Standard English</b> is the form of English used in formal speech and writing.',e[2],`Correct: “${s.replace(/\*\S+?(?=[\s.?!])/,'<b>'+e[1]+'</b>')}”`],ansText:`“${toks[ai]}” → ${e[1]}`};
+});
+def('se_tick','G7','G7.1','Standard English',true,()=>{
+ const es=sample(SE,4);const fix=e=>{const s=fillN(e[0]);return s.replace(/\*\S+?(?=[\s.?!])/,e[1]);};const bad=e=>fillN(e[0]).replace('*','');
+ const right=fix(es[0]);const opts=shuffle([right,...es.slice(1).map(bad)]);
+ return {type:'tick',prompt:'Tick the sentence written in <b>Standard English</b>.',options:opts,answer:opts.indexOf(right),hint:'Three of these use spoken, non-standard forms. Which one would be fine in a formal letter?',
+  why:['<b>Standard English</b> is the form of English used in formal speech and writing.',`“${right}” is correct.`,...es.slice(1).map(e=>e[2])],ansText:right};
+});
+const FORM=[['ask for','request'],['find out','discover'],['get','receive'],['need','require'],['help','assist'],['tell','inform'],['say sorry','apologise'],['put off','postpone'],['go up','increase'],['kids','children']];
+def('se_match','G7','G7.2','Formal vocabulary',false,()=>{
+ const ps=sample(FORM,4);const right=shuffle(ps.map(p=>p[1]));
+ return {type:'match',prompt:'Match each <b>informal</b> word or phrase to its <b>formal</b> partner.',left:ps.map(p=>p[0]),right,answer:ps.map(p=>right.indexOf(p[1])),hint:'Formal words are the ones you’d find in an official letter.',
+  why:['<b>Formal</b> vocabulary is used in official writing like letters, reports and speeches. Informal words are for chatting with friends.',...ps.map(p=>`${p[0]} → <b>${p[1]}</b>`)],ansText:'see the matches above'};
+});
+const FT=[['Pupils are requested to arrive by 8:45am.','Kids, get here by quarter to nine!','Make sure you’re in by 8:45, yeah?','Try to come in a bit early, okay?'],['We regret to inform you that the trip has been cancelled.','Sorry, the trip’s off.','Bad news – no trip!','The trip isn’t happening, guys.'],['Should you require assistance, please ask a member of staff.','If you need help, just shout.','Need a hand? Give us a shout.','Ask someone if you’re stuck, okay?'],['If I were you, I would apologise to her.','If I was you, I’d say sorry.','You should totally say sorry.','Just say sorry, mate.']];
+def('se_formal','G7','G7.3–G7.4','Formal sentences',true,()=>{
+ const f=pick(FT);const opts=shuffle(f);
+ return {type:'tick',prompt:'Which sentence is the <b>most formal</b>?',options:opts,answer:opts.indexOf(f[0]),hint:'Look for formal words, no contractions (you’re, trip’s) and no chatty words (okay, guys, yeah).',
+  why:['Formal writing uses formal vocabulary (request, require, inform), avoids contractions and chatty words, and may use the subjunctive (“If I were…”, “Should you require…”).',`“${f[0]}” is the most formal.`],ansText:f[0]};
+});
+
+/* ============ domains & glossary ============ */
+const DOMS={
+ G1:{name:'The Word Class Line-up',tab:'G1',desc:'Nouns, verbs, adverbs, prepositions, pronouns, subject & object.',weight:22,icon:'🔤'},
+ G2:{name:'The Sentence Suspects',tab:'G2',desc:'Statements, questions, commands, exclamations and question tags.',weight:6,icon:'❓'},
+ G3:{name:'The Clause Conspiracy',tab:'G3',desc:'Main, subordinate and relative clauses, phrases and conjunctions.',weight:10,icon:'🔗'},
+ G4:{name:'The Time-Travelling Verbs',tab:'G4',desc:'Tenses, progressive, perfect, modals, passive, subjunctive.',weight:16,icon:'⏳'},
+ G5:{name:'The Punctuation Heist',tab:'G5',desc:'Commas, apostrophes, speech, parenthesis, colons, semi-colons, hyphens.',weight:30,icon:'❗'},
+ G6:{name:'The Vocabulary Vault',tab:'G6',desc:'Synonyms, antonyms, prefixes, suffixes and word families.',weight:10,icon:'🗝️'},
+ G7:{name:'The Formal Disguise',tab:'G7',desc:'Standard English and formal vs informal language.',weight:6,icon:'🎩'}
+};
+const byDom=d=>Object.values(G).filter(g=>g.dom===d).map(g=>g.id);
+const GLOSS={
+ G1:[['Noun','Names a person, place, thing or idea.','the <u>castle</u>, <u>Maya</u>, <u>happiness</u>',['wc_circle','wc_table']],['Verb','A doing or being word. It can change tense.','she <u>runs</u> / she <u>ran</u>; I <u>am</u>',['wc_circle','wc_table']],['Adjective','Describes a noun.','a <u>muddy</u> boot',['wc_circle','wc_table']],['Adverb','Adds to a verb: how, when, where, how often.','He ran <u>quickly</u>. We <u>often</u> swim.',['wc_circle','wc_table']],['Fronted adverbial','An adverbial moved to the front, followed by a comma.','<u>Later that day,</u> we went home.',['wc_fronted','pu_fronted']],['Preposition','Links a noun phrase to show place, time or cause. No verb after it.','<u>under</u> the bridge, <u>after</u> lunch',['wc_circle','wc_prepconj']],['Determiner','Comes before a noun: the, a, an, this, some, every…','<u>an</u> hour, <u>those</u> shoes',['wc_circle','wc_aan']],['Conjunction','Joins words or clauses.','tea <u>and</u> toast; I left <u>because</u> I was cold',['wc_circle','wc_prepconj','cl_conj']],['Pronoun','Replaces a noun. Possessive pronouns show ownership.','<u>She</u> helped <u>us</u>. It’s <u>mine</u>.',['wc_pronoun']],['Relative pronoun','Starts a relative clause: who, which, where, when, whose, that.','the girl <u>who</u> won',['wc_relpron','cl_rel']],['Subject & object','Subject does the verb; object has it done to it.','<u>The dog</u> chased <u>the ball</u>.',['wc_subjobj']]],
+ G2:[['Statement','Tells you something.','The bus is late.',['fn_table','fn_which']],['Question','Asks something – question word, verb first, or a question tag.','Is it raining? You’re coming, <u>aren’t you</u>?',['fn_table','fn_tag']],['Command','Tells someone to do something (imperative verb).','<u>Close</u> the door. When it rings, <u>line up</u>.',['fn_table','fn_which']],['Exclamation','Starts with What or How and has a verb.','<u>What</u> a mess you made! <u>How</u> fast it is!',['fn_table','fn_which']]],
+ G3:[['Clause','A group of words with a verb (and usually a subject).','<u>the dog barked</u>',['cl_phrase']],['Phrase','A group of words with no verb of its own.','<u>under the old bridge</u>',['cl_phrase','cl_np']],['Main clause','Makes sense on its own.','<u>We stayed in</u> because it rained.',['cl_sub']],['Subordinate clause','Starts with a subordinating conjunction; needs a main clause.','We stayed in <u>because it rained</u>.',['cl_sub','cl_conjtype']],['Relative clause','Adds information about a noun, starting with a relative pronoun.','My aunt, <u>who is a vet</u>, came.',['cl_rel']],['Expanded noun phrase','A noun with extra describing words before or after.','<u>the tiny mouse with a long tail</u>',['cl_np']],['Co-ordinating vs subordinating','and/but/or join equals; because/when/if/although start a subordinate clause.','tea <u>or</u> coffee; <u>if</u> it snows',['cl_conjtype','cl_conj']]],
+ G4:[['Simple present & past','One verb word.','she <u>walks</u> / she <u>walked</u>',['vb_table','vb_tick']],['Progressive','is/was + -ing: an action in progress.','I <u>was reading</u>.',['vb_table','vb_write']],['Perfect','has/have/had + past participle.','She <u>has eaten</u>. We <u>had left</u>.',['vb_table','vb_write','vb_tick']],['Modal verbs','Show possibility, certainty or obligation.','You <u>might</u> win. You <u>must</u> stop.',['vb_modal','vb_certain']],['Tense consistency','Keep the same tense unless the time changes.','Yesterday I <u>walked</u> and <u>played</u>.',['vb_consist']],['Passive voice','The thing acted on becomes the subject: was/were + participle (+ by…).','The cake <u>was eaten</u> by the dog.',['vb_passive']],['Subjunctive','Formal form: If I were…; insist that he be…','If I <u>were</u> you…',['vb_subj']]],
+ G5:[['Capital letters','Sentence starts, names, places, days, months and “I”.','On <u>M</u>onday, <u>I</u> visited <u>L</u>ondon.',['pu_caps']],['Commas in lists','Separate items; not usually before the final “and”.','eggs, milk, flour and sugar',['pu_list']],['Commas for clarity','Change or clarify meaning.','Let’s eat, Grandma!',['pu_ambig','pu_fronted']],['Inverted commas','Go around the spoken words; speech punctuation goes inside.','“Stop<u>,</u>” said Dad.',['pu_speech']],['Apostrophes','Show missing letters or possession.','it’s (it is); the girls’ coats',['pu_apos','pu_plural','pu_contr']],['Parenthesis','Extra information in a pair of commas, brackets or dashes.','My uncle <u>(a chef)</u> cooked.',['pu_paren']],['Colon','Introduces a list or explanation.','You need three things<u>:</u> …',['pu_box','pu_name']],['Semi-colon','Joins two related main clauses.','It was late<u>;</u> we hurried home.',['pu_box','pu_name']],['Dash vs hyphen','Dash ( – ) separates clauses; hyphen ( - ) joins words.','man-eating; I looked – nothing!',['pu_hyph','pu_box']],['Bullet points','Punctuate every point the same way.','• bread • butter • cheese',['pu_bullet']]],
+ G6:[['Synonym & antonym','Same meaning / opposite meaning.','huge = enormous; huge ≠ tiny',['vo_syn']],['Prefix','Added to the start of a word.','<u>un</u>happy, <u>re</u>write, <u>im</u>possible',['vo_prefix','vo_match']],['Suffix','Added to the end; can change the word class.','kind<u>ness</u>, enjoy<u>ment</u>, pur<u>ify</u>',['vo_suffix']],['Word family','Words from the same root with linked meanings.','sign, signal, signature',['vo_family']]],
+ G7:[['Standard English','The form used in formal speech and writing.','We <u>were</u> (not we was); I <u>did</u> it',['se_circle','se_tick']],['Formal vocabulary','Words suited to official writing.','ask for → <u>request</u>',['se_match','se_formal']],['Formal structures','No contractions or chat; may use the subjunctive.','Should you require help…',['se_formal','vb_subj']]]
+};
+
+/* ============ state ============ */
+const KEY='inspectorClause_v1';
+let S={points:0,stars:{},cases:{},cold:{},coldCleared:0,trophies:{},rapidBest:0,whys:0,bestStreak:0,drills:[],mocks:0,sound:true};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)S=Object.assign(S,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const RANKS=[[0,'Cadet'],[100,'Constable'],[300,'Sergeant'],[600,'Detective'],[1000,'Detective Inspector'],[1600,'Chief Inspector'],[2500,'Superintendent'],[4000,'Commissioner']];
+const rank=()=>{let r=RANKS[0];RANKS.forEach(x=>{if(S.points>=x[0])r=x;});return r;};
+const nextRank=()=>RANKS.find(x=>x[0]>S.points);
+const TROPHIES=[['first','🗂️','First Case Closed','Finish any case file'],['perfect','💎','Flawless Evidence','Get 10/10 in a case file'],['allcases','📚','Full Caseload','Finish all seven case files'],['allstars','⭐','Chief of Detectives','3 stars on every case file'],['punct','❗','Punctuation Patrol','3 stars on The Punctuation Heist'],['streak5','🔥','Hot on the Trail','5 correct in a row'],['streak10','🚀','Unstoppable','10 correct in a row'],['sharp','👁️','Sharp Eyes','8+ in a case with no magnifying glass'],['cold3','🧊','Cold Case Cracker','Clear 3 cold cases'],['mockhalf','⚖️','Trial Run','Finish a half paper'],['mockfull','🏛️','Day in Court','Finish a full 50-question paper'],['mock80','🏆','Case for the Defence','Score 80%+ in a mock paper'],['rapid10','⚡','Quick on the Draw','10+ in a Rapid Interrogation'],['rapid20','🌩️','Lightning Interrogator','20+ in a Rapid Interrogation'],['curious','🤔','Curious Detective','Open 15 “Why?” explanations'],['locker','🧰','Evidence Expert','Practise 5 skills from the Evidence Locker']];
+function award(id){if(S.trophies[id])return;S.trophies[id]=Date.now();save();const t=TROPHIES.find(x=>x[0]===id);toast(`<span style="font-size:32px">${t[1]}</span><div><b>Trophy unlocked!</b><br>${t[2]}</div>`);sfx('trophy');confetti();}
+
+/* ============ sound & fx ============ */
+let AC=null;
+function sfx(k){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const seq={good:[[660,.08],[880,.12]],bad:[[220,.18]],trophy:[[523,.1],[659,.1],[784,.1],[1046,.2]],tick:[[500,.03]],stamp:[[140,.1]]}[k]||[];let t=AC.currentTime;seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=k==='bad'||k==='stamp'?'square':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);t+=d;});}catch(e){}}
+function toast(html){const d=document.createElement('div');d.className='toast';d.innerHTML=html;document.body.appendChild(d);setTimeout(()=>d.remove(),3200);}
+function flash(c){const d=document.createElement('div');d.className='flash';d.style.background=c;document.body.appendChild(d);setTimeout(()=>d.remove(),500);}
+const cv=document.getElementById('fx');let parts=[],raf=null;
+function confetti(){const W=cv.width=innerWidth,H=cv.height=innerHeight;for(let i=0;i<120;i++)parts.push({x:W/2,y:H/3,vx:(Math.random()-.5)*14,vy:Math.random()*-12-2,c:pick(['#e0a526','#c0392b','#2f6fb5','#25854f','#f4e4bc']),s:4+Math.random()*6,r:Math.random()*6,life:90+R(40)});if(!raf)loop();}
+function loop(){const x=cv.getContext('2d');x.clearRect(0,0,cv.width,cv.height);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.r+=.2;p.life--;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore();});parts=parts.filter(p=>p.life>0&&p.y<cv.height+20);raf=parts.length?requestAnimationFrame(loop):(x.clearRect(0,0,cv.width,cv.height),null);}
+
+const INSPECTOR=(sz=64)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 64 64" aria-hidden="true"><path d="M12 64c2-12 10-16 20-16s18 4 20 16z" fill="#b8925a"/><path d="M26 48l6 8 6-8z" fill="#fff"/><path d="M30 50h4l1 8h-6z" fill="#c0392b"/><circle cx="32" cy="34" r="14" fill="#f1c9a5"/><path d="M13 23h38l-5-13H18z" fill="#3b3f4a"/><rect x="9" y="21" width="46" height="5" rx="2.5" fill="#262932"/><rect x="18" y="18" width="28" height="3" fill="#c0392b"/><circle cx="26.5" cy="33" r="2" fill="#222"/><circle cx="37.5" cy="33" r="2" fill="#222"/><path d="M23 40q4.5-3 9 0q4.5-3 9 0" stroke="#6b4423" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="51" cy="45" r="8" fill="#d6ecff" stroke="#8a6a2a" stroke-width="3"/><path d="M45.5 50.5l-6 7" stroke="#8a6a2a" stroke-width="4" stroke-linecap="round"/></svg>`;
+const QUIPS_OK=['Case cracked!','Elementary, my dear detective!','The evidence fits perfectly.','Another mystery solved!','Superb sleuthing!','Nothing gets past you!','That’s a conviction!'];
+const QUIPS_BAD=['Hmm… the evidence doesn’t add up.','A red herring! Look again.','Close – but the clues point elsewhere.','Not quite, detective.'];
+const STAMPS_OK=['SOLVED','CRACKED','CORRECT'];
+
+/* ============ question rendering ============ */
+const app=document.getElementById('app');
+let Q=null; // session
+const PALETTE_COL=['#2f6fb5','#c0392b','#25854f','#b8860b','#7d3c98','#16a085'];
+function joinHTML(toks,fn){let h='';toks.forEach((t,i)=>{const sp=i>0&&!NOSPACE_BEFORE.test(t)&&!NOSPACE_AFTER.test(toks[i-1])?' ':'';h+=sp+fn(t,i);});return h;}
+function qBody(q){
+ let h=`<div class="qmeta"><span>${esc(q.code)} · ${esc(q.skill)}</span><span>${q.marks} mark</span></div><p class="prompt">${q.prompt}</p>`;
+ if(q.note)h+=`<p class="note">${q.note}</p>`;
+ if(q.stem)h+=`<div class="stem">${q.stem}</div>`;
+ const u=q.ui;
+ if(q.type==='tick'){h+=`<div class="opts">${q.options.map((o,i)=>`<button class="opt${u.sel===i?' sel':''}" data-o="${i}"><span class="box"></span><span>${o}</span></button>`).join('')}</div>`;}
+ else if(q.type==='circle'){h+=`<div class="stem">${joinHTML(q.tokens,(t,i)=>/\w/.test(t)?`<button class="tok click${u.sel.includes(i)?' sel':''}" data-t="${i}">${esc(t)}</button>`:`<span class="tok p">${esc(t)}</span>`)}</div>`;}
+ else if(q.type==='chunks'){h+=`<div class="stem">${q.chunks.map((c,i)=>`<button class="chunk${u.sel===i?' sel':''}" data-c="${i}">${c}</button>`).join(' ')}</div><p class="note">Tap a part of the sentence to underline it.</p>`;}
+ else if(q.type==='table'){h+=`<div style="overflow-x:auto"><table class="tt"><tr><th></th>${q.cols.map(c=>`<th>${c}</th>`).join('')}</tr>${q.rows.map((r,ri)=>`<tr data-r="${ri}"><td>${r.html}</td>${q.cols.map((c,ci)=>`<td><button class="cell${u.sel[ri]===ci?' sel':''}" data-cell="${ri},${ci}" aria-label="${strip(c)}"></button></td>`).join('')}</tr>`).join('')}</table></div>`;}
+ else if(q.type==='match'){h+=`<div class="match"><div class="mcol">${q.left.map((l,i)=>`<button class="mitem${u.act===i?' act':''}" data-l="${i}">${l}${u.pairs[i]!=null?`<span class="tag" style="background:${PALETTE_COL[i]}">${i+1}</span>`:''}</button>`).join('')}</div><div class="mcol">${q.right.map((r,j)=>{const li=u.pairs.indexOf(j);return `<button class="mitem" data-rr="${j}">${r}${li>=0?`<span class="tag" style="background:${PALETTE_COL[li]}">${li+1}</span>`:''}</button>`;}).join('')}</div></div><p class="note">Tap an item on the left, then its partner on the right.</p>`;}
+ else if(q.type==='type'){h+=`<input class="typed" id="typed" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${q.placeholder||''}" value="${esc(u.val||'')}">`;}
+ else if(q.type==='gaps'){h+=`<div class="stem gapline">${q.words.map((w,i)=>{let s=`<span>${esc(w)}</span>`;if(i<q.words.length-1)s+=` <button class="gap${u.sel[i]?' filled':''}" data-g="${i}">${u.sel[i]?esc(u.sel[i]):'&nbsp;'}</button> `;return s;}).join('')}</div>
+  <div class="palette">${q.palette.length>1?'Choose a mark:':'Mark:'} ${q.palette.map(p=>`<button class="pbtn${u.mark===p?' on':''}" data-p="${esc(p)}">${esc(p)}</button>`).join('')} <span>then tap a gap. Tap again to remove.</span></div>`;}
+ return h;
+}
+function initUI(q){q.ui={sel:q.type==='tick'||q.type==='chunks'?null:q.type==='table'?q.rows.map(()=>null):q.type==='gaps'?{}:[],act:null,pairs:q.type==='match'?q.left.map(()=>null):null,val:'',mark:q.palette?q.palette[0]:null};}
+function answered(q){const u=q.ui;switch(q.type){case 'tick':case 'chunks':return u.sel!=null;case 'circle':return u.sel.length>0;case 'table':return u.sel.every(x=>x!=null);case 'match':return u.pairs.every(x=>x!=null);case 'type':return norm(u.val).length>0;case 'gaps':return Object.keys(u.sel).length>0;}}
+function isRight(q){const u=q.ui;switch(q.type){
+ case 'tick':case 'chunks':return u.sel===q.answer;
+ case 'circle':{const a=[...q.answer].sort().join(),b=[...u.sel].sort().join();return a===b;}
+ case 'table':return q.rows.every((r,i)=>u.sel[i]===r.ans);
+ case 'match':return q.answer.every((a,i)=>u.pairs[i]===a);
+ case 'type':return q.accept.some(a=>norm(a)===norm(u.val));
+ case 'gaps':if(q.check)return q.check(u.sel);{const k1=Object.keys(u.sel).sort().join(),k2=Object.keys(q.answer).sort().join();return k1===k2&&Object.keys(q.answer).every(k=>u.sel[k]===q.answer[k]);}
+}}
+function reveal(q,root){const u=q.ui;
+ if(q.type==='tick'){root.querySelectorAll('.opt').forEach((b,i)=>{if(i===q.answer)b.classList.add('right');else if(i===u.sel)b.classList.add('wrong');});}
+ if(q.type==='chunks'){root.querySelectorAll('.chunk').forEach((b,i)=>{if(i===q.answer)b.classList.add('right');else if(i===u.sel)b.classList.add('wrong');});}
+ if(q.type==='circle'){root.querySelectorAll('.tok.click').forEach(b=>{const i=+b.dataset.t;const inA=q.answer.includes(i),inS=u.sel.includes(i);b.classList.remove('sel');if(inA&&inS)b.classList.add('right');else if(inA)b.classList.add('miss');else if(inS)b.classList.add('wrong');});}
+ if(q.type==='table'){q.rows.forEach((r,ri)=>{const tr=root.querySelector(`tr[data-r="${ri}"]`);tr.classList.add(u.sel[ri]===r.ans?'rowok':'rowbad');tr.querySelector(`[data-cell="${ri},${r.ans}"]`).classList.add('ans');});}
+ if(q.type==='match'){root.querySelectorAll('[data-l]').forEach((b,i)=>b.classList.add(u.pairs[i]===q.answer[i]?'right':'wrong'));}
+ if(q.type==='type'){const el=root.querySelector('#typed');el.classList.add(isRight(q)?'right':'wrong');el.disabled=true;}
+ if(q.type==='gaps'){const ok=isRight(q);root.querySelectorAll('.gap').forEach(b=>{const g=b.dataset.g;if(ok){if(u.sel[g])b.classList.add('right');}else{const want=q.answer[g];const have=u.sel[g];if(want){b.textContent=want;b.classList.add(have===want?'right':'wrong');b.classList.add('filled');}else if(have){b.classList.add('wrong');}}});}
+ root.querySelectorAll('button.opt,button.tok,button.chunk,button.cell,button.mitem,button.gap,button.pbtn').forEach(b=>b.disabled=true);
+}
+function whyHTML(q,open){return `<div class="why"${open?'':' hidden'} id="whybox"><h4>🔎 CASE NOTES – why is this the answer?</h4><ol>${q.why.map(w=>`<li>${w}</li>`).join('')}</ol><div class="ans">Answer: ${q.ansText}</div></div>`;}
+
+function bindQ(root,q,onChange){
+ root.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const u=q.ui;let hit=true;
+  if(b.dataset.o!=null)u.sel=+b.dataset.o;
+  else if(b.dataset.t!=null){const i=+b.dataset.t;u.sel=u.sel.includes(i)?u.sel.filter(x=>x!==i):[...u.sel,i];}
+  else if(b.dataset.c!=null)u.sel=+b.dataset.c;
+  else if(b.dataset.cell){const [r,c]=b.dataset.cell.split(',').map(Number);u.sel[r]=c;}
+  else if(b.dataset.l!=null)u.act=+b.dataset.l;
+  else if(b.dataset.rr!=null){if(u.act==null)return;const j=+b.dataset.rr;u.pairs=u.pairs.map(x=>x===j?null:x);u.pairs[u.act]=j;const nx=u.pairs.indexOf(null);u.act=nx>=0?nx:null;}
+  else if(b.dataset.p!=null)u.mark=b.dataset.p;
+  else if(b.dataset.g!=null){const g=b.dataset.g;if(u.sel[g]===u.mark)delete u.sel[g];else u.sel[g]=u.mark;}
+  else hit=false;
+  if(hit){sfx('tick');onChange();}
+ };
+ const ti=root.querySelector('#typed');if(ti){ti.oninput=()=>{q.ui.val=ti.value;onChange(true);};ti.onkeydown=e=>{if(e.key==='Enter'){const c=document.getElementById('checkBtn');if(c&&!c.disabled)c.click();}};}
+}
+
+/* ============ sessions ============ */
+function buildList(ids,n){const out=[];let last=null;for(let i=0;i<n;i++){let pool=ids.filter(x=>x!==last);if(!pool.length)pool=ids;const id=pick(pool);out.push(make(id));last=id;}return out;}
+function weightedList(n){const W={G5:.30,G1:.22,G4:.16,G3:.10,G6:.10,G2:.06,G7:.06};const counts={};let tot=0;Object.keys(W).forEach(d=>{counts[d]=Math.round(W[d]*n);tot+=counts[d];});counts.G5+=n-tot;let ids=[];Object.keys(counts).forEach(d=>{const pool=shuffle(byDom(d));for(let i=0;i<counts[d];i++)ids.push(pool[i%pool.length]);});return shuffle(ids).map(make);}
+function start(mode,opts={}){
+ let list,title,timer=null;
+ if(mode==='case'){list=buildList(byDom(opts.dom),10);title=`${DOMS[opts.dom].icon} ${DOMS[opts.dom].name}`;}
+ else if(mode==='patrol'){list=weightedList(12);title='🚓 Mixed Patrol';}
+ else if(mode==='cold'){const ids=Object.keys(S.cold).filter(k=>G[k]);list=buildList(shuffle(ids).slice(0,8).length?ids:Object.keys(G),Math.min(8,Math.max(ids.length*2,4)));title='🧊 Cold Cases';}
+ else if(mode==='drill'){list=buildList(opts.ids,5);title=`🧰 Drill: ${opts.term}`;if(!S.drills.includes(opts.term)){S.drills.push(opts.term);save();if(S.drills.length>=5)award('locker');}}
+ else if(mode==='mock'){const n=opts.n;list=weightedList(n);title=n===50?'🏛️ The Full Trial – mock Paper 1':'⚖️ Half Paper';timer=n===50?45*60:23*60;}
+ else if(mode==='rapid'){list=[];title='⚡ Rapid Interrogation';timer=90;}
+ Q={mode,opts,list,i:0,title,res:[],streak:0,pts:0,hintsUsed:0,timer,ended:false};
+ list.forEach(initUI);
+ if(mode==='rapid'){nextRapid();}
+ if(timer){clearInterval(window._tm);window._tm=setInterval(tick,1000);}
+ renderQ();
+}
+function nextRapid(){const ids=Object.values(G).filter(g=>g.fast).map(g=>g.id);const q=make(pick(ids));initUI(q);Q.list.push(q);Q.i=Q.list.length-1;}
+function tick(){if(!Q||Q.ended){clearInterval(window._tm);return;}Q.timer--;const el=document.getElementById('timer');if(el){el.textContent=fmt(Q.timer);el.classList.toggle('low',Q.timer<=(Q.mode==='rapid'?10:120));}if(Q.timer<=0){clearInterval(window._tm);finish();}}
+const fmt=s=>`${Math.floor(Math.max(0,s)/60)}:${String(Math.max(0,s)%60).padStart(2,'0')}`;
+
+function renderQ(){
+ const q=Q.list[Q.i];q.attempt=q.attempt||0;
+ const rapid=Q.mode==='rapid',mock=Q.mode==='mock';
+ const dots=rapid?`<span class="rapidscore">${Q.pts}</span>`:`<div class="dots">${Q.list.map((x,i)=>{const r=Q.res[i];return `<span class="dot${r?(r.ok?(r.full?' ok':' half'):' bad'):''}${i===Q.i?' cur':''}"></span>`;}).join('')}</div>`;
+ app.innerHTML=`${topbar()}<div class="qbar"><span class="ttl">${Q.title}${rapid?'':` · ${Q.i+1}/${Q.list.length}`}</span>${dots}${Q.timer!=null?`<span class="timer" id="timer">${fmt(Q.timer)}</span>`:''}${!rapid&&!mock&&Q.streak>=3?`<span class="pill">🔥 ${Q.streak} in a row</span>`:''}<button class="iconbtn" id="quit">${mock?'✕ Stop & mark':rapid?'✕ Stop':'✕ Leave'}</button></div>
+ <div class="qcard" id="qc">${qBody(q)}<div id="fbarea"></div><div class="actions" id="acts"></div></div>`;
+ document.getElementById('quit').onclick=()=>{const qb=document.getElementById('quit');if(mock&&!qb.dataset.sure){qb.dataset.sure=1;qb.textContent='Tap again to mark now';return;}if(mock||rapid)finish();else home();};
+ const qc=document.getElementById('qc');
+ const refresh=(typing)=>{if(!typing){const fb=document.getElementById('fbarea').innerHTML;qc.innerHTML=qBody(q)+`<div id="fbarea">${fb}</div><div class="actions" id="acts"></div>`;bindQ(qc,q,refresh);}drawActs();};
+ bindQ(qc,q,refresh);
+ function drawActs(){const a=document.getElementById('acts');const can=answered(q);
+  if(rapid)a.innerHTML=`<button class="btn" id="checkBtn" ${can?'':'disabled'}>Lock it in ✔</button><button class="btn sec" id="skip">Skip (−3s)</button>`;
+  else if(mock)a.innerHTML=`<button class="btn" id="checkBtn">${Q.i===Q.list.length-1?'Finish paper':'Next question →'}</button><span class="small">No hints in the trial – just like the real thing!</span>`;
+  else a.innerHTML=`<button class="btn" id="checkBtn" ${can?'':'disabled'}>${q.attempt?'Check again':'Check answer'}</button>${q.hinted?'':`<button class="btn gold" id="hintBtn">🔍 Magnifying glass</button>`}<button class="btn sec" id="whyFirst">📖 Show me the rule</button>`;
+  const c=document.getElementById('checkBtn');if(c)c.onclick=check;
+  const h=document.getElementById('hintBtn');if(h)h.onclick=()=>{q.hinted=true;Q.hintsUsed++;document.getElementById('fbarea').innerHTML=`<div class="fb hint"><div class="mini">🔍</div><div><b>Magnifying glass:</b> ${q.hint}<br><span class="small">(Using a clue halves the points for this question.)</span></div></div>`;drawActs();};
+  const wf=document.getElementById('whyFirst');if(wf)wf.onclick=()=>{q.peeked=true;q.hinted=true;const g=Object.entries(GLOSS).flatMap(([d,a])=>a).find(x=>x[3].includes(q.id));document.getElementById('fbarea').innerHTML=`<div class="fb hint"><div class="mini">📖</div><div><b>${g?g[0]:q.skill}:</b> ${g?g[1]+' <i>e.g. '+g[2]+'</i>':q.hint}<br><span class="small">(Peeking at the rule halves the points.)</span></div></div>`;drawActs();};
+  const sk=document.getElementById('skip');if(sk)sk.onclick=()=>{Q.timer-=3;Q.streak=0;nextRapid();renderQ();};
+ }
+ drawActs();
+ function check(){
+  const ok=isRight(q);const fbA=document.getElementById('fbarea');const acts=document.getElementById('acts');
+  if(mock){Q.res[Q.i]={ok,full:ok,q};if(Q.i<Q.list.length-1){Q.i++;renderQ();}else finish();return;}
+  if(rapid){Q.res.push({ok,q});if(ok){Q.pts++;Q.streak++;flash('#52c27e');sfx('good');nextRapid();renderQ();}else{Q.streak=0;flash('#e0605a');sfx('bad');reveal(q,qc);acts.innerHTML='';fbA.innerHTML=`<div class="fb bad"><div class="mini">${INSPECTOR(40)}</div><div><b>Answer:</b> ${q.ansText}</div></div>`;setTimeout(()=>{if(!Q.ended){nextRapid();renderQ();}},1400);}return;}
+  if(ok){
+   const full=!q.hinted&&q.attempt===0;let p=full?10:5;if(full){Q.streak++;if(Q.streak>=3)p+=2;}else Q.streak=0;
+   S.bestStreak=Math.max(S.bestStreak,Q.streak);if(Q.streak>=5)award('streak5');if(Q.streak>=10)award('streak10');
+   Q.pts+=p;S.points+=p;Q.res[Q.i]={ok:true,full,q};
+   if(Q.mode==='cold'&&S.cold[q.id]){delete S.cold[q.id];S.coldCleared++;if(S.coldCleared>=3)award('cold3');}
+   save();reveal(q,qc);sfx('good');sfx('stamp');const pp=document.getElementById('ptsPill');if(pp)pp.innerHTML=`${rank()[1]} · <b>${S.points}</b> pts`;
+   qc.insertAdjacentHTML('beforeend',`<div class="stamp">${pick(STAMPS_OK)}</div>`);
+   fbA.innerHTML=`<div class="fb good"><div class="mini">${INSPECTOR(44)}</div><div><b>${pick(QUIPS_OK)}</b> +${p} points${Q.streak>=3&&full?' (streak bonus!)':''}</div></div>${whyHTML(q,false)}`;
+   acts.innerHTML=`<button class="btn green" id="nextBtn">${Q.i===Q.list.length-1?'Close the case →':'Next clue →'}</button><button class="btn sec" id="whyBtn">🤔 Why is that right?</button>`;
+  } else if(q.attempt===0){
+   q.attempt=1;sfx('bad');
+   fbA.innerHTML=`<div class="fb bad"><div class="mini">${INSPECTOR(44)}</div><div><b>${pick(QUIPS_BAD)}</b><br>Take a <b>second look</b> (for half points) – or open the case notes to see the answer.</div></div>`;
+   acts.innerHTML=`<button class="btn" id="again">🔁 Second look</button><button class="btn sec" id="giveup">📂 Show me the answer</button>`;
+   document.getElementById('again').onclick=()=>{fbA.innerHTML=`<div class="fb hint"><div class="mini">🔍</div><div><b>Clue:</b> ${q.hint}</div></div>`;drawActs();};
+   document.getElementById('giveup').onclick=()=>fail();
+   return;
+  } else {fail();return;}
+  bindNext();
+ }
+ function fail(){const fbA=document.getElementById('fbarea'),acts=document.getElementById('acts');Q.streak=0;Q.res[Q.i]={ok:false,q};S.cold[q.id]=(S.cold[q.id]||0)+1;save();reveal(q,qc);sfx('bad');
+  qc.insertAdjacentHTML('beforeend',`<div class="stamp r">COLD CASE</div>`);
+  fbA.innerHTML=`<div class="fb bad"><div class="mini">${INSPECTOR(44)}</div><div><b>This one’s gone into the Cold Case files</b> – you can crack it later. Here’s how it works:</div></div>${whyHTML(q,true)}`;
+  acts.innerHTML=`<button class="btn" id="nextBtn">${Q.i===Q.list.length-1?'Close the case →':'Next clue →'}</button>`;bindNext();}
+ function bindNext(){document.getElementById('nextBtn').onclick=()=>{if(Q.i<Q.list.length-1){Q.i++;renderQ();}else finish();};const w=document.getElementById('whyBtn');if(w)w.onclick=()=>{const b=document.getElementById('whybox');b.hidden=!b.hidden;if(!b.hidden){S.whys++;save();if(S.whys>=15)award('curious');}};}
+}
+function finish(){
+ if(!Q||Q.ended)return;Q.ended=true;clearInterval(window._tm);
+ if(Q.mode==='rapid')return endRapid();
+ if(Q.mode==='mock')return endMock();
+ const n=Q.list.length,correct=Q.res.filter(r=>r&&r.ok).length,full=Q.res.filter(r=>r&&r.full).length;const pct=correct/n;
+ let stars=pct>=.9?3:pct>=.7?2:pct>=.5?1:0;let msg='';
+ if(Q.mode==='case'){const d=Q.opts.dom;S.cases[d]=true;S.stars[d]=Math.max(S.stars[d]||0,stars);award('first');if(correct===10)award('perfect');if(Object.keys(DOMS).every(k=>S.cases[k]))award('allcases');if(Object.keys(DOMS).every(k=>S.stars[k]===3))award('allstars');if(d==='G5'&&stars===3)award('punct');if(Q.hintsUsed===0&&correct>=8)award('sharp');}
+ save();if(stars>=2)confetti();
+ const bySkill={};Q.res.forEach(r=>{if(!r)return;const k=r.q.skill;bySkill[k]=bySkill[k]||[0,0];bySkill[k][1]++;if(r.ok)bySkill[k][0]++;});
+ const missed=Q.res.filter(r=>r&&!r.ok);
+ app.innerHTML=`${topbar()}<div class="panel"><h2>${stars>=2?'📁 CASE CLOSED':'📁 Case report'}</h2>
+ <div class="hero" style="margin:24px 0 18px">${INSPECTOR(70)}<div class="speech">${stars===3?'Outstanding work, detective. This case is airtight!':stars===2?'Solid detective work. A couple of loose ends to tie up.':stars===1?'A good start – but some clues slipped through. Check your Cold Cases!':'This one needs more investigating. Read the case notes and try again – every detective has off days.'}</div></div>
+ <div class="kv"><div>Correct<b>${correct}/${n}</b></div><div>First time, no clues<b>${full}</b></div><div>Points earned<b>+${Q.pts}</b></div>${Q.mode==='case'?`<div>Stars<b>${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</b></div>`:''}</div>
+ <h3>Evidence by skill</h3><div class="bars">${Object.entries(bySkill).map(([k,v])=>`<div class="bar"><span>${k}</span><div class="track"><div class="fill" style="width:${v[0]/v[1]*100}%;background:${v[0]===v[1]?'var(--green)':v[0]?'var(--gold)':'var(--red)'}"></div></div><span>${v[0]}/${v[1]}</span></div>`).join('')}</div>
+ ${missed.length?`<h3>Cold cases opened</h3><div class="review">${missed.map((r,i)=>reviewItem(r,i)).join('')}</div>`:''}
+ <div class="actions">${Q.mode==='case'?`<button class="btn" id="again">Re-open this case (new questions)</button>`:Q.mode==='drill'?`<button class="btn" id="again">Another drill</button>`:Q.mode==='patrol'?`<button class="btn" id="again">Another patrol</button>`:''}<button class="btn sec" id="hq">Back to HQ</button></div></div>`;
+ bindReview();const a=document.getElementById('again');if(a)a.onclick=()=>start(Q.mode,Q.opts);document.getElementById('hq').onclick=home;
+}
+function reviewItem(r,i){return `<div class="ritem ${r.ok?'ok':'no'}"><div><b>${r.ok?'✔':'✘'} ${esc(r.q.skill)}</b> <span class="small">${esc(r.q.code)}</span></div><div>${r.q.prompt}${r.q.stem?' <span class="small">'+r.q.stem+'</span>':''}</div><button class="btn sec" style="padding:5px 10px;font-size:13px;margin-top:6px" data-rv="${i}">Why?</button><div class="why" hidden id="rv${i}"><ol>${r.q.why.map(w=>`<li>${w}</li>`).join('')}</ol><div class="ans">Answer: ${r.q.ansText}</div></div></div>`;}
+function bindReview(){app.querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>{const w=document.getElementById('rv'+b.dataset.rv);w.hidden=!w.hidden;if(!w.hidden){S.whys++;save();if(S.whys>=15)award('curious');}});}
+function endMock(){
+ const n=Q.list.length;Q.list.forEach((q,i)=>{if(!Q.res[i])Q.res[i]={ok:false,q,skipped:true};});
+ const correct=Q.res.filter(r=>r.ok).length;const pct=correct/n;S.mocks++;
+ const pts=correct*5;S.points+=pts;award(n===50?'mockfull':'mockhalf');if(pct>=.8)award('mock80');
+ Q.res.forEach(r=>{if(!r.ok)S.cold[r.q.id]=(S.cold[r.q.id]||0)+1;});save();if(pct>=.6)confetti();
+ const dom={};Q.res.forEach(r=>{const d=r.q.dom;dom[d]=dom[d]||[0,0];dom[d][1]++;if(r.ok)dom[d][0]++;});
+ app.innerHTML=`${topbar()}<div class="panel"><h2>⚖️ The verdict</h2>
+ <div class="hero" style="margin:24px 0 18px">${INSPECTOR(70)}<div class="speech">You scored <b>${correct} out of ${n}</b> (${Math.round(pct*100)}%). ${pct>=.8?'A superb performance – the jury is very impressed!':pct>=.6?'A strong case. Tidy up the weaker areas below and you’ll be flying.':pct>=.4?'Good effort under pressure. Focus on the red bars below – that’s where the marks are hiding.':'Tough trial! Work through the case files for the red areas, then come back for a retrial.'}</div></div>
+ <p class="small">In the real Paper 1 there are 50 marks in 45 minutes, and it is added to the 20-mark spelling paper. The mark needed for the expected standard changes a little each year, so use this as practice rather than a prediction.</p>
+ <h3>Marks by content area</h3><div class="bars">${Object.keys(DOMS).filter(d=>dom[d]).map(d=>`<div class="bar"><span>${d} ${DOMS[d].name}</span><div class="track"><div class="fill" style="width:${dom[d][0]/dom[d][1]*100}%;background:${dom[d][0]/dom[d][1]>=.75?'var(--green)':dom[d][0]/dom[d][1]>=.5?'var(--gold)':'var(--red)'}"></div></div><span>${dom[d][0]}/${dom[d][1]}</span></div>`).join('')}</div>
+ <h3>Question by question</h3><div class="review">${Q.res.map((r,i)=>reviewItem(r,i)).join('')}</div>
+ <div class="actions"><button class="btn sec" id="hq">Back to HQ</button></div></div>`;
+ bindReview();document.getElementById('hq').onclick=home;
+}
+function endRapid(){
+ const best=S.rapidBest;S.rapidBest=Math.max(S.rapidBest,Q.pts);S.points+=Q.pts*3;if(Q.pts>=10)award('rapid10');if(Q.pts>=20)award('rapid20');save();
+ const wrong=Q.res.filter(r=>!r.ok);
+ app.innerHTML=`${topbar()}<div class="panel"><h2>⚡ Interrogation over!</h2><div class="hero" style="margin:24px 0 18px">${INSPECTOR(70)}<div class="speech">You cracked <b>${Q.pts}</b> clues in 90 seconds. ${Q.pts>best?'🎉 A new personal best!':`Your best is ${S.rapidBest}.`}</div></div>
+ ${wrong.length?`<h3>Ones that got away</h3><div class="review">${wrong.map((r,i)=>reviewItem(r,i)).join('')}</div>`:''}
+ <div class="actions"><button class="btn" id="again">Go again</button><button class="btn sec" id="hq">Back to HQ</button></div></div>`;
+ bindReview();document.getElementById('again').onclick=()=>start('rapid');document.getElementById('hq').onclick=home;
+}
+
+/* ============ pages ============ */
+function topbar(){const r=rank();return `<header class="top"><div class="logo" id="logo">${INSPECTOR(46)}<h1>Inspector Clause<small>The Grammar Case Files · Y6 SATs</small></h1></div><span class="pill" id="ptsPill">${r[1]} · <b>${S.points}</b> pts</span><button class="iconbtn" id="snd" title="Sound">${S.sound?'🔊':'🔈'}</button></header>`;}
+function bindTop(){const l=document.getElementById('logo');if(l)l.onclick=()=>{if(Q&&!Q.ended&&(Q.mode==='mock'||Q.mode==='rapid'))return;home();};const s=document.getElementById('snd');if(s)s.onclick=()=>{S.sound=!S.sound;save();s.textContent=S.sound?'🔊':'🔈';};}
+new MutationObserver(bindTop).observe(app,{childList:true});
+function home(){
+ Q=null;clearInterval(window._tm);const r=rank(),nx=nextRank();const coldN=Object.keys(S.cold).filter(k=>G[k]).length;
+ app.innerHTML=`${topbar()}
+ <div class="hero">${INSPECTOR(84)}<div><div class="speech"><b>Welcome to the Grammar Squad, ${r[1]}!</b> Every SATs grammar question is a little mystery. Spot the clues, crack the case – and if you get stuck, the case notes will show you <i>why</i> the answer is the answer.</div><p class="small" style="margin-top:8px">${nx?`${nx[0]-S.points} points to promotion: <b>${nx[1]}</b>`:'You have reached the top rank!'} · ${Object.keys(S.trophies).length}/${TROPHIES.length} trophies</p></div></div>
+ <div class="secthead">📂 Case files – one for each part of the test</div>
+ <div class="grid">${Object.entries(DOMS).map(([k,d])=>`<button class="folder" data-tab="${d.tab}" data-dom="${k}"><h3>${d.icon} ${d.name}</h3><p>${d.desc}</p><span class="weight">≈${d.weight}% of Paper 1 (2026)</span><div class="stars">${'★'.repeat(S.stars[k]||0)}<span style="opacity:.3">${'★'.repeat(3-(S.stars[k]||0))}</span></div></button>`).join('')}
+ <button class="folder special" data-tab="MIXED" id="patrol"><h3>🚓 Mixed Patrol</h3><p>12 questions from every case file, weighted like the real paper.</p></button></div>
+ <div class="secthead">🏛️ Test conditions</div>
+ <div class="grid"><button class="folder red" data-tab="TRIAL" id="mock25"><h3>⚖️ Half Paper</h3><p>25 questions · 23 minutes · no hints. Marked at the end with full case notes.</p></button>
+ <button class="folder red" data-tab="TRIAL" id="mock50"><h3>🏛️ The Full Trial</h3><p>50 questions · 45 minutes – just like Paper 1 on SATs morning.</p></button>
+ <button class="folder special" data-tab="SPEED" id="rapid"><h3>⚡ Rapid Interrogation</h3><p>90 seconds. How many can you crack? Skipping costs 3 seconds! Best: <b>${S.rapidBest}</b></p></button>
+ <button class="folder ${coldN?'':'green'}" data-tab="COLD" id="cold"><h3>🧊 Cold Cases (${coldN})</h3><p>${coldN?'Skills that slipped through. Crack them to clear them!':'No cold cases – your files are clear!'}</p></button></div>
+ <div class="secthead">🧰 Detective’s toolkit</div>
+ <div class="grid"><button class="folder green" data-tab="BRIEF" id="brief"><h3>📋 Briefing: what to expect</h3><p>How the SATs grammar test works and the question types you’ll meet.</p></button>
+ <button class="folder green" data-tab="LOCKER" id="locker"><h3>🗄️ Evidence Locker</h3><p>Every grammar term explained with an example – and a 5-question drill for each.</p></button>
+ <button class="folder green" data-tab="TROPHY" id="tro"><h3>🏆 Trophy Cabinet</h3><p>${Object.keys(S.trophies).length} of ${TROPHIES.length} unlocked.</p></button></div>`;
+ app.querySelectorAll('[data-dom]').forEach(b=>b.onclick=()=>start('case',{dom:b.dataset.dom}));
+ const on=(id,f)=>document.getElementById(id).onclick=f;
+ on('patrol',()=>start('patrol'));on('mock25',()=>start('mock',{n:25}));on('mock50',()=>start('mock',{n:50}));on('rapid',()=>start('rapid'));
+ on('cold',()=>{if(!coldN){toast('🧊 <div>No cold cases yet – keep investigating!</div>');return;}start('cold');});
+ on('brief',briefing);on('locker',locker);on('tro',trophies);
+ window.scrollTo(0,0);
+}
+function back(){return `<div class="actions" style="margin-top:0;margin-bottom:12px"><button class="btn sec" id="hqb">← Back to HQ</button></div>`;}
+function briefing(){
+ const types=[['Tick one / tick two','Choose the right option(s). Read carefully – is it ONE or TWO? Watch out for “NOT”.','pu_speech'],['Circle','Circle a word (or all the words) of a certain type.','wc_circle'],['Underline','Underline a clause or phrase – e.g. the subordinate or relative clause.','cl_sub'],['Tick boxes in a table','One tick per row: e.g. statement / question / command / exclamation.','fn_table'],['Draw lines to match','Match words to meanings, or informal to formal.','vo_match'],['Insert punctuation','Add commas, brackets, dashes etc. in the right places.','pu_paren'],['Write a word or phrase','e.g. a contraction or a verb form. Spell it carefully!','vb_write']];
+ app.innerHTML=`${topbar()}${back()}<div class="panel"><h2>📋 Briefing: the SATs grammar test</h2>
+ <p>In Year 6, the <b>English grammar, punctuation and spelling</b> (GPS) test has two papers, taken on the Monday of SATs week in May (in 2026 it was Monday 11 May):</p>
+ <div class="kv"><div>Paper 1: questions<b>50 marks</b>45 minutes · grammar, punctuation & vocabulary</div><div>Paper 2: spelling<b>20 marks</b>20 words read aloud in sentences</div><div>Total<b>70 marks</b>turned into a scaled score – 100 means “expected standard”</div></div>
+ <p>This site trains you for <b>Paper 1</b>. Most questions are worth 1 mark, and most just need a tick, circle, line or a very short answer. A few near the end ask you to write a word, phrase or sentence.</p>
+ <h3>What gets tested (and how much)</h3>
+ <p class="small">Paper 1 must have 25–35 grammar marks, 10–20 punctuation marks and 3–7 vocabulary marks. Here’s roughly how the 2026 paper split its questions:</p>
+ <div class="bars">${Object.entries(DOMS).sort((a,b)=>b[1].weight-a[1].weight).map(([k,d])=>`<div class="bar"><span>${d.icon} ${k} ${d.name}</span><div class="track"><div class="fill" style="width:${d.weight/30*100}%"></div></div><span>${d.weight}%</span></div>`).join('')}</div>
+ <p class="small">Punctuation is the biggest slice, then word classes, then verb forms.</p>
+ <h3>Question types you’ll meet</h3>
+ <div class="gloss">${types.map((t,i)=>`<div class="gitem"><b>${t[0]}</b><div class="ex">${t[1]}</div><button class="btn sec" data-try="${t[2]}">Try one</button></div>`).join('')}</div>
+ <h3>Detective’s top tips</h3><ol>
+ <li><b>Read the instruction twice.</b> Circle or underline? Tick one or tick two? Is there a sneaky “NOT”?</li>
+ <li><b>Look at the job a word is doing</b>, not just the word. “After” can be a preposition <i>or</i> a conjunction; “right” can be an adjective <i>or</i> an adverb.</li>
+ <li><b>Punctuation must be clear.</b> Make commas look like commas and apostrophes sit up high. Put them exactly in the right place.</li>
+ <li><b>Commands can hide!</b> “When the bell rings, line up quietly” is still a command.</li>
+ <li><b>Exclamations start with What or How</b> and have a verb: “What a huge dog that is!”</li>
+ <li><b>Don’t leave blanks.</b> If you’re unsure, make your best detective guess and move on – then come back if you have time.</li></ol>
+ <h3>How to use this site</h3><p><b>Case files</b> practise one area at a time. <b>Mixed Patrol</b> mixes them up like the real paper. <b>The Trial</b> is a timed mock. Anything you miss goes into <b>Cold Cases</b> so you can come back to it. Every question has <b>case notes</b> explaining why the answer is right – and the questions change every time you play.</p></div>`;
+ document.getElementById('hqb').onclick=home;
+ app.querySelectorAll('[data-try]').forEach(b=>b.onclick=()=>start('drill',{ids:[b.dataset.try],term:'Try it: '+G[b.dataset.try].skill}));
+}
+function locker(){
+ app.innerHTML=`${topbar()}${back()}<div class="panel"><h2>🗄️ The Evidence Locker</h2><p>Every term you need for the SATs grammar test. Tap <b>Drill</b> to practise that skill with 5 fresh questions.</p>
+ ${Object.entries(GLOSS).map(([d,arr])=>`<h3>${DOMS[d].icon} ${d} · ${DOMS[d].name}</h3><div class="gloss">${arr.map((g,i)=>`<div class="gitem"><b>${g[0]}</b> – ${g[1]}<div class="ex">e.g. ${g[2]}</div><button class="btn sec" data-d="${d}" data-i="${i}">Drill this ▶</button></div>`).join('')}</div>`).join('')}</div>`;
+ document.getElementById('hqb').onclick=home;
+ app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const g=GLOSS[b.dataset.d][+b.dataset.i];start('drill',{ids:g[3],term:g[0]});});
+}
+function trophies(){
+ app.innerHTML=`${topbar()}${back()}<div class="panel"><h2>🏆 Trophy Cabinet</h2><p>Rank: <b>${rank()[1]}</b> · ${S.points} points · best streak ${S.bestStreak} · rapid best ${S.rapidBest}</p>
+ <div class="troph">${TROPHIES.map(t=>`<div class="tro${S.trophies[t[0]]?' got':''}"><span class="ic">${t[1]}</span><div><b>${t[2]}</b><small>${t[3]}</small></div></div>`).join('')}</div>
+ <h3>Ranks</h3><p class="small">${RANKS.map(r=>`${r[1]} (${r[0]})`).join(' → ')}</p>
+ <div class="actions"><button class="btn red" id="reset">Reset all progress</button></div></div>`;
+ document.getElementById('hqb').onclick=home;
+ document.getElementById('reset').onclick=e=>{const rb=e.target;if(!rb.dataset.sure){rb.dataset.sure=1;rb.textContent='Tap again to wipe everything';return;}{const snd=S.sound;S={points:0,stars:{},cases:{},cold:{},coldCleared:0,trophies:{},rapidBest:0,whys:0,bestStreak:0,drills:[],mocks:0,sound:snd};save();home();}};
+}
+window.addEventListener('resize',()=>{cv.width=innerWidth;cv.height=innerHeight;});
+home();
+</script>
+</body>
+</html>
